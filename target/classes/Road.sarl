@@ -1,0 +1,10 @@
+/** 
+ * 
+ */
+
+/** 
+ * @author robin
+ * 
+ */
+class Road extends Object {
+}

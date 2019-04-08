@@ -19,6 +19,11 @@
 			<artifactId>io.sarl.maven.sdk</artifactId>
 			<version>${sarl.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.arakhne.afc.gis</groupId>
+			<artifactId>gisroad</artifactId>
+			<version>15.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
