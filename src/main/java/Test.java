@@ -1,6 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
+
+import org.arakhne.afc.gis.maplayer.MapElementLayer;
+import org.arakhne.afc.gis.maplayer.MultiMapLayer;
+import org.arakhne.afc.gis.primitive.GISContainer;
 import org.arakhne.afc.gis.road.RoadPolyline;
 import org.arakhne.afc.gis.road.StandardRoadNetwork;
+import org.arakhne.afc.gis.road.layer.RoadNetworkLayer;
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d;
+import org.arakhne.afc.gis.ui.GisPane;
 
 import javafx.application.*;
 import javafx.stage.*;
@@ -11,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.text.TextAlignment;
 
 
 
@@ -21,7 +30,7 @@ public class Test extends Application{
 		
 	}
 	
-	public void drawRoads(GraphicsContext gc ) {
+	public MapElementLayer<?> getRoads( ) {
 		RoadPolyline p=new RoadPolyline();
 		p.addPoint(10, 10);
 		p.addPoint(10, 20);
@@ -30,20 +39,54 @@ public class Test extends Application{
 		/*worldRect.setFromCorners(0,0,500,500);*/
 		StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
 		network.addRoadSegment(p);
-		//RoadPolylineDrawer drawer=new RoadPolylineDrawer() ;
+		return new RoadNetworkLayer(network);
 	}
-
+	
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		primaryStage.setTitle("Drawing Operations Test");
-        Group root = new Group();
-        Canvas canvas = new Canvas(300, 250);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawRoads(gc);
-        root.getChildren().add(canvas);
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+	public void start(Stage primaryStage) {
+		final List<MapElementLayer> containers = new ArrayList<>();
+
+		final StringBuilder filename = new StringBuilder();
+
+
+		final MapElementLayer loadedResource = getRoads();
+		if (loadedResource != null) {
+			containers.add(loadedResource);
+		}
+		
+		final GISContainer container;
+
+		if (containers.size() == 1) {
+			container = containers.get(0);
+		} else {
+			final MultiMapLayer layer = new MultiMapLayer<>();
+			for (final MapElementLayer child : containers) {
+				layer.addMapLayer(child);
+			}
+			container = layer;
+		}
+		
+		final BorderPane root = new BorderPane();
+		final Label messageBar = new Label(""); //$NON-NLS-1$
+		messageBar.setTextAlignment(TextAlignment.CENTER);
+		final GisPane scrollPane = new GisPane(container);
+		
+		root.setCenter(scrollPane);
+
+		root.setBottom(messageBar);
+
+
+
+		final Scene scene = new Scene(root, 1024, 768);
+
+		scene.getStylesheets().add(getClass().getResource("/ressources/application.css").toExternalForm()); //$NON-NLS-1$
+
+
+
+		primaryStage.setScene(scene);
+
+		primaryStage.show();
+		
 	}
 
 }
