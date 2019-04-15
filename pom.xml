@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<groupId>PC-ROBIN</groupId>
-	<artifactId>traffic sim</artifactId>
+	<artifactId>traffic_sim</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<properties>

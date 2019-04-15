@@ -8,9 +8,9 @@ import io.sarl.lang.annotation.SyntheticMember;
 @SarlSpecification("0.8")
 @SarlElementType(10)
 @SuppressWarnings("all")
-public class Road {
+public class TrafficLight {
   @SyntheticMember
-  public Road() {
+  public TrafficLight() {
     super();
   }
 }

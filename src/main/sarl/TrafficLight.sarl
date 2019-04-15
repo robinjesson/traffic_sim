@@ -6,5 +6,6 @@
  * @author robin
  * 
  */
-class Road extends Object {
+class TrafficLight extends Object {
+	
 }
