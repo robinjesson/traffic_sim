@@ -31,14 +31,37 @@ public class Test extends Application{
 	}
 	
 	public MapElementLayer<?> getRoads( ) {
-		RoadPolyline p=new RoadPolyline();
-		p.addPoint(10, 10);
-		p.addPoint(10, 20);
+		RoadPolyline p1=new RoadPolyline();
+		p1.addPoint(0,0);
+		p1.addPoint(0,100);
+		
+		RoadPolyline p2=new RoadPolyline();
+		p2.addPoint(0,100);
+		p2.addPoint(100,100);
+		
+		RoadPolyline p3=new RoadPolyline();
+		p3.addPoint(100,100);
+		p3.addPoint(100,0);
+		
+		RoadPolyline p4=new RoadPolyline();
+		p4.addPoint(100,0);
+		p4.addPoint(0,0);
+		
+		RoadPolyline p5=new RoadPolyline();
+		p5.addPoint(50,0);
+		p5.addPoint(50,100);
+		
+		
+		
 		
 		final Rectangle2d worldRect = new Rectangle2d();
-		/*worldRect.setFromCorners(0,0,500,500);*/
+		worldRect.setFromCorners(0,0,500,500);
 		StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
-		network.addRoadSegment(p);
+		network.addRoadSegment(p1);
+		network.addRoadSegment(p2);
+		network.addRoadSegment(p3);
+		network.addRoadSegment(p4);
+		network.addRoadSegment(p5);
 		return new RoadNetworkLayer(network);
 	}
 	
@@ -79,7 +102,7 @@ public class Test extends Application{
 
 		final Scene scene = new Scene(root, 1024, 768);
 
-		scene.getStylesheets().add(getClass().getResource("/ressources/application.css").toExternalForm()); //$NON-NLS-1$
+		scene.getStylesheets().add("application.css"); //$NON-NLS-1$
 
 
 
