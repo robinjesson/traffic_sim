@@ -30,7 +30,7 @@ public class Test extends Application{
 		
 	}
 	
-	public MapElementLayer<?> getRoads( ) {
+	public RoadNetworkLayer getRoads( ) {
 		RoadPolyline p1=new RoadPolyline();
 		p1.addPoint(0,0);
 		p1.addPoint(0,100);
@@ -67,32 +67,13 @@ public class Test extends Application{
 	
 	@Override
 	public void start(Stage primaryStage) {
-		final List<MapElementLayer> containers = new ArrayList<>();
-
-		final StringBuilder filename = new StringBuilder();
-
-
-		final MapElementLayer loadedResource = getRoads();
-		if (loadedResource != null) {
-			containers.add(loadedResource);
-		}
 		
-		final GISContainer container;
-
-		if (containers.size() == 1) {
-			container = containers.get(0);
-		} else {
-			final MultiMapLayer layer = new MultiMapLayer<>();
-			for (final MapElementLayer child : containers) {
-				layer.addMapLayer(child);
-			}
-			container = layer;
-		}
+		
 		
 		final BorderPane root = new BorderPane();
 		final Label messageBar = new Label(""); //$NON-NLS-1$
 		messageBar.setTextAlignment(TextAlignment.CENTER);
-		final GisPane scrollPane = new GisPane(container);
+		final GisPane scrollPane = new GisPane(getRoads());
 		
 		root.setCenter(scrollPane);
 

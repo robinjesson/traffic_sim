@@ -1,0 +1,35 @@
+package drawers;
+
+import org.arakhne.afc.nodefx.Drawer;
+import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
+import road_elements.Car
+import road_elements.Road
+
+class CarDrawer implements Drawer<Car> {
+
+	
+	@Override
+	def draw(gc:ZoomableGraphicsContext, element:Car):void {
+		var currentRoad:Road=element.road
+		var pos1D:int=element.getPos1D(); 
+		var t:double=0;
+		/*if(element.isOnRight()) */
+			t=pos1D/currentRoad.getDistanceKilometers();
+		/*else 
+			t=(currentRoad.getDistanceKilometers()-pos1D)/currentRoad.getDistanceKilometers();*/
+		
+		
+		var x:double=(1-t)*currentRoad.getBeginX()+t*currentRoad.getEndX();
+		var y:double=(1-t)*currentRoad.getBeginY()+t*currentRoad.getEndY();
+		
+		gc.fillOval(x, y, 10, 10);
+		gc.strokeOval(x, y, 10, 10);
+
+	}
+
+	@Override
+	def getPrimitiveType() : Class<? extends Car> {
+		return Car as Class<? extends Car>
+	}
+
+}
