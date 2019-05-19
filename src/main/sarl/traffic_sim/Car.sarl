@@ -1,0 +1,8 @@
+package traffic_sim
+
+class Car extends RoadObject {
+	
+	new(){
+		super()
+	}
+}

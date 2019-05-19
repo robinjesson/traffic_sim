@@ -1,0 +1,101 @@
+/** 
+ * 
+ */
+package traffic_sim
+
+/** 
+ * @author tiantian
+ * 
+ */
+import java.util.ArrayList
+import javafx.application.Application
+import javafx.scene.Scene
+import javafx.scene.control.Label
+import javafx.scene.layout.BorderPane
+import javafx.scene.text.TextAlignment
+import javafx.stage.Stage
+import org.arakhne.afc.gis.maplayer.MapElementLayer
+import org.arakhne.afc.gis.maplayer.MultiMapLayer
+import org.arakhne.afc.gis.primitive.GISContainer
+import org.arakhne.afc.gis.road.RoadPolyline
+import org.arakhne.afc.gis.road.StandardRoadNetwork
+import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
+import org.arakhne.afc.gis.ui.GisPane
+import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
+import org.arakhne.afc.gis.maplayer.MapLayer
+import java.util.List
+import org.arakhne.afc.gis.primitive.GISElement
+import org.arakhne.afc.nodefx.ZoomableCanvas
+import org.arakhne.afc.nodefx.ZoomablePane
+import org.arakhne.afc.gis.ui.GisCanvas
+
+class Test extends Application {
+
+	def main(args : String[]) : void {
+		Application.launch(args)
+
+	}
+
+	def getRoads : RoadNetworkLayer {
+		var p1 : RoadPolyline
+		p1.addPoint(0, 0)
+		p1.addPoint(0, 100)
+
+		var p2 : RoadPolyline
+		p2.addPoint(0, 100)
+		p2.addPoint(100, 100)
+
+		var p3 : RoadPolyline
+		p3.addPoint(100, 100)
+		p3.addPoint(100, 0)
+
+		var p4 : RoadPolyline
+		p4.addPoint(100, 0)
+		p4.addPoint(0, 0)
+
+		var p5 : RoadPolyline
+		p5.addPoint(50, 0)
+		p5.addPoint(50, 100)
+
+		var worldRect : Rectangle2d
+		worldRect.setFromCorners(0, 0, 500, 500)
+		var network = new StandardRoadNetwork(worldRect)
+		network.addRoadSegment(p1)
+		network.addRoadSegment(p2)
+		network.addRoadSegment(p3)
+		network.addRoadSegment(p4)
+		network.addRoadSegment(p5)
+
+		return new RoadNetworkLayer(network)
+	}
+
+	@Override
+	def start(primaryStage : Stage) throws Exception {
+		// var filename : StringBuilder
+
+        var loadedResource = getRoads()
+
+		var root : BorderPane
+
+		var messageBar = new Label("")
+		messageBar.setTextAlignment(TextAlignment.CENTER)
+
+		var rootLayer = new MultiMapLayer
+		rootLayer.addMapLayer(loadedResource)
+
+		var scrollPane = new ZoomablePane(new GisCanvas(rootLayer));
+
+		root.setCenter(scrollPane)
+
+		root.setBottom(messageBar)
+
+		var scene = new Scene(root, 1024, 768)
+
+		scene.getStylesheets().add("application.css")
+
+		primaryStage.setScene(scene)
+
+		primaryStage.show()
+
+	}
+}

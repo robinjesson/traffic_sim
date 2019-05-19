@@ -1,0 +1,332 @@
+package traffic_sim
+
+import org.arakhne.afc.gis.primitive.GISElement
+import org.arakhne.afc.gis.location.GeoId
+import org.arakhne.afc.gis.location.GeoLocation
+import java.util.UUID
+import org.arakhne.afc.attrs.collection.AttributeChangeListener
+import java.util.Map
+import org.arakhne.afc.attrs.collection.AttributeProvider
+import org.arakhne.afc.attrs.attr.AttributeException
+import org.arakhne.afc.attrs.attr.Attribute
+import org.arakhne.afc.attrs.attr.AttributeValue
+import java.net.URL
+import java.net.URI
+import java.util.Date
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import org.arakhne.afc.attrs.attr.AttributeType
+import java.util.Collection
+import org.arakhne.afc.vmutil.json.JsonBuffer
+
+class RoadObject implements GISElement {
+	
+	def copyAttributes(arg0 : GISElement) : int {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getName : String {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def hashKey : String {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setName(arg0 : String) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getGeoId : GeoId {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getGeoLocation : GeoLocation {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getUUID : UUID {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def addAttributeChangeListener(arg0 : AttributeChangeListener) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def addAttributes(arg0 : Map<String, Object>) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def addAttributes(arg0 : AttributeProvider) throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def flush {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def isEventFirable : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def removeAllAttributes : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def removeAttribute(arg0 : String) : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def removeAttributeChangeListener(arg0 : AttributeChangeListener) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def renameAttribute(arg0 : String, arg1 : String) : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def renameAttribute(arg0 : String, arg1 : String, arg2 : boolean) : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : Attribute) : Attribute throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : AttributeValue) : Attribute throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : boolean) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : int) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : long) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : float) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : double) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : String) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : UUID) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : URL) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : URI) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : Date) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : InetAddress) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : InetSocketAddress) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : Enum<?>) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttribute(arg0 : String, arg1 : Class<?>) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttributeType(arg0 : String, arg1 : AttributeType) : Attribute throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttributes(arg0 : Map<String, Object>) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setAttributes(arg0 : AttributeProvider) throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def setEventFirable(arg0 : boolean) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def attributes : Iterable<Attribute> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def freeMemory {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAllAttributeNames : Collection<String> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAllAttributes : Collection<Attribute> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAllAttributesByType : Map<AttributeType, Collection<Attribute>> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String) : AttributeValue {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : boolean) : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : int) : int {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : long) : long {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : float) : float {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : double) : double {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : String) : String {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : UUID) : UUID {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : URL) : URL {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : URI) : URI {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : Date) : Date {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : AttributeValue) : AttributeValue {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : InetAddress) : InetAddress {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : InetSocketAddress) : InetAddress {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : T) : T with T extends Enum<T> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttribute(arg0 : String, arg1 : Class<?>) : Class<?> {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsBool(arg0 : String) : boolean throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsDate(arg0 : String) : Date throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsDouble(arg0 : String) : double throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsEnumeration(arg0 : String) : Enum<?> throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsEnumeration(arg0 : String, arg1 : Class<T>) : T with T extends Enum<T> throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsFloat(arg0 : String) : float throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsInetAddress(arg0 : String) : InetAddress throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsInt(arg0 : String) : int throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsJavaClass(arg0 : String) : Class<?> throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsLong(arg0 : String) : long throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsString(arg0 : String) : String throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsURI(arg0 : String) : URI throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsURL(arg0 : String) : URL throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeAsUUID(arg0 : String) : UUID throws AttributeException {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeCount : int {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def getAttributeObject(arg0 : String) : Attribute {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def hasAttribute(arg0 : String) : boolean {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def toMap(arg0 : Map<String, Object>) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def toJson(arg0 : JsonBuffer) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+}

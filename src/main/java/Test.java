@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.arakhne.afc.gis.maplayer.MapElementLayer;
+import org.arakhne.afc.gis.maplayer.MapLayer;
 import org.arakhne.afc.gis.maplayer.MultiMapLayer;
 import org.arakhne.afc.gis.primitive.GISContainer;
 import org.arakhne.afc.gis.road.RoadPolyline;
@@ -72,12 +73,12 @@ public class Test extends Application{
 		final StringBuilder filename = new StringBuilder();
 
 
-		final MapElementLayer loadedResource = getRoads();
+		final MapElementLayer<?> loadedResource = getRoads();
 		if (loadedResource != null) {
 			containers.add(loadedResource);
 		}
 		
-		final GISContainer container;
+		final GISContainer<MapLayer> container;
 
 		if (containers.size() == 1) {
 			container = containers.get(0);
