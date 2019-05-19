@@ -1,0 +1,37 @@
+/** 
+ * 
+ */
+package agents
+
+import io.sarl.core.AgentKilled
+import io.sarl.core.AgentSpawned
+import io.sarl.core.ContextJoined
+import io.sarl.core.ContextLeft
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Logging
+import io.sarl.core.MemberJoined
+import io.sarl.core.MemberLeft
+import events.Influence
+import events.Perception
+import io.sarl.core.DefaultContextInteractions
+
+/** 
+ * @author robin
+ * 
+ */
+agent EnvAgent {
+	uses Logging
+	uses DefaultContextInteractions
+	
+	on Initialize {
+		DriverNormal.spawn
+		emit(new Perception)
+		info("The agent was started.")
+	}
+
+	on Influence{
+		info("influence")
+		emit(new Perception)
+	}
+}

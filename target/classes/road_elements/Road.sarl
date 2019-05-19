@@ -1,0 +1,99 @@
+package road_elements
+
+import org.arakhne.afc.gis.road.RoadPolyline
+import java.util.*;
+import org.arakhne.afc.gis.primitive.GISElement
+import org.arakhne.afc.gis.road.primitive.RoadConnection
+
+/** 
+ * 
+ */
+
+/** 
+ * @author robin
+ * 
+ */
+class Road extends RoadPolyline {
+	var objects: ArrayList<RoadObject>
+	var beginX:int
+	var beginY:int
+	var endX:int
+	var endY:int
+	var distanceKilometers:double
+	var speedLimit:int
+	
+	new(beginX:int,beginY:int,endX:int,endY:int,speedLimit:int){
+		super()
+		this.beginX = beginX
+		this.beginY = beginY
+		this.endX = endX
+		this.endY = endY
+		this.addPoint(beginX, beginY)
+		this.addPoint(endX, endY)
+		this.objects = new ArrayList<RoadObject>()
+		this.speedLimit=speedLimit
+		this.distanceKilometers = Math.sqrt(Math.pow((endX - beginX), 2) + Math.pow((endY - beginY), 2))
+	}
+	
+	
+	
+	def getBeginX:int{
+		return this.beginX
+	}
+
+	def getEndX : int {
+		return this.endX
+	}
+
+	def getBeginY : int {
+		return this.beginY
+	}
+
+	def getEndY : int {
+		return this.endY
+	}
+	
+	def addObject(obj : RoadObject){
+		this.objects.add(obj);
+	}
+	
+	def removeObject(id : UUID) : RoadObject {
+		var objToRemove : RoadObject = null;
+		for(obj as RoadObject : this.objects){
+			if (obj.getUUID() === id) {
+				objToRemove=obj
+			}
+		}	
+		if(objToRemove!==null){
+			this.objects.remove(objToRemove)
+		}
+		return objToRemove
+	}
+
+	def listOfCars() : List<Car> {
+		var cars = new ArrayList<Car>()
+		for (obj as RoadObject : this.objects) {
+			if (obj instanceof Car) {
+				cars.add(obj)
+			}
+		}
+		return cars
+	}
+	
+	def getDistanceKilometers() : double {
+		return this.distanceKilometers
+	}
+
+	def getSpeedLimit() : int {
+		return this.speedLimit
+	}
+	
+	def getFrontCarDistance(car:Car):double{
+		var dist:double=0;
+		for(c:this.listOfCars){
+			
+		}
+		return dist
+	}
+	
+}

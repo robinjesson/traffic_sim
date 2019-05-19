@@ -1,0 +1,51 @@
+/** 
+ * 
+ */
+package agents
+
+import io.sarl.core.AgentKilled
+import io.sarl.core.AgentSpawned
+import io.sarl.core.ContextJoined
+import io.sarl.core.ContextLeft
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Logging
+import io.sarl.core.MemberJoined
+import io.sarl.core.MemberLeft
+import org.arakhne.afc.math.geometry.d2.d.Point2d
+import road_elements.Car
+import road_elements.Road
+import events.EndOfRoad
+import road_elements.GPS
+import org.arakhne.afc.gis.road.primitive.RoadNetwork
+
+/** 
+ * @author robin
+ * 
+ */
+agent Driver {
+	protected var currentPoint : Point2d
+	protected var arrivalPoint : Point2d
+	protected var car : Car
+	protected var currentRoad : Road
+	protected var roadNetwork : RoadNetwork
+	protected var speed:int
+
+	def initProperties(pos1D : int, firstRoad : Road, startPoint : Point2d, arrivalPoint : Point2d, network:RoadNetwork) : void {
+		this.currentPoint = startPoint
+		this.arrivalPoint = arrivalPoint
+		this.currentRoad = firstRoad
+		this.car = new Car(pos1D, firstRoad)
+		this.roadNetwork=network
+		this.speed=0
+	}
+	
+	
+	on EndOfRoad{
+		var nextRoadToTake:Road=GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.roadNetwork)
+		this.car.road = nextRoadToTake
+		this.currentRoad=nextRoadToTake
+	}
+	
+
+}

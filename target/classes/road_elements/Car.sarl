@@ -1,0 +1,17 @@
+/** 
+ * 
+ */
+package road_elements
+
+/** 
+ * @author robin
+ * 
+ */
+class Car extends RoadObject {
+	
+	new(pos1D : int, currentRoad:Road){
+		super(pos1D, currentRoad)
+	}
+	
+	
+}
