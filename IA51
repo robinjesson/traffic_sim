@@ -24,8 +24,8 @@ Voiture qui accélère
 
 	- voir fonction accélération
 
-Env Agent 
 
+Env Agent 
 1) Si la voiture est arrivée -> comparaison coordonnées -> kill agent
 2) Si la voiture arrive bout de route -> pos1D = taille route -> change route GPS
 3) Si object devant agent -> comparer leurs pos1D -> envoyer données agent (décision/influence)
@@ -33,4 +33,15 @@ Env Agent
 		- accélerer
 		- décélerer
 	- s'arrêter
+
+
+Apparition d'un agent
+1) Création véhicule + route départ + route/point arrivée
+2) Vérifier si véhicule est au même endroit
+	- while(tant qu'un véhicule est présent){}
+
+
+
+
+
 

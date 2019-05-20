@@ -49,6 +49,11 @@ public class Road extends RoadPolyline {
   }
   
   @Pure
+  public ArrayList<RoadObject> getObjects() {
+    return this.objects;
+  }
+  
+  @Pure
   public int getBeginX() {
     return this.beginX;
   }
@@ -116,6 +121,22 @@ public class Road extends RoadPolyline {
     return dist;
   }
   
+  @Pure
+  public int getObjectsSize() {
+    return this.objects.size();
+  }
+  
+  @Pure
+  public RoadObject getObjectsByUUID(final UUID id) {
+    for (final RoadObject current : this.objects) {
+      UUID _uUID = current.getUUID();
+      if ((_uUID == id)) {
+        return current;
+      }
+    }
+    throw new IllegalArgumentException("This UUID doesn\'t exist");
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -169,5 +190,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -4470318466L;
+  private final static long serialVersionUID = -3822792390L;
 }

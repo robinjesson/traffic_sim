@@ -7,6 +7,7 @@ package road_elements
  * @author tiantian
  * 
  */
+
 import java.util.ArrayList
 import javafx.application.Application
 import javafx.scene.Scene
@@ -14,24 +15,13 @@ import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 import javafx.scene.text.TextAlignment
 import javafx.stage.Stage
-import org.arakhne.afc.gis.maplayer.MapElementLayer
 import org.arakhne.afc.gis.maplayer.MultiMapLayer
-import org.arakhne.afc.gis.primitive.GISContainer
-import org.arakhne.afc.gis.road.RoadPolyline
 import org.arakhne.afc.gis.road.StandardRoadNetwork
 import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
-import org.arakhne.afc.gis.ui.GisPane
-import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
-import org.arakhne.afc.gis.maplayer.MapLayer
-import java.util.List
-import org.arakhne.afc.gis.primitive.GISElement
-import org.arakhne.afc.nodefx.ZoomableCanvas
-import org.arakhne.afc.nodefx.ZoomablePane
 import org.arakhne.afc.gis.ui.GisCanvas
-import org.arakhne.afc.gis.road.path.astar.RoadAStar
-import org.arakhne.afc.math.geometry.d2.Point2D
 import org.arakhne.afc.math.geometry.d2.d.Point2d
-
+import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
+import org.arakhne.afc.nodefx.ZoomablePane
 
 class Test extends Application {
 
@@ -42,6 +32,7 @@ class Test extends Application {
 
 	def getRoads : RoadNetworkLayer {
 		var roadList : ArrayList<Road> = new ArrayList<Road>()
+
 		//autoroutes
 		roadList.add(new Road(0, 0, 0, 20, 100))
 		roadList.add(new Road(0, 20, 0, 100, 100))

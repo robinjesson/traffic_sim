@@ -11,7 +11,6 @@ import io.sarl.lang.core.DynamicSkillProvider;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
-import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
@@ -31,26 +30,23 @@ public class Driver extends Agent {
   
   protected Car car;
   
-  protected Road currentRoad;
-  
-  protected RoadNetwork roadNetwork;
-  
   protected int speed;
   
-  protected void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint, final RoadNetwork network) {
+  protected synchronized void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint) {
     this.currentPoint = startPoint;
     this.arrivalPoint = arrivalPoint;
-    this.currentRoad = firstRoad;
     Car _car = new Car(pos1D, firstRoad);
     this.car = _car;
-    this.roadNetwork = network;
     this.speed = 0;
   }
   
   private void $behaviorUnit$EndOfRoad$0(final EndOfRoad occurrence) {
-    Road nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.roadNetwork);
-    this.car.setRoad(nextRoadToTake);
-    this.currentRoad = nextRoadToTake;
+    Road nextRoadToTake = null;
+    synchronized (this) {
+      nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.car.getRoad().getRoadNetwork());
+      this.car.setRoad(nextRoadToTake);
+      this.car.setPos1D(0);
+    }
   }
   
   @SyntheticMember

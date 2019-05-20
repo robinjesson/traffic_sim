@@ -1,9 +1,9 @@
 package road_elements
 
+import java.util.ArrayList
+import java.util.List
+import java.util.UUID
 import org.arakhne.afc.gis.road.RoadPolyline
-import java.util.*;
-import org.arakhne.afc.gis.primitive.GISElement
-import org.arakhne.afc.gis.road.primitive.RoadConnection
 
 /** 
  * 
@@ -14,15 +14,15 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection
  * 
  */
 class Road extends RoadPolyline {
-	var objects: ArrayList<RoadObject>
-	var beginX:int
-	var beginY:int
-	var endX:int
-	var endY:int
-	var distanceKilometers:double
-	var speedLimit:int
+	var objects : ArrayList<RoadObject>
+	var beginX : int
+	var beginY : int
+	var endX : int
+	var endY : int
+	var distanceKilometers : double
+	var speedLimit : int
 	
-	new(beginX:int,beginY:int,endX:int,endY:int,speedLimit:int){
+	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int){
 		super()
 		this.beginX = beginX
 		this.beginY = beginY
@@ -33,9 +33,11 @@ class Road extends RoadPolyline {
 		this.objects = new ArrayList<RoadObject>()
 		this.speedLimit=speedLimit
 		this.distanceKilometers = Math.sqrt(Math.pow((endX - beginX), 2) + Math.pow((endY - beginY), 2))
+	}	
+	
+	def getObjects : ArrayList<RoadObject> {
+		return this.objects
 	}
-	
-	
 	
 	def getBeginX:int{
 		return this.beginX
@@ -61,14 +63,14 @@ class Road extends RoadPolyline {
 		var objToRemove : RoadObject = null;
 		for(obj as RoadObject : this.objects){
 			if (obj.getUUID() === id) {
-				objToRemove=obj
+				objToRemove = obj
 			}
 		}	
-		if(objToRemove!==null){
+		if(objToRemove !== null){
 			this.objects.remove(objToRemove)
 		}
 		return objToRemove
-	}
+	}	
 
 	def listOfCars() : List<Car> {
 		var cars = new ArrayList<Car>()
@@ -96,4 +98,16 @@ class Road extends RoadPolyline {
 		return dist
 	}
 	
+	def getObjectsSize() : int {
+		return this.objects.size();
+	}
+
+	def getObjectsByUUID(id : UUID) : RoadObject {
+		for (current as RoadObject : this.objects) {
+			if (current.getUUID() === id) {
+				return current
+			}
+		}
+		throw new IllegalArgumentException("This UUID doesn't exist")
+	}
 }

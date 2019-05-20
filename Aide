@@ -1,0 +1,10 @@
+
+
+Demander à Stéphane Galland :
+
+	- pourquoi classe Road veut transformer en booléen
+	- UUID dans RoadObject
+	- graph spatial (as-t-on besoin ?)
+	- boucle environnement agent (1 seul envagent / pls?)
+	- CarDrawer + ServiceLoader
+	- event endofroad

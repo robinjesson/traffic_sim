@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import org.arakhne.afc.attrs.attr.Attribute;
 import org.arakhne.afc.attrs.attr.AttributeException;
@@ -37,12 +38,14 @@ import road_elements.Road;
 public class RoadObject implements GISElement {
   private int pos1D;
   
+  private UUID uuid;
+  
   private Road road;
   
   @DefaultValueSource
   public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final int pos1D, final Road road) {
-    this.pos1D = pos1D;
-    this.road = road;
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method randomUUID() is undefined");
   }
   
   /**
@@ -64,6 +67,10 @@ public class RoadObject implements GISElement {
   @Pure
   public int getPos1D() {
     return this.pos1D;
+  }
+  
+  public void setPos1D(final int pos1D) {
+    this.pos1D = pos1D;
   }
   
   /**
@@ -101,7 +108,7 @@ public class RoadObject implements GISElement {
   
   @Pure
   public UUID getUUID() {
-    throw new UnsupportedOperationException("TODO: auto-generated method stub");
+    return this.getUUID();
   }
   
   public void addAttributeChangeListener(final AttributeChangeListener arg0) {
@@ -441,6 +448,9 @@ public class RoadObject implements GISElement {
     RoadObject other = (RoadObject) obj;
     if (other.pos1D != this.pos1D)
       return false;
+    if (!Objects.equals(this.uuid, other.uuid)) {
+      return false;
+    }
     return super.equals(obj);
   }
   
@@ -451,6 +461,7 @@ public class RoadObject implements GISElement {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + this.pos1D;
+    result = prime * result + Objects.hashCode(this.uuid);
     return result;
   }
   
@@ -466,5 +477,5 @@ public class RoadObject implements GISElement {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 32752269932L;
+  private final static long serialVersionUID = 33324063206L;
 }

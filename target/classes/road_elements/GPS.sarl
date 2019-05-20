@@ -15,7 +15,7 @@ class GPS {
 	 * Returns the next road to take
 	 * Should be used when an agent arrive at the end of its road
 	 */
-	def static nextRoad(current:Point2d , end:Point2d , network:RoadNetwork ):Road {
+	def static nextRoad(current : Point2d, end : Point2d, network : RoadNetwork) : Road {
 		 
 		var aStar:RoadAStar =new RoadAStar();
 		var path : RoadPath = aStar.solve(current, end, network);
