@@ -30,13 +30,13 @@ import org.arakhne.afc.vmutil.json.JsonBuffer
 	class RoadObject extends Object implements GISElement {
 	
 	var pos1D : int
-	var uuid : UUID
+	val uuid : UUID
 	var road : Road
 	// var onRight : boolean
 	
 	new(pos1D : int = 0 , road:Road){
 		this.pos1D = pos1D;
-		this.uuid = randomUUID()
+		this.uuid = UUID::randomUUID
 		this.road = road
 		//this.onRight = this.pos1D < 0
 	}
@@ -87,7 +87,7 @@ import org.arakhne.afc.vmutil.json.JsonBuffer
 	}
 	
 	def getUUID : UUID {
-		return this.UUID
+		return this.uuid
 	}
 	
 	def addAttributeChangeListener(arg0 : AttributeChangeListener) {

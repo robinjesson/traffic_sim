@@ -32,7 +32,7 @@ class RoadTest {
 
 	@Test
 	void testAddObject() {
-		Car car = new Car(3);
+		Car car = new Car(3, null);
 		System.out.println("Hello");
 		System.out.println(car.getUUID());
 		System.out.println("OK");

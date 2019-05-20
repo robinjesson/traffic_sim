@@ -2,9 +2,33 @@
 
 Demander à Stéphane Galland :
 
-	- pourquoi classe Road veut transformer en booléen
-	- UUID dans RoadObject
-	- graph spatial (as-t-on besoin ?)
-	- boucle environnement agent (1 seul envagent / pls?)
-	- CarDrawer + ServiceLoader
-	- event endofroad
+	X pourquoi classe Road veut transformer en booléen
+	X UUID dans RoadObject
+	X graph spatial (as-t-on besoin ?)
+	X boucle environnement agent (1 seul envagent / pls?)
+	X CarDrawer + ServiceLoader
+	X event endofroad
+	
+	
+	ajouter RoadConnection d'entrée de la voiture
+	
+	org.arakhne.afc.nodefx.Drawer
+	
+	roadNetworkLayer avec toutes les routes chargées
+	
+	addMapLayer --> MapLayer --> route
+	MapElementLayer --> extend MapPoint - MapElement -  MapRectangle... --> voiture
+	
+	SimulationScenario
+	
+	EnvAgent --> objet et non agent
+			--> contient tous les objets, corps etc...
+			
+			perceptionRoad
+			perceptionObject
+			
+			PhysicUtil -> déplacement des objets
+			
+			Dans envAent --> modele de l'environnement et temps
+			
+			fogsim sur github

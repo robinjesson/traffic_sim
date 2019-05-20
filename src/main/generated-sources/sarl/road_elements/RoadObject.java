@@ -38,14 +38,15 @@ import road_elements.Road;
 public class RoadObject implements GISElement {
   private int pos1D;
   
-  private UUID uuid;
+  private final UUID uuid;
   
   private Road road;
   
   @DefaultValueSource
   public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final int pos1D, final Road road) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method randomUUID() is undefined");
+    this.pos1D = pos1D;
+    this.uuid = UUID.randomUUID();
+    this.road = road;
   }
   
   /**
@@ -108,7 +109,7 @@ public class RoadObject implements GISElement {
   
   @Pure
   public UUID getUUID() {
-    return this.getUUID();
+    return this.uuid;
   }
   
   public void addAttributeChangeListener(final AttributeChangeListener arg0) {
