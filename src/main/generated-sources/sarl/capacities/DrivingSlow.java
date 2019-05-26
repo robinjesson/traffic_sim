@@ -16,8 +16,8 @@ import org.eclipse.xtext.xbase.lib.Pure;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
-@SarlElementType(21)
+@SarlSpecification("0.9")
+@SarlElementType(22)
 @SuppressWarnings("all")
 public class DrivingSlow extends Skill implements Drive {
   public void install() {

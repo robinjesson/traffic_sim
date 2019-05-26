@@ -10,12 +10,16 @@ import road_elements.RoadObject;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Car extends RoadObject {
-  public Car(final int pos1D, final Road currentRoad) {
-    super(pos1D, currentRoad);
+  public Car(final int pos1D, final Road currentRoad, final double x, final double y) {
+    super(pos1D, currentRoad, x, y);
+    Road _road = super.getRoad();
+    if ((_road != null)) {
+      super.getRoad().addObject(this);
+    }
   }
   
   @Override
@@ -30,5 +34,5 @@ public class Car extends RoadObject {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1177218349L;
+  private static final long serialVersionUID = 637790605L;
 }

@@ -14,7 +14,7 @@ import road_elements.RoadObject;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Road extends RoadPolyline {
@@ -108,15 +108,32 @@ public class Road extends RoadPolyline {
   }
   
   @Pure
-  public int getSpeedLimit() {
+  public double getDistanceMeters() {
+    return (this.distanceKilometers * 1000);
+  }
+  
+  @Pure
+  public int getSpeedLimitKMH() {
     return this.speedLimit;
   }
   
   @Pure
+  public double getSpeedLimitMS() {
+    return (this.speedLimit * 3.6);
+  }
+  
+  @Pure
   public double getFrontCarDistance(final Car car) {
-    double dist = 0;
+    double dist = 10000;
     List<Car> _listOfCars = this.listOfCars();
     for (final Car c : _listOfCars) {
+      int _pos1D = c.getPos1D();
+      int _pos1D_1 = car.getPos1D();
+      if (((_pos1D - _pos1D_1) < dist)) {
+        int _pos1D_2 = c.getPos1D();
+        int _pos1D_3 = car.getPos1D();
+        dist = (_pos1D_2 - _pos1D_3);
+      }
     }
     return dist;
   }
@@ -190,5 +207,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -3822792390L;
+  private static final long serialVersionUID = -9458813105L;
 }

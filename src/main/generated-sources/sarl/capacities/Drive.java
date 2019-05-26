@@ -8,8 +8,8 @@ import io.sarl.lang.core.Capacity;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
-@SarlElementType(19)
+@SarlSpecification("0.9")
+@SarlElementType(20)
 @SuppressWarnings("all")
 public interface Drive extends Capacity {
   /**

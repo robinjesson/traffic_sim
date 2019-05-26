@@ -1,0 +1,89 @@
+/** 
+ * 
+ */
+package road_elements
+
+import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
+import java.util.ArrayList
+import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
+import org.arakhne.afc.gis.road.StandardRoadNetwork
+import org.arakhne.afc.gis.maplayer.MapElementLayer
+import org.arakhne.afc.gis.mapelement.MapElement
+import org.arakhne.afc.gis.maplayer.TreeMapElementLayer
+import org.arakhne.afc.gis.maplayer.MultiMapLayer
+
+/** 
+ * @author robin
+ * 
+ */
+class TrafficLayers extends MultiMapLayer {
+	var worldRect : Rectangle2d
+	var roadNetworkLayer : RoadNetworkLayer
+	var mapElementLayer : MapElementLayer<MapElement>
+	//var multiMapLayer : MultiMapLayer<MapElementLayer<? extends MapElement>> 
+	
+	new(roadList : ArrayList<Road>, objectList : ArrayList<RoadObject>) {
+		super()
+		
+		this.worldRect = new Rectangle2d()
+		this.worldRect.setFromCorners(-200, -200, 200, 200)
+		
+		var network = new StandardRoadNetwork(worldRect)
+		for (road : roadList) {
+			network.addRoadSegment(road)
+		}
+		this.roadNetworkLayer = new RoadNetworkLayer(network)
+		
+		this.mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect)
+		if (!objectList.isNullOrEmpty)
+			this.mapElementLayer.addMapElements(objectList)
+		
+		//this.multiMapLayer = new MultiMapLayer<MapElementLayer<? extends MapElement>>
+		this.addMapLayer(this.roadNetworkLayer)
+		this.addMapLayer(this.mapElementLayer)
+	}
+	
+	def static roadListFactory : ArrayList<Road> {
+		var roadList : ArrayList<Road> = new ArrayList<Road>()
+
+		// autoroutes
+		var r0 : Road = new Road(0, 0, 0, 20, 100)
+		roadList.add(r0)
+		roadList.add(new Road(0, 20, 0, 100, 100))
+		roadList.add(new Road(0, 100, 100, 100, 100))
+		roadList.add(new Road(100, 100, 100, 50, 100))
+		roadList.add(new Road(100, 50, 100, 0, 100))
+		roadList.add(new Road(100, 0, 0, 0, 100))
+		
+		// bretelles
+		roadList.add(new Road(0, 20, 20, 20, 70))
+		roadList.add(new Road(50, 50, 100, 50, 70))
+		
+		// ville
+		roadList.add(new Road(20, 20, 50, 20, 50))
+		roadList.add(new Road(20, 50, 50, 50, 50))
+		roadList.add(new Road(20, 30, 50, 30, 50))
+		roadList.add(new Road(20, 20, 20, 30, 50))
+		roadList.add(new Road(20, 30, 20, 50, 50))
+		roadList.add(new Road(50, 20, 50, 30, 50))
+		roadList.add(new Road(50, 30, 50, 50, 50))
+		return roadList
+	}
+	
+	def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
+		var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
+		for(road:roads){
+			
+			var nbCarRandom = (Math.random() * 3) as int
+			//println(road.distanceKilometers+" "+posRandom)
+			for (var i = 0; i < nbCarRandom; i++) {
+				var posRandom = (Math.random() * road.distanceKilometers) as int
+				carList.add(new Car(posRandom, road, 0, 0))
+			}
+			
+		}
+		return carList
+	}
+	
+	
+}

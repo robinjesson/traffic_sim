@@ -22,6 +22,11 @@ import org.arakhne.afc.gis.ui.GisCanvas
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
 import org.arakhne.afc.nodefx.ZoomablePane
+import org.arakhne.afc.gis.maplayer.MapElementLayer
+import org.arakhne.afc.gis.mapelement.MapPoint
+import org.arakhne.afc.gis.mapelement.MapElement
+import org.arakhne.afc.gis.maplayer.TreeMapElementLayer
+import org.arakhne.afc.gis.mapelement.MapCircle
 
 class Test extends Application {
 
@@ -30,11 +35,12 @@ class Test extends Application {
 		System.out.print(1)
 	}
 
-	def getRoads : RoadNetworkLayer {
-		var roadList : ArrayList<Road> = new ArrayList<Road>()
+	def getRoads : MultiMapLayer {
+		/*var roadList : ArrayList<Road> = new ArrayList<Road>()
 
 		//autoroutes
-		roadList.add(new Road(0, 0, 0, 20, 100))
+		var r0 : Road = new Road(0, 0, 0, 20, 100)
+		roadList.add(r0)
 		roadList.add(new Road(0, 20, 0, 100, 100))
 		roadList.add(new Road(0, 100, 100, 100, 100))
 		roadList.add(new Road(100, 100, 100, 50, 100))
@@ -62,42 +68,43 @@ class Test extends Application {
 		}
 		
 		
-		var p1 : Point2d = new Point2d(0,0)
-		var p2 : Point2d = new Point2d(100,100)
+		//var p1 : Point2d = new Point2d(0,0)
+		//var p2 : Point2d = new Point2d(100, 100)
+
+		var car : Car = new Car(0, r0, 20, 30)
+		var car2 : Car = new Car(20, r0, 20, 30)
+		var layer : MapElementLayer<MapElement> = new TreeMapElementLayer<MapElement>(worldRect);
+		layer.addMapElement(car)
+		layer.addMapElement(car2)
+		//println(GPS.nextRoad(p1,p2,network))
 		
+		var multiMapLayer = new MultiMapLayer
+		multiMapLayer.addMapLayer(new RoadNetworkLayer(network))
+		multiMapLayer.addMapLayer(layer)
 		
-		println(GPS.nextRoad(p1,p2,network))
+		return multiMapLayer*/
 		
-		
-		return new RoadNetworkLayer(network)
+		var roads=TrafficLayers::roadListFactory
+		var cars = TrafficLayers::carListFactory(roads)
+		return new TrafficLayers(roads,cars)
 	}
 
 	@Override
 	def start(primaryStage : Stage) throws Exception {
 		// var filename : StringBuilder
-
         var loadedResource = getRoads()
-
 		var root =new BorderPane()
-
 		var messageBar = new Label("")
 		messageBar.setTextAlignment(TextAlignment.CENTER)
-
 		var rootLayer = new MultiMapLayer
 		rootLayer.addMapLayer(loadedResource)
-
+		
 		var scrollPane = new ZoomablePane(new GisCanvas(rootLayer));
-
 		root.setCenter(scrollPane)
-
 		root.setBottom(messageBar)
-
 		var scene = new Scene(root, 1024, 768)
-
-		scene.getStylesheets().add("application.css")
-
+		//scene.stylesheets.add(class.getResource("application.css").toExternalForm)
 		primaryStage.setScene(scene)
-
 		primaryStage.show()
 
 	}

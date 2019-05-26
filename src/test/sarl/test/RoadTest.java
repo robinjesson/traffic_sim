@@ -25,14 +25,14 @@ class RoadTest {
 		assertEquals("Should show BeginY loc", 20, road.getBeginY());
 		assertEquals("Should show EndX loc", 30, road.getEndX());
 		assertEquals("Should show EndY loc", 40, road.getEndY());
-		assertEquals("Should show SpeedLimit", 50, road.getSpeedLimit());
+		assertEquals("Should show SpeedLimit", 50, road.getSpeedLimitKMH());
 		assertEquals("Should calculate Distance", (int)Math.sqrt(800), (int)road.getDistanceKilometers());
 		assertEquals("Should be empty", 0, road.getObjectsSize());
 	}
 
 	@Test
 	void testAddObject() {
-		Car car = new Car(3, null);
+		Car car = new Car(3, null,0,0);
 		System.out.println("Hello");
 		System.out.println(car.getUUID());
 		System.out.println("OK");
@@ -42,7 +42,7 @@ class RoadTest {
 
 	@Test
 	void testRemoveObject() {
-		Car car = new Car(3);
+		Car car = new Car(3,null,0,0);
 		System.out.println(car);
 		road.addObject(car);
 		assertTrue(car == road.removeObject(car.getUUID()));

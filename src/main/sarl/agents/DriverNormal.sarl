@@ -5,7 +5,6 @@ package agents
  */
 
 import events.Influence
-import events.Perception
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Destroy
 import io.sarl.core.Initialize
@@ -14,7 +13,6 @@ import capacities.Drive
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Road
 import road_elements.Car
-import events.EndOfRoad
 import capacities.DrivingNormal
 
 /** 
@@ -26,9 +24,9 @@ agent DriverNormal extends Driver {
 	uses DefaultContextInteractions
 	uses Drive
 	
-	on Initialize {
-		setSkill(new DrivingNormal)
-		super.initProperties(0,null, new Point2d(0, 0), new Point2d(100, 100),null)
+	on Initialize{
+		//setSkill(new DrivingNormal)
+		super.initProperties(0,null, new Point2d(0, 0), new Point2d(100, 100))
 		
 	}
 	
@@ -36,12 +34,6 @@ agent DriverNormal extends Driver {
 
 	on Destroy {
 		info("The agent was stopped.")
-	}
-
-	on Perception {
-		info("perception")
-		emit(new Influence)
-		
 	}
 	
 }

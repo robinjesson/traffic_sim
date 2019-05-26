@@ -3,8 +3,21 @@
  */
 package events
 
+import java.util.UUID
+import road_elements.Car
+import io.sarl.lang.core.Agent
+import agents.Driver
+
 /** 
  * @author robin
  * 
  */
-event Influence
+event Influence{
+	var influencedCar:Car
+	var ^agent:Agent
+	
+	new(car : Car, ^agent:Driver){
+		this.influencedCar = car
+		this.^agent=^agent
+	}
+}
