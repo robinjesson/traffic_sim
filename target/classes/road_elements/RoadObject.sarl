@@ -1,0 +1,74 @@
+package road_elements
+
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.URI
+import java.net.URL
+import java.util.Collection
+import java.util.Date
+import java.util.Map
+import java.util.UUID
+import org.arakhne.afc.attrs.attr.Attribute
+import org.arakhne.afc.attrs.attr.AttributeException
+import org.arakhne.afc.attrs.attr.AttributeType
+import org.arakhne.afc.attrs.attr.AttributeValue
+import org.arakhne.afc.attrs.collection.AttributeChangeListener
+import org.arakhne.afc.attrs.collection.AttributeProvider
+import org.arakhne.afc.gis.location.GeoId
+import org.arakhne.afc.gis.location.GeoLocation
+import org.arakhne.afc.gis.mapelement.MapPoint
+import org.arakhne.afc.gis.primitive.GISElement
+import org.arakhne.afc.vmutil.json.JsonBuffer
+import org.arakhne.afc.gis.mapelement.MapCircle
+
+/** 
+ * 
+ */
+
+/** 
+ * @author robin
+ * 
+ */
+<<<<<<< HEAD
+	class RoadObject implements GISElement {
+		
+=======
+class RoadObject extends MapCircle {
+	
+>>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
+	var pos1D : int
+	val uuid : UUID
+	var road : Road
+	// var onRight : boolean
+	
+	new(pos1D : int = 0 , road:Road, x:double, y:double){
+		super(x,y,10)
+		this.pos1D = pos1D;
+		this.uuid = UUID::randomUUID
+		this.road = road
+		//this.onRight = this.pos1D < 0
+	}
+
+	def getRoad() : Road {
+		return this.road
+	}
+
+	def setRoad(road : Road) {
+		this.road = road
+	}
+	
+	def getPos1D:int{
+		return this.pos1D
+	}
+	
+	def setPos1D(pos1D : int) : void {
+		this.pos1D = pos1D
+	}
+	
+	/*def isOnRight :boolean{
+		return this.onRight
+	 * }
+	 */
+	
+	
+}
