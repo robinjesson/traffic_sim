@@ -1,0 +1,37 @@
+/** 
+ * 
+ */
+package capacities
+
+import capacities.Drive
+import io.sarl.core.Logging
+
+/** 
+ * @author robin
+ * 
+ */
+skill DrivingSlow implements Drive {
+	uses Logging
+
+	def install {
+		// Function invoked when the skill is installed in the owner.
+		// You should put all the initialization statements in this block of code.
+		info("Installing the skill")
+	}
+
+	def uninstall {
+		// Function invoked when the skill is uninstalled from the owner.
+		// You should put all the resource release statements in this block of code.
+		info("Uninstalling the skill")
+	}
+
+	override speedUp(maxSpeed : int, currentSpeed : int) : int {
+		// TODO Auto-generated code.
+		0
+	}
+
+	override brake(currentSpeed : int) : int {
+		// TODO Auto-generated code.
+		0
+	}
+}

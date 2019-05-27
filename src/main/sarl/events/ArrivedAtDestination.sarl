@@ -1,0 +1,10 @@
+/** 
+ * 
+ */
+package events
+
+/** 
+ * @author robin
+ * 
+ */
+event ArrivedAtDestination extends Perception
