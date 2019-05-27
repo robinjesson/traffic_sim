@@ -22,7 +22,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.GPS;
 import road_elements.Road;
 
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Test extends Application {

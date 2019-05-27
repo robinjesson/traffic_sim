@@ -1,7 +1,6 @@
 package road_elements
 
 import java.util.ArrayList
-import java.util.List
 import java.util.UUID
 import org.arakhne.afc.gis.road.RoadPolyline
 
@@ -66,13 +65,14 @@ class Road extends RoadPolyline {
 				objToRemove = obj
 			}
 		}	
-		if(objToRemove !== null){
-			this.objects.remove(objToRemove)
-		}
+		
+		if(objToRemove === null) throw new IllegalArgumentException("The UUID " + id + " doesn't exist")
+		
+		this.objects.remove(objToRemove)
 		return objToRemove
 	}	
 
-	def listOfCars() : List<Car> {
+	def listOfCars() : ArrayList<Car> {
 		var cars = new ArrayList<Car>()
 		for (obj as RoadObject : this.objects) {
 			if (obj instanceof Car) {
@@ -90,16 +90,10 @@ class Road extends RoadPolyline {
 		return this.speedLimit
 	}
 	
-	def getFrontCarDistance(car:Car):double{
-		var dist:double=0;
-		for(c:this.listOfCars){
-			
+	def getFrontCarDistance(car : Car) : double{
+		for(roadCar as Car : this.listOfCars){
+			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
 		}
-		return dist
-	}
-	
-	def getObjectsSize() : int {
-		return this.objects.size();
 	}
 
 	def getObjectsByUUID(id : UUID) : RoadObject {

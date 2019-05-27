@@ -9,7 +9,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.Road;
 
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class CarDrawer implements Drawer<Car> {
@@ -33,7 +33,7 @@ public class CarDrawer implements Drawer<Car> {
   @Override
   @Pure
   public Class<? extends Car> getPrimitiveType() {
-    return ((Class<? extends Car>) Car.class);
+    return Car.class;
   }
   
   @SyntheticMember

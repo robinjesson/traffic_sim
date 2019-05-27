@@ -3,19 +3,20 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import org.arakhne.afc.gis.road.primitive.RoadConnection;
 import org.eclipse.xtext.xbase.lib.Pure;
+import road_elements.MobileRoadObject;
 import road_elements.Road;
-import road_elements.RoadObject;
 
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
-public class Car extends RoadObject {
-  public Car(final int pos1D, final Road currentRoad) {
-    super(pos1D, currentRoad);
+public class Car extends MobileRoadObject {
+  public Car(final int pos1D, final Road currentRoad, final RoadConnection roadConnection) {
+    super(pos1D, currentRoad, roadConnection);
   }
   
   @Override
@@ -30,5 +31,5 @@ public class Car extends RoadObject {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 1177218349L;
+  private static final long serialVersionUID = -1186892785L;
 }

@@ -9,7 +9,7 @@ import io.sarl.lang.core.Event;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(15)
 @SuppressWarnings("all")
 public class EndOfRoad extends Event {
@@ -24,5 +24,5 @@ public class EndOfRoad extends Event {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 588368462L;
+  private static final long serialVersionUID = 588368462L;
 }

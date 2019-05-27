@@ -27,8 +27,8 @@ import org.eclipse.xtext.xbase.lib.Pure;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
-@SarlElementType(18)
+@SarlSpecification("0.9")
+@SarlElementType(19)
 @SuppressWarnings("all")
 public class DriverNormal extends Driver {
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {

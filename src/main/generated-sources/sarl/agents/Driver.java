@@ -20,8 +20,8 @@ import road_elements.Road;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
-@SarlElementType(18)
+@SarlSpecification("0.9")
+@SarlElementType(19)
 @SuppressWarnings("all")
 public class Driver extends Agent {
   protected Point2d currentPoint;
@@ -33,11 +33,8 @@ public class Driver extends Agent {
   protected int speed;
   
   protected synchronized void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint) {
-    this.currentPoint = startPoint;
-    this.arrivalPoint = arrivalPoint;
-    Car _car = new Car(pos1D, firstRoad);
-    this.car = _car;
-    this.speed = 0;
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The constructor Car(int, Road, RoadConnection) is not applicable for the arguments (int,Road)");
   }
   
   private void $behaviorUnit$EndOfRoad$0(final EndOfRoad occurrence) {

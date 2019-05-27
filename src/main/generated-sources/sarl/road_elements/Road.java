@@ -4,7 +4,6 @@ import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -14,7 +13,7 @@ import road_elements.RoadObject;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Road extends RoadPolyline {
@@ -85,14 +84,15 @@ public class Road extends RoadPolyline {
         objToRemove = obj;
       }
     }
-    if ((objToRemove != null)) {
-      this.objects.remove(objToRemove);
+    if ((objToRemove == null)) {
+      throw new IllegalArgumentException((("The UUID " + id) + " doesn\'t exist"));
     }
+    this.objects.remove(objToRemove);
     return objToRemove;
   }
   
   @Pure
-  public List<Car> listOfCars() {
+  public ArrayList<Car> listOfCars() {
     ArrayList<Car> cars = new ArrayList<Car>();
     for (final RoadObject obj : this.objects) {
       if ((obj instanceof Car)) {
@@ -114,16 +114,17 @@ public class Road extends RoadPolyline {
   
   @Pure
   public double getFrontCarDistance(final Car car) {
-    double dist = 0;
-    List<Car> _listOfCars = this.listOfCars();
-    for (final Car c : _listOfCars) {
+    ArrayList<Car> _listOfCars = this.listOfCars();
+    for (final Car roadCar : _listOfCars) {
+      int _pos1D = car.getPos1D();
+      int _pos1D_1 = roadCar.getPos1D();
+      if ((_pos1D < _pos1D_1)) {
+        int _pos1D_2 = roadCar.getPos1D();
+        int _pos1D_3 = car.getPos1D();
+        return (_pos1D_2 - _pos1D_3);
+      }
     }
-    return dist;
-  }
-  
-  @Pure
-  public int getObjectsSize() {
-    return this.objects.size();
+    return 0;
   }
   
   @Pure
@@ -190,5 +191,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = -3822792390L;
+  private static final long serialVersionUID = -5053170973L;
 }

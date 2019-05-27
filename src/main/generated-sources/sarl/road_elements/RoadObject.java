@@ -32,7 +32,7 @@ import road_elements.Road;
 /**
  * @author robin
  */
-@SarlSpecification("0.8")
+@SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class RoadObject implements GISElement {
@@ -54,7 +54,7 @@ public class RoadObject implements GISElement {
    */
   @SyntheticMember
   @SarlSourceCode("0")
-  private final static int $DEFAULT_VALUE$NEW_0 = 0;
+  private static final int $DEFAULT_VALUE$NEW_0 = 0;
   
   @Pure
   public Road getRoad() {
@@ -478,5 +478,5 @@ public class RoadObject implements GISElement {
   }
   
   @SyntheticMember
-  private final static long serialVersionUID = 33324063206L;
+  private static final long serialVersionUID = 33324063206L;
 }
