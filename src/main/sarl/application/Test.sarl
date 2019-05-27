@@ -1,0 +1,118 @@
+/** 
+ * 
+ */
+package application
+
+/** 
+ * @author tiantian
+ * 
+ */
+import java.util.ArrayList
+import javafx.application.Application
+import javafx.scene.Scene
+import javafx.scene.control.Label
+import javafx.scene.layout.BorderPane
+import javafx.scene.text.TextAlignment
+import javafx.stage.Stage
+import org.arakhne.afc.gis.maplayer.MapElementLayer
+import org.arakhne.afc.gis.maplayer.MultiMapLayer
+import org.arakhne.afc.gis.primitive.GISContainer
+import org.arakhne.afc.gis.road.RoadPolyline
+import org.arakhne.afc.gis.road.StandardRoadNetwork
+import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
+import org.arakhne.afc.gis.ui.GisPane
+import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
+import org.arakhne.afc.gis.maplayer.MapLayer
+import java.util.List
+import org.arakhne.afc.gis.primitive.GISElement
+import org.arakhne.afc.nodefx.ZoomableCanvas
+import org.arakhne.afc.nodefx.ZoomablePane
+import org.arakhne.afc.gis.ui.GisCanvas
+import org.arakhne.afc.gis.road.path.astar.RoadAStar
+import org.arakhne.afc.math.geometry.d2.Point2D
+import org.arakhne.afc.math.geometry.d2.d.Point2d
+import road_elements.Road
+import road_elements.GPS
+import agents.Driver
+import agents.EnvAgent
+import io.sarl.lang.core.Agent
+
+
+class Test extends Application {
+
+	def static main(args : String[]) : void {
+		Application.launch(args)
+		System.out.print(1)
+	}
+
+	def getRoads : RoadNetworkLayer {
+		var roadList : ArrayList<Road> = new ArrayList<Road>()
+		//autoroutes
+		roadList.add(new Road(0, 0, 0, 20, 100))
+		roadList.add(new Road(0, 20, 0, 100, 100))
+		roadList.add(new Road(0, 100, 100, 100, 100))
+		roadList.add(new Road(100, 100, 100, 50, 100))
+		roadList.add(new Road(100, 50, 100, 0, 100))
+		roadList.add(new Road(100, 0, 0, 0, 100))
+		
+		//bretelles
+		roadList.add(new Road(0, 20, 20, 20, 70))
+		roadList.add(new Road(50, 50, 100, 50, 70))
+		
+		//ville
+		roadList.add(new Road(20, 20, 50, 20, 50))
+		roadList.add(new Road(20, 50, 50, 50, 50))
+		roadList.add(new Road(20, 30, 50, 30, 50))
+		roadList.add(new Road(20, 20, 20, 30, 50))
+		roadList.add(new Road(20, 30, 20, 50, 50))
+		roadList.add(new Road(50, 20, 50, 30, 50))
+		roadList.add(new Road(50, 30, 50, 50, 50))
+
+		var worldRect =new  Rectangle2d()
+		worldRect.setFromCorners(-200, -200, 200, 200)
+		var network = new StandardRoadNetwork(worldRect)
+		for(road:roadList){
+			network.addRoadSegment(road)
+		}
+		
+		
+		var p1 : Point2d = new Point2d(0,0)
+		var p2 : Point2d = new Point2d(100,100)
+		
+		
+		println(GPS.nextRoad(p1,p2,network))
+		
+		
+		return new RoadNetworkLayer(network)
+	}
+
+	@Override
+	def start(primaryStage : Stage) throws Exception {
+		// var filename : StringBuilder
+
+        var loadedResource = getRoads()
+
+		var root =new BorderPane()
+
+		var messageBar = new Label("")
+		messageBar.setTextAlignment(TextAlignment.CENTER)
+
+		var rootLayer = new MultiMapLayer
+		rootLayer.addMapLayer(loadedResource)
+
+		var scrollPane = new ZoomablePane(new GisCanvas(rootLayer));
+
+		root.setCenter(scrollPane)
+
+		root.setBottom(messageBar)
+
+		var scene = new Scene(root, 1024, 768)
+
+		scene.getStylesheets().add("application.css")
+
+		primaryStage.setScene(scene)
+
+		primaryStage.show()
+
+	}
+}

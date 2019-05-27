@@ -33,7 +33,7 @@ class Road extends RoadPolyline {
 		this.speedLimit=speedLimit
 		this.distanceKilometers = Math.sqrt(Math.pow((endX - beginX), 2) + Math.pow((endY - beginY), 2))
 	}	
-	
+
 	def getObjects : ArrayList<RoadObject> {
 		return this.objects
 	}
@@ -86,13 +86,31 @@ class Road extends RoadPolyline {
 		return this.distanceKilometers
 	}
 
-	def getSpeedLimit() : int {
+	def getDistanceMeters() : double {
+		return this.distanceKilometers*1000
+	}
+
+	def getSpeedLimitKMH() : int {
 		return this.speedLimit
 	}
+
+	def getSpeedLimitMS() : double {
+		return this.speedLimit*3.6
+	}
 	
+	/*
+	}
 	def getFrontCarDistance(car : Car) : double{
 		for(roadCar as Car : this.listOfCars){
 			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
+	*/
+
+}
+	def getFrontCarDistance(car:Car):double{
+		var dist:double=10000;
+		for(c:this.listOfCars){
+			if(c.pos1D-car.pos1D<dist)
+				dist = c.pos1D - car.pos1D
 		}
 	}
 

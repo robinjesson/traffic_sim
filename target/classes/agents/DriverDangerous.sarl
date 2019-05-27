@@ -22,7 +22,7 @@ agent DriverDangerous extends Driver{
 	uses Logging
 
 	on Initialize {
-		super.initProperties(0, null, new Point2d(0, 0), new Point2d(100, 100),null)
+		super.initProperties(0, null, new Point2d(0, 0), new Point2d(100, 100))
 	}
 	
 	

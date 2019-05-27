@@ -15,6 +15,7 @@ import io.sarl.core.MemberLeft
 import events.Influence
 import events.Perception
 import io.sarl.core.DefaultContextInteractions
+import events.ArrivedAtDestination
 
 /** 
  * @author robin
@@ -24,14 +25,21 @@ agent EnvAgent {
 	uses Logging
 	uses DefaultContextInteractions
 	
+	var time:int=0
+	
 	on Initialize {
-		DriverNormal.spawn
+		DriverNormal.spawn(1)
 		emit(new Perception)
 		info("The agent was started.")
 	}
 
 	on Influence{
-		info("influence")
-		emit(new Perception)
+		var car=occurrence.influencedCar
+		var ^agent=occurrence.^agent as Driver
+		//info("influence"+ car.toString)
+		var xAgent = ^agent.arrivalPoint.x
+		var yAgent = ^agent.arrivalPoint.y
+		if(car.x==xAgent && car.y==yAgent)
+			emit(new ArrivedAtDestination())
 	}
 }

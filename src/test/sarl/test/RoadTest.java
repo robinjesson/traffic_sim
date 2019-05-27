@@ -44,17 +44,32 @@ class RoadTest {
 		assertEquals("Should show BeginY loc", 20, road.getBeginY());
 		assertEquals("Should show EndX loc", 30, road.getEndX());
 		assertEquals("Should show EndY loc", 40, road.getEndY());
-		assertEquals("Should show SpeedLimit", 50, road.getSpeedLimit());
+		assertEquals("Should show SpeedLimit", 50, road.getSpeedLimitKMH());
 		assertEquals("Should calculate Distance", (int)Math.sqrt(800), (int)road.getDistanceKilometers());
 	}
 
 	@Test
 	void testAddObject() {
+<<<<<<< HEAD
+=======
+		Car car = new Car(3, null,0,0);
+		System.out.println("Hello");
+		System.out.println(car.getUUID());
+		System.out.println("OK");
+		road.getObjects().add(car);
+>>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertEquals("Should be the same object", car, road.getObjectsByUUID(car.getUUID()));		
 	}
 
 	@Test
+<<<<<<< HEAD
 	void remove_object_should_return_object() {
+=======
+	void testRemoveObject() {
+		Car car = new Car(3,null,0,0);
+		System.out.println(car);
+		road.addObject(car);
+>>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertTrue(car == road.removeObject(car.getUUID()));
 	}
 

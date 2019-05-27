@@ -18,8 +18,10 @@ public class MobileRoadObject extends RoadObject {
   private RoadConnection entryRoadConnection;
   
   public MobileRoadObject(final int pos1D, final Road currentRoad, final RoadConnection entryRoadConnection) {
-    super(pos1D, currentRoad);
-    this.entryRoadConnection = entryRoadConnection;
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The constructor RoadObject(Road, double, double) is not applicable for the arguments (int,Road)"
+      + "\nType mismatch: cannot convert from int to Road"
+      + "\nType mismatch: cannot convert from Road to double");
   }
   
   @Override

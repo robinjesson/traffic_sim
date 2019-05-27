@@ -15,6 +15,7 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -27,8 +28,9 @@ import org.eclipse.xtext.xbase.lib.Pure;
 @SuppressWarnings("all")
 public class DriverDangerous extends Driver {
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The method initProperties(int, Road, Point2d, Point2d) is not applicable for the arguments (int,null,Point2d,Point2d,null)");
+    Point2d _point2d = new Point2d(0, 0);
+    Point2d _point2d_1 = new Point2d(100, 100);
+    super.initProperties(0, null, _point2d, _point2d_1);
   }
   
   @Extension
