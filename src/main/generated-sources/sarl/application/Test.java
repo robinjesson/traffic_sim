@@ -5,18 +5,11 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import org.arakhne.afc.gis.maplayer.MultiMapLayer;
 import org.arakhne.afc.gis.road.StandardRoadNetwork;
 import org.arakhne.afc.gis.road.layer.RoadNetworkLayer;
-import org.arakhne.afc.gis.ui.GisCanvas;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d;
-import org.arakhne.afc.nodefx.ZoomablePane;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.GPS;
@@ -78,20 +71,9 @@ public class Test extends Application {
   
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    RoadNetworkLayer loadedResource = this.getRoads();
-    BorderPane root = new BorderPane();
-    Label messageBar = new Label("");
-    messageBar.setTextAlignment(TextAlignment.CENTER);
-    MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
-    rootLayer.addMapLayer(loadedResource);
-    GisCanvas<MultiMapLayer<RoadNetworkLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<RoadNetworkLayer>>(rootLayer);
-    ZoomablePane<MultiMapLayer<RoadNetworkLayer>> scrollPane = new ZoomablePane<MultiMapLayer<RoadNetworkLayer>>(_gisCanvas);
-    root.setCenter(scrollPane);
-    root.setBottom(messageBar);
-    Scene scene = new Scene(root, 1024, 768);
-    scene.getStylesheets().add("application.css");
-    primaryStage.setScene(scene);
-    primaryStage.show();
+    throw new Error("Unresolved compilation problems:"
+      + "\nZoomablePane cannot be resolved."
+      + "\nGisCanvas cannot be resolved.");
   }
   
   @SyntheticMember
