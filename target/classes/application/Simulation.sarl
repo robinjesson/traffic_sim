@@ -115,53 +115,55 @@ class Simulation extends Application {
 	}
 
 	def loadShapeFile(file : File) : MapElementLayer<?> {
-		var network : StandardRoadNetwork = null;
-		var layer : MapElementLayer<MapElement> = null;
+		var network : StandardRoadNetwork = null
+		var layer : MapElementLayer<MapElement> = null
 
 		var reader : GISShapeFileReader = new GISShapeFileReader(file)
 		
-		var worldRect : Rectangle2d = new Rectangle2d();
+		var worldRect : Rectangle2d = new Rectangle2d()
 		
-		var	esriBounds = reader.getBoundsFromHeader();
+		var	esriBounds = reader.getBoundsFromHeader()
 		
-		worldRect.setFromCorners(esriBounds.getMinX(), esriBounds.getMinY(), esriBounds.getMaxX(),
-			esriBounds.getMaxY());
+		worldRect.setFromCorners(esriBounds.getMinX(), 
+								esriBounds.getMinY(), 
+								esriBounds.getMaxX(),
+								esriBounds.getMaxY()
+		)
 
 		if (reader.getShapeElementType() == ShapeElementType.POLYLINE) {
-			reader.setMapElementType(typeof(RoadPolyline));
+			reader.setMapElementType(typeof(RoadPolyline))
 		}
 
-		var element : MapElement;
+		var element : MapElement
 
 		while ((element = reader.read()) !== null) {
 			if (element instanceof RoadPolyline) {
 				if (network === null) {
-					network = new StandardRoadNetwork(worldRect);
+					network = new StandardRoadNetwork(worldRect)
 				}
-				var sgmt : RoadPolyline = element;
+				var sgmt : RoadPolyline = element
 				try {
-					network.addRoadSegment(sgmt);
+					network.addRoadSegment(sgmt)
 				} catch (e : RoadNetworkException) {
-					throw new RuntimeException(e);
+					throw new RuntimeException(e)
 				}
 			} else {
 				if (layer === null) {
 					layer = new TreeMapElementLayer
 				try {
-					layer.addMapElement(element);
+					layer.addMapElement(element)
 				} catch (e : RoadNetworkException) {
-					throw new RuntimeException(e);
+					throw new RuntimeException(e)
 				}
 				}
 			}	
+		}
 		
-		}
-
 		if (network !== null) {
-			var networkLayer = new RoadNetworkLayer(network);
-			return networkLayer;
+			var networkLayer = new RoadNetworkLayer(network)
+			return networkLayer
 		}
 
-		return layer;
+		return layer
 	}
 }

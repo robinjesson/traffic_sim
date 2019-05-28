@@ -115,7 +115,9 @@ public class Simulation extends Application {
       GISShapeFileReader reader = new GISShapeFileReader(file);
       Rectangle2d worldRect = new Rectangle2d();
       ESRIBounds esriBounds = reader.getBoundsFromHeader();
-      worldRect.setFromCorners(esriBounds.getMinX(), esriBounds.getMinY(), esriBounds.getMaxX(), 
+      worldRect.setFromCorners(esriBounds.getMinX(), 
+        esriBounds.getMinY(), 
+        esriBounds.getMaxX(), 
         esriBounds.getMaxY());
       ShapeElementType _shapeElementType = reader.getShapeElementType();
       boolean _equals = Objects.equal(_shapeElementType, ShapeElementType.POLYLINE);
