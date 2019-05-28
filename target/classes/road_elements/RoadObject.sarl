@@ -29,13 +29,9 @@ import org.arakhne.afc.gis.mapelement.MapCircle
  * @author robin
  * 
  */
-<<<<<<< HEAD
-	class RoadObject implements GISElement {
-		
-=======
+
 class RoadObject extends MapCircle {
 	
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 	var pos1D : int
 	val uuid : UUID
 	var road : Road

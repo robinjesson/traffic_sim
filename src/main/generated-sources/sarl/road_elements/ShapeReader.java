@@ -31,10 +31,7 @@ public class ShapeReader {
   /**
    * Read a ESRI Shape file.
    * 
-   * 
-   * 
    * @param file the file to read.
-   * 
    * @return the map layer.
    */
   public RoadNetworkLayer loadRoads(final File file) {
@@ -148,4 +145,12 @@ public class ShapeReader {
   public ShapeReader() {
     super();
   }
+
+public static void loadRoads(File file) {
+  throw new UnsupportedOperationException("TODO: auto-generated method stub");
+}
+
+public static void loadRoads(File file) {
+  throw new UnsupportedOperationException("TODO: auto-generated method stub");
+}
 }

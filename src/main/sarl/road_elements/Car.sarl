@@ -3,8 +3,6 @@
  */
 package road_elements
 
-import org.arakhne.afc.gis.road.primitive.RoadConnection
-
 /** 
  * @author robin
  * 
@@ -12,7 +10,7 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection
 class Car extends MobileRoadObject {	
 	new(pos1D : int, currentRoad:Road, x:double, y:double){
 		super(pos1D, currentRoad,x,y)
-		if(super.road!==null)
+		if(super.road !== null)
 			super.road.addObject(this)
 	}
 }

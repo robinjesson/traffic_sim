@@ -27,9 +27,9 @@ class RoadTest {
 	@BeforeAll
 	static void setUp() {
 		road = new Road(10,20,30,40,50);
-		tLight = new TrafficLight(4, null);
-		car = new Car(3,null,null);
-		car2 = new Car(4, null, null);
+		tLight = new TrafficLight(4,null,0,0);
+		car = new Car(3,null,0,0);
+		car2 = new Car(4,null,0,0);
 		road.addObject(car);
 		road.addObject(car2);
 	}
@@ -50,26 +50,11 @@ class RoadTest {
 
 	@Test
 	void testAddObject() {
-<<<<<<< HEAD
-=======
-		Car car = new Car(3, null,0,0);
-		System.out.println("Hello");
-		System.out.println(car.getUUID());
-		System.out.println("OK");
-		road.getObjects().add(car);
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertEquals("Should be the same object", car, road.getObjectsByUUID(car.getUUID()));		
 	}
 
 	@Test
-<<<<<<< HEAD
 	void remove_object_should_return_object() {
-=======
-	void testRemoveObject() {
-		Car car = new Car(3,null,0,0);
-		System.out.println(car);
-		road.addObject(car);
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertTrue(car == road.removeObject(car.getUUID()));
 	}
 

@@ -3,10 +3,12 @@ package application;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -17,6 +19,7 @@ import org.arakhne.afc.gis.ui.GisCanvas;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d;
 import org.arakhne.afc.nodefx.ZoomablePane;
+import org.arakhne.afc.vmutil.Resources;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.GPS;
@@ -26,9 +29,9 @@ import road_elements.Road;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Test extends Application {
+  @Pure
   public static void main(final String[] args) {
     Application.launch(args);
-    System.out.print(1);
   }
   
   @Pure
@@ -80,7 +83,7 @@ public class Test extends Application {
   public void start(final Stage primaryStage) throws Exception {
     RoadNetworkLayer loadedResource = this.getRoads();
     BorderPane root = new BorderPane();
-    Label messageBar = new Label("");
+    Label messageBar = new Label("ok");
     messageBar.setTextAlignment(TextAlignment.CENTER);
     MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
     rootLayer.addMapLayer(loadedResource);
@@ -89,7 +92,10 @@ public class Test extends Application {
     root.setCenter(scrollPane);
     root.setBottom(messageBar);
     Scene scene = new Scene(root, 1024, 768);
-    scene.getStylesheets().add("application.css");
+    InputStream _resourceAsStream = Resources.getResourceAsStream(Test.class, "/traffic_light_32.png");
+    Image applicationIcon32 = new Image(_resourceAsStream);
+    primaryStage.getIcons().add(applicationIcon32);
+    primaryStage.setTitle("Traffic Simulation");
     primaryStage.setScene(scene);
     primaryStage.show();
   }

@@ -122,6 +122,40 @@ public class Road extends RoadPolyline {
     return (this.speedLimit * 3.6);
   }
   
+  /**
+   * }
+   * def getFrontCarDistance(car : Car) : double{
+   * for(roadCar as Car : this.listOfCars){
+   * if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
+   * }
+   */
+  @Pure
+  public double getFrontCarDistance(final Car car) {
+    double dist = 10000;
+    ArrayList<Car> _listOfCars = this.listOfCars();
+    for (final Car c : _listOfCars) {
+      int _pos1D = c.getPos1D();
+      int _pos1D_1 = car.getPos1D();
+      if (((_pos1D - _pos1D_1) < dist)) {
+        int _pos1D_2 = c.getPos1D();
+        int _pos1D_3 = car.getPos1D();
+        dist = (_pos1D_2 - _pos1D_3);
+      }
+    }
+    return 0;
+  }
+  
+  @Pure
+  public RoadObject getObjectsByUUID(final UUID id) {
+    for (final RoadObject current : this.objects) {
+      UUID _uUID = current.getUUID();
+      if ((_uUID == id)) {
+        return current;
+      }
+    }
+    throw new IllegalArgumentException("This UUID doesn\'t exist");
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -175,5 +209,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10705506299L;
+  private static final long serialVersionUID = -10689191688L;
 }
