@@ -15,9 +15,11 @@ import road_elements.Road;
 @SuppressWarnings("all")
 public class Car extends MobileRoadObject {
   public Car(final int pos1D, final Road currentRoad, final double x, final double y) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The constructor MobileRoadObject(int, Road, RoadConnection) is not applicable for the arguments (int,Road,double,double)"
-      + "\nType mismatch: cannot convert from double to RoadConnection");
+    super(pos1D, currentRoad, x, y);
+    Road _road = super.getRoad();
+    if ((_road != null)) {
+      super.getRoad().addObject(this);
+    }
   }
   
   @Override

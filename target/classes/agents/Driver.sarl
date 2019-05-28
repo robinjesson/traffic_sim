@@ -13,6 +13,7 @@ import events.Influence
 import io.sarl.core.Logging
 import io.sarl.core.DefaultContextInteractions
 import events.ArrivedAtEndRoad
+import io.sarl.core.Initialize
 
 /** 
  * @author robin
@@ -56,6 +57,8 @@ agent Driver {
 	def getArrivalPoint : Point2d {
 		return this.arrivalPoint
 	}
-	
 
+	on Initialize {
+		// emit(new AgentDeparture)
+	}	
 }

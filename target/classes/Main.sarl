@@ -1,0 +1,17 @@
+import application.Simulation
+import javafx.application.Application
+
+/** 
+ * 
+ */
+
+/** 
+ * @author tiantian
+ * 
+ */
+class Main {
+
+	static def main(args : String[]) {
+		Application::launch(typeof(Simulation))
+	}
+}

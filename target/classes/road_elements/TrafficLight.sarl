@@ -9,7 +9,7 @@ package road_elements
  */
 class TrafficLight extends RoadObject {
 	
-	new(pos1D : int, currentRoad : Road) {
-		super(pos1D, currentRoad)
+	new(pos1D : int, currentRoad : Road, x:double, y:double) {
+		super(pos1D, currentRoad, x, y)
 	}
 }

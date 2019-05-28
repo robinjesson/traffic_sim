@@ -98,17 +98,19 @@ class Road extends RoadPolyline {
 		return this.speedLimit*3.6
 	}
 	
-<<<<<<< HEAD
+	/*
+	}
 	def getFrontCarDistance(car : Car) : double{
 		for(roadCar as Car : this.listOfCars){
 			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
-=======
+	}
+	*/
+
 	def getFrontCarDistance(car:Car):double{
 		var dist:double=10000;
 		for(c:this.listOfCars){
 			if(c.pos1D-car.pos1D<dist)
 				dist = c.pos1D - car.pos1D
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		}
 	}
 
