@@ -88,14 +88,15 @@ public class Simulation extends Application {
   @Override
   public void start(final Stage primaryStage) throws Exception {
     File file = new File("/home/tiantian/Documents/IA51/Etienne/traffic_sim/src/main/resources/application/quartier_polyline.shp");
-    MapElementLayer<?> loadedResource = this.loadShapeFile(file);
+    MapElementLayer<?> _loadShapeFile = this.loadShapeFile(file);
+    RoadNetworkLayer loadedResource = ((RoadNetworkLayer) _loadShapeFile);
     BorderPane root = new BorderPane();
     Label messageBar = new Label("");
     messageBar.setTextAlignment(TextAlignment.CENTER);
-    MultiMapLayer<MapElementLayer<?>> rootLayer = new MultiMapLayer<MapElementLayer<?>>();
+    MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
     rootLayer.addMapLayer(loadedResource);
-    GisCanvas<MultiMapLayer<MapElementLayer<?>>> _gisCanvas = new GisCanvas<MultiMapLayer<MapElementLayer<?>>>(rootLayer);
-    ZoomablePane<MultiMapLayer<MapElementLayer<?>>> scrollPane = new ZoomablePane<MultiMapLayer<MapElementLayer<?>>>(_gisCanvas);
+    GisCanvas<MultiMapLayer<RoadNetworkLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<RoadNetworkLayer>>(rootLayer);
+    ZoomablePane<MultiMapLayer<RoadNetworkLayer>> scrollPane = new ZoomablePane<MultiMapLayer<RoadNetworkLayer>>(_gisCanvas);
     root.setCenter(scrollPane);
     root.setBottom(messageBar);
     Scene scene = new Scene(root, 1024, 768);

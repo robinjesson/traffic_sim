@@ -1,4 +1,4 @@
-package road_elements;
+package application;
 
 import io.sarl.lang.annotation.DefaultValue;
 import io.sarl.lang.annotation.DefaultValueSource;
@@ -47,7 +47,7 @@ public class ShapeReader {
    * @return the map layer.
    */
   @DefaultValueSource
-  public MapElementLayer<?> loadShapeFile(final File file, @DefaultValue("road_elements.ShapeReader#LOADSHAPEFILE_0") final boolean isRoad) {
+  public MapElementLayer<?> loadShapeFile(final File file, @DefaultValue("application.ShapeReader#LOADSHAPEFILE_0") final boolean isRoad) {
     try {
       StandardRoadNetwork network = null;
       MapElementLayer<MapElement> layer = null;
@@ -145,12 +145,4 @@ public class ShapeReader {
   public ShapeReader() {
     super();
   }
-
-public static void loadRoads(File file) {
-  throw new UnsupportedOperationException("TODO: auto-generated method stub");
-}
-
-public static void loadRoads(File file) {
-  throw new UnsupportedOperationException("TODO: auto-generated method stub");
-}
 }

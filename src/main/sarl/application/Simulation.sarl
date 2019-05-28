@@ -37,8 +37,8 @@ import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
 import org.arakhne.afc.nodefx.ZoomablePane
 import org.arakhne.afc.vmutil.FileSystem
 import org.arakhne.afc.vmutil.Resources
-import road_elements.GPS
-import road_elements.Road
+import road_elements.*
+
 
 class Simulation extends Application {
 
@@ -84,10 +84,11 @@ class Simulation extends Application {
 	def start(primaryStage : Stage) throws Exception {
 		// var filename : StringBuilder		
 		// var simpleName = typeof(Test).simpleName
-        // var loadedResource = getRoads()
         
 		var file : File = new File("/home/tiantian/Documents/IA51/Etienne/traffic_sim/src/main/resources/application/quartier_polyline.shp")
-        var loadedResource = loadShapeFile(file)
+        // var loadedResource = getRoads()
+		// var loadedResource = loadShapeFile(file)
+		var loadedResource : RoadNetworkLayer = loadShapeFile(file) as RoadNetworkLayer
 
 		var root = new BorderPane()
 

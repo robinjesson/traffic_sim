@@ -10,7 +10,6 @@ import javafx.application.Application
  * 
  */
 class Main {
-
 	static def main(args : String[]) {
 		Application::launch(typeof(Simulation))
 	}

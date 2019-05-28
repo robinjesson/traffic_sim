@@ -20,7 +20,7 @@ class GPS {
 		var aStar:RoadAStar =new RoadAStar();
 		var path : RoadPath = aStar.solve(current, end, network);
 
-		var count:int=0
+		var count : int = 0
 		for (roadSegment : path) {
 
 			return roadSegment as Road;

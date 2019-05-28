@@ -1,7 +1,8 @@
 /** 
  * 
  */
-package road_elements
+ 
+package application
 
 import java.io.File
 import java.io.FileInputStream
@@ -21,17 +22,13 @@ import org.arakhne.afc.vmutil.FileSystem
 
 class ShapeReader {
 
-		/** Read a ESRI Shape file.
-
-		 * 
-
-		 * @param file the file to read.
-
-		 * @return the map layer.
-
-		 */
+	/** Read a ESRI Shape file.
+	 * 
+	 * @param file the file to read.
+	 * @return the map layer.
+	 */
 	def loadRoads(file : File) : RoadNetworkLayer {
-		loadShapeFile(file, true) as RoadNetworkLayer
+		return loadShapeFile(file, true) as RoadNetworkLayer
 	}
 
 	/** Read a ESRI Shape file.
