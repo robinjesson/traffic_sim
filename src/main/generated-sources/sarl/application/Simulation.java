@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.arakhne.afc.gis.io.shape.GISShapeFileReader;
+import org.arakhne.afc.gis.mapelement.MapComposedElement;
 import org.arakhne.afc.gis.mapelement.MapElement;
 import org.arakhne.afc.gis.maplayer.MapElementLayer;
 import org.arakhne.afc.gis.maplayer.MultiMapLayer;
@@ -30,73 +31,35 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d;
 import org.arakhne.afc.nodefx.ZoomablePane;
 import org.arakhne.afc.vmutil.Resources;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
-import org.eclipse.xtext.xbase.lib.Pure;
-import road_elements.GPS;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+import road_elements.Car;
 import road_elements.Road;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Simulation extends Application {
-  @Pure
-  public RoadNetworkLayer getRoads() {
-    ArrayList<Road> roadList = new ArrayList<Road>();
-    Road _road = new Road(0, 0, 0, 20, 100);
-    roadList.add(_road);
-    Road _road_1 = new Road(0, 20, 0, 100, 100);
-    roadList.add(_road_1);
-    Road _road_2 = new Road(0, 100, 100, 100, 100);
-    roadList.add(_road_2);
-    Road _road_3 = new Road(100, 100, 100, 50, 100);
-    roadList.add(_road_3);
-    Road _road_4 = new Road(100, 50, 100, 0, 100);
-    roadList.add(_road_4);
-    Road _road_5 = new Road(100, 0, 0, 0, 100);
-    roadList.add(_road_5);
-    Road _road_6 = new Road(0, 20, 20, 20, 70);
-    roadList.add(_road_6);
-    Road _road_7 = new Road(50, 50, 100, 50, 70);
-    roadList.add(_road_7);
-    Road _road_8 = new Road(20, 20, 50, 20, 50);
-    roadList.add(_road_8);
-    Road _road_9 = new Road(20, 50, 50, 50, 50);
-    roadList.add(_road_9);
-    Road _road_10 = new Road(20, 30, 50, 30, 50);
-    roadList.add(_road_10);
-    Road _road_11 = new Road(20, 20, 20, 30, 50);
-    roadList.add(_road_11);
-    Road _road_12 = new Road(20, 30, 20, 50, 50);
-    roadList.add(_road_12);
-    Road _road_13 = new Road(50, 20, 50, 30, 50);
-    roadList.add(_road_13);
-    Road _road_14 = new Road(50, 30, 50, 50, 50);
-    roadList.add(_road_14);
-    Rectangle2d worldRect = new Rectangle2d();
-    worldRect.setFromCorners((-200), (-200), 200, 200);
-    StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
-    for (final Road road : roadList) {
-      network.addRoadSegment(road);
-    }
-    Point2d p1 = new Point2d(0, 0);
-    Point2d p2 = new Point2d(100, 100);
-    InputOutput.<Road>println(GPS.nextRoad(p1, p2, network));
-    return new RoadNetworkLayer(network);
-  }
-  
+  /**
+   * def getRoads : TrafficLayers {
+   * 
+   * var roads = Simulation::shapeToList
+   * var cars = new ArrayList<RoadObject>()// TrafficLayers::carListFactory(roads)
+   * return new TrafficLayers(roads, cars)
+   * }
+   */
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    File file = new File("/home/tiantian/Documents/IA51/Etienne/traffic_sim/src/main/resources/application/quartier_polyline.shp");
-    MapElementLayer<?> _loadShapeFile = this.loadShapeFile(file);
-    RoadNetworkLayer loadedResource = ((RoadNetworkLayer) _loadShapeFile);
+    File file = new File("src/main/resources/application/roads-line.shp");
+    MultiMapLayer loadedResource = Simulation.shapeToLayers();
     BorderPane root = new BorderPane();
     Label messageBar = new Label("");
     messageBar.setTextAlignment(TextAlignment.CENTER);
-    MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
+    MultiMapLayer<MultiMapLayer> rootLayer = new MultiMapLayer<MultiMapLayer>();
     rootLayer.addMapLayer(loadedResource);
-    GisCanvas<MultiMapLayer<RoadNetworkLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<RoadNetworkLayer>>(rootLayer);
-    ZoomablePane<MultiMapLayer<RoadNetworkLayer>> scrollPane = new ZoomablePane<MultiMapLayer<RoadNetworkLayer>>(_gisCanvas);
+    GisCanvas<MultiMapLayer<MultiMapLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<MultiMapLayer>>(rootLayer);
+    ZoomablePane<MultiMapLayer<MultiMapLayer>> scrollPane = new ZoomablePane<MultiMapLayer<MultiMapLayer>>(_gisCanvas);
     root.setCenter(scrollPane);
     root.setBottom(messageBar);
     Scene scene = new Scene(root, 1024, 768);
@@ -109,7 +72,7 @@ public class Simulation extends Application {
     primaryStage.show();
   }
   
-  public MapElementLayer<?> loadShapeFile(final File file) {
+  public MapElementLayer<?> loadShapeFile2(final File file) {
     try {
       StandardRoadNetwork network = null;
       MapElementLayer<MapElement> layer = null;
@@ -165,6 +128,66 @@ public class Simulation extends Application {
         return networkLayer;
       }
       return layer;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public static MultiMapLayer shapeToLayers() {
+    try {
+      ArrayList<Road> list = new ArrayList<Road>();
+      File file = new File("src/main/resources/application/quartier_polyline.shp");
+      GISShapeFileReader reader = new GISShapeFileReader(file);
+      Rectangle2d worldRect = new Rectangle2d();
+      ESRIBounds esriBounds = reader.getBoundsFromHeader();
+      worldRect.setFromCorners(
+        esriBounds.getMinX(), 
+        esriBounds.getMinY(), 
+        esriBounds.getMaxX(), 
+        esriBounds.getMaxY());
+      MultiMapLayer<MapElementLayer<? extends MapElement>> multiMapLayer = new MultiMapLayer<MapElementLayer<? extends MapElement>>();
+      RoadNetworkLayer roadNetworkLayer = null;
+      TreeMapElementLayer<MapElement> mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect);
+      StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
+      ShapeElementType _shapeElementType = reader.getShapeElementType();
+      boolean _equals = Objects.equal(_shapeElementType, ShapeElementType.POLYLINE);
+      if (_equals) {
+        reader.setMapElementType(RoadPolyline.class);
+      }
+      MapElement element = null;
+      int count = 0;
+      while ((((element = reader.read()) != null) && (count < 2))) {
+        {
+          if ((element instanceof RoadPolyline)) {
+            RoadPolyline sgmt = ((RoadPolyline)element);
+            Iterable<MapComposedElement.PointGroup> _groups = sgmt.groups();
+            for (final MapComposedElement.PointGroup group : _groups) {
+              for (int i = 0; (i < (IterableExtensions.size(group.points()) - 1)); i++) {
+                {
+                  double _x = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[i].getX();
+                  int xBegin = ((int) _x);
+                  double _y = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[i].getY();
+                  int yBegin = ((int) _y);
+                  double _x_1 = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[(i + 1)].getX();
+                  int xEnd = ((int) _x_1);
+                  double _y_1 = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[(i + 1)].getY();
+                  int yEnd = ((int) _y_1);
+                  Road road = new Road(xBegin, yBegin, xEnd, yEnd);
+                  network.addRoadSegment(road);
+                  Car car = new Car(0, road, 0, 0);
+                  mapElementLayer.addMapElement(car);
+                }
+              }
+            }
+          }
+          count++;
+        }
+      }
+      RoadNetworkLayer _roadNetworkLayer = new RoadNetworkLayer(network);
+      roadNetworkLayer = _roadNetworkLayer;
+      multiMapLayer.addMapLayer(roadNetworkLayer);
+      multiMapLayer.addMapLayer(mapElementLayer);
+      return multiMapLayer;
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

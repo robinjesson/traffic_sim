@@ -42,53 +42,22 @@ import road_elements.*
 
 class Simulation extends Application {
 
-	def getRoads : RoadNetworkLayer {
-		var roadList : ArrayList<Road> = new ArrayList<Road>()
-		// autoroutes
-		roadList.add(new Road(0, 0, 0, 20, 100))
-		roadList.add(new Road(0, 20, 0, 100, 100))
-		roadList.add(new Road(0, 100, 100, 100, 100))
-		roadList.add(new Road(100, 100, 100, 50, 100))
-		roadList.add(new Road(100, 50, 100, 0, 100))
-		roadList.add(new Road(100, 0, 0, 0, 100))
+	/*def getRoads : TrafficLayers {
 
-		// bretelles
-		roadList.add(new Road(0, 20, 20, 20, 70))
-		roadList.add(new Road(50, 50, 100, 50, 70))
-
-		//ville
-		roadList.add(new Road(20, 20, 50, 20, 50))
-		roadList.add(new Road(20, 50, 50, 50, 50))
-		roadList.add(new Road(20, 30, 50, 30, 50))
-		roadList.add(new Road(20, 20, 20, 30, 50))
-		roadList.add(new Road(20, 30, 20, 50, 50))
-		roadList.add(new Road(50, 20, 50, 30, 50))
-		roadList.add(new Road(50, 30, 50, 50, 50))
-
-		var worldRect = new Rectangle2d()
-		worldRect.setFromCorners(-200, -200, 200, 200)
-		var network = new StandardRoadNetwork(worldRect)
-		for (road : roadList) {
-			network.addRoadSegment(road)
-		}
-
-		var p1 : Point2d = new Point2d(0, 0)
-		var p2 : Point2d = new Point2d(100, 100)
-
-		println(GPS.nextRoad(p1, p2, network))
-
-		return new RoadNetworkLayer(network)
-	}
+		var roads = Simulation::shapeToList
+		var cars = new ArrayList<RoadObject>()// TrafficLayers::carListFactory(roads)
+		return new TrafficLayers(roads, cars)
+	}*/
 
 	@Override
 	def start(primaryStage : Stage) throws Exception {
 		// var filename : StringBuilder		
 		// var simpleName = typeof(Test).simpleName
         
-		var file : File = new File("/home/tiantian/Documents/IA51/Etienne/traffic_sim/src/main/resources/application/quartier_polyline.shp")
-        // var loadedResource = getRoads()
-		// var loadedResource = loadShapeFile(file)
-		var loadedResource : RoadNetworkLayer = loadShapeFile(file) as RoadNetworkLayer
+		var file : File = new File("src/main/resources/application/roads-line.shp")
+        var loadedResource = shapeToLayers()
+		//var loadedResource : RoadNetworkLayer = loadShapeFile2(file) as RoadNetworkLayer
+		
 
 		var root = new BorderPane()
 
@@ -115,7 +84,8 @@ class Simulation extends Application {
 		primaryStage.show()
 	}
 
-	def loadShapeFile(file : File) : MapElementLayer<?> {
+	def loadShapeFile2(file : File) : MapElementLayer<?> {
+		
 		var network : StandardRoadNetwork = null
 		var layer : MapElementLayer<MapElement> = null
 
@@ -166,5 +136,69 @@ class Simulation extends Application {
 		}
 
 		return layer
+	}
+
+	def static shapeToLayers() : MultiMapLayer {
+		var list = new ArrayList<Road>()
+
+		var file : File = new File("src/main/resources/application/quartier_polyline.shp")
+		var reader : GISShapeFileReader = new GISShapeFileReader(file)
+
+		var worldRect : Rectangle2d = new Rectangle2d()
+		var esriBounds = reader.getBoundsFromHeader()
+		worldRect.setFromCorners(
+			esriBounds.getMinX(),
+			esriBounds.getMinY(),
+			esriBounds.getMaxX(),
+			esriBounds.getMaxY()
+		)
+		var multiMapLayer = new MultiMapLayer
+		var roadNetworkLayer : RoadNetworkLayer
+		var mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect)
+		var network = new StandardRoadNetwork(worldRect)
+
+
+		
+
+		if (reader.getShapeElementType() == ShapeElementType.POLYLINE) {
+			reader.setMapElementType(typeof(RoadPolyline))
+		}
+
+		var element : MapElement
+		var count=0
+		while ((element = reader.read()) !== null && count<2) {
+			if (element instanceof RoadPolyline) {
+				var sgmt = element
+				
+		
+				
+				for(group:sgmt.groups){
+					for(var i=0;i<group.points.size-1;i++){
+						var xBegin = group.points.get(i).x as int
+						var yBegin = group.points.get(i).y as int
+						var xEnd = group.points.get(i + 1).x as int
+						var yEnd = group.points.get(i + 1).y as int
+
+						var road = new Road(xBegin, yBegin, xEnd, yEnd)
+						network.addRoadSegment(road)
+						
+						var car : Car = new Car(0, road, 0, 0)
+						mapElementLayer.addMapElement(car)
+						
+						//println(road)
+					}
+				}
+				
+			}
+			count++
+		}
+		
+		roadNetworkLayer = new RoadNetworkLayer(network)
+		multiMapLayer.addMapLayer(roadNetworkLayer)
+		multiMapLayer.addMapLayer(mapElementLayer)
+		
+		
+
+		return multiMapLayer
 	}
 }

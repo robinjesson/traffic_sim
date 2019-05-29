@@ -3,6 +3,7 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
@@ -19,6 +20,7 @@ public class Car extends MobileRoadObject {
     Road _road = super.getRoad();
     if ((_road != null)) {
       super.getRoad().addObject(this);
+      InputOutput.<Road>println(this.getRoad());
     }
   }
   

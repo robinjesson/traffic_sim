@@ -10,7 +10,9 @@ package road_elements
 class Car extends MobileRoadObject {	
 	new(pos1D : int, currentRoad:Road, x:double, y:double){
 		super(pos1D, currentRoad,x,y)
-		if(super.road !== null)
+		if(super.road !== null){
 			super.road.addObject(this)
+			println(road)
+		}
 	}
 }

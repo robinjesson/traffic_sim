@@ -21,7 +21,7 @@ class Road extends RoadPolyline {
 	var distanceKilometers : double
 	var speedLimit : int
 	
-	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int){
+	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int=50){
 		super()
 		this.beginX = beginX
 		this.beginY = beginY
@@ -121,5 +121,18 @@ class Road extends RoadPolyline {
 			}
 		}
 		throw new IllegalArgumentException("This UUID doesn't exist")
+	}
+	
+
+	def disp : void{
+		println("    beginX=" + this.beginX)
+		println("    beginY=" + this.beginY)
+		println("    endX=" + this.endX)
+		println("    endY=" + this.endY)
+		print("    [")
+		for(obj:this.objects){
+			print(obj+" ")
+		}
+		print("]")
 	}
 }
