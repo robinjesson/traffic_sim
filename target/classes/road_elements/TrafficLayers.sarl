@@ -72,15 +72,13 @@ class TrafficLayers extends MultiMapLayer {
 	
 	def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
 		var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
-		for(road:roads){
-			
+		for(road:roads){			
 			var nbCarRandom = (Math.random() * 3) as int
 			//println(road.distanceKilometers+" "+posRandom)
 			for (var i = 0; i < nbCarRandom; i++) {
 				var posRandom = (Math.random() * road.distanceKilometers) as int
 				carList.add(new Car(posRandom, road, 0, 0))
-			}
-			
+			}	
 		}
 		return carList
 	}

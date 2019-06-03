@@ -75,12 +75,12 @@ public class ShapeReader {
           final ESRIBounds esriBounds = reader.getBoundsFromHeader();
           worldRect.setFromCorners(esriBounds.getMinX(), esriBounds.getMinY(), esriBounds.getMaxX(), esriBounds.getMaxY());
           if (isRoad) {
-            reader.setMapElementType(RoadPolyline.class);
+            reader.setMapElementType(Road.class);
           }
           MapElement element = null;
           if (isRoad) {
             while (((element = reader.read()) != null)) {
-              if ((element instanceof RoadPolyline)) {
+              if ((element instanceof Road)) {
                 if ((network == null)) {
                   StandardRoadNetwork _standardRoadNetwork = new StandardRoadNetwork(worldRect);
                   network = _standardRoadNetwork;
@@ -146,11 +146,5 @@ public class ShapeReader {
     super();
   }
 
-public static void loadRoads(File file) {
-  throw new UnsupportedOperationException("TODO: auto-generated method stub");
-}
 
-public static void loadRoads(File file) {
-  throw new UnsupportedOperationException("TODO: auto-generated method stub");
-}
 }

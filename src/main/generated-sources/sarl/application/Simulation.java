@@ -9,10 +9,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.arakhne.afc.gis.io.shape.GISShapeFileReader;
 import org.arakhne.afc.gis.mapelement.MapElement;
@@ -35,6 +33,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.GPS;
 import road_elements.Road;
+import road_elements.ShapeReader;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -87,18 +86,16 @@ public class Simulation extends Application {
   
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    File file = new File("/home/tiantian/Documents/IA51/Etienne/traffic_sim/src/main/resources/application/quartier_polyline.shp");
-    MapElementLayer<?> _loadShapeFile = this.loadShapeFile(file);
-    RoadNetworkLayer loadedResource = ((RoadNetworkLayer) _loadShapeFile);
     BorderPane root = new BorderPane();
-    Label messageBar = new Label("");
-    messageBar.setTextAlignment(TextAlignment.CENTER);
+    ShapeReader reader = new ShapeReader();
+    File file = new File("src/main/resources/application/quartier_polyline.shp");
+    MapElementLayer<?> _loadShapeFile = this.loadShapeFile(file);
+    RoadNetworkLayer loadedRoads = ((RoadNetworkLayer) _loadShapeFile);
     MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
-    rootLayer.addMapLayer(loadedResource);
+    rootLayer.addMapLayer(loadedRoads);
     GisCanvas<MultiMapLayer<RoadNetworkLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<RoadNetworkLayer>>(rootLayer);
     ZoomablePane<MultiMapLayer<RoadNetworkLayer>> scrollPane = new ZoomablePane<MultiMapLayer<RoadNetworkLayer>>(_gisCanvas);
     root.setCenter(scrollPane);
-    root.setBottom(messageBar);
     Scene scene = new Scene(root, 1024, 768);
     scene.getStylesheets().add("application.css");
     InputStream _resourceAsStream = Resources.getResourceAsStream(Simulation.class, "/traffic_light_32.png");
