@@ -1,5 +1,7 @@
 import application.Simulation
 import javafx.application.Application
+import org.arakhne.afc.gis.road.RoadPolyline
+import road_elements.Road
 
 /** 
  * 
@@ -10,7 +12,13 @@ import javafx.application.Application
  * 
  */
 class Main {
-	static def main(args : String[]) {
+	static def main(args : String[]) : void {
 		Application::launch(typeof(Simulation))
+		
+		/*var list = Simulation::shapeToList()
+		for(r:list){
+			println(r)
+		}*/
+		
 	}
 }

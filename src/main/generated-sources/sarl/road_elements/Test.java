@@ -3,7 +3,6 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -14,9 +13,6 @@ import org.arakhne.afc.gis.maplayer.MultiMapLayer;
 import org.arakhne.afc.gis.ui.GisCanvas;
 import org.arakhne.afc.nodefx.ZoomablePane;
 import org.eclipse.xtext.xbase.lib.Pure;
-import road_elements.Road;
-import road_elements.RoadObject;
-import road_elements.TrafficLayers;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -29,9 +25,8 @@ public class Test extends Application {
   
   @Pure
   public MultiMapLayer getRoads() {
-    ArrayList<Road> roads = TrafficLayers.roadListFactory();
-    ArrayList<RoadObject> cars = TrafficLayers.carListFactory(roads);
-    return new TrafficLayers(roads, cars);
+    throw new Error("Unresolved compilation problems:"
+      + "\nThe method carListFactory(ArrayList<Road>) is undefined for the type Class<TrafficLayers>");
   }
   
   @Override

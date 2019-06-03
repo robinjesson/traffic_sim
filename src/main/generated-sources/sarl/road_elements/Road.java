@@ -1,11 +1,16 @@
 package road_elements;
 
+import io.sarl.lang.annotation.DefaultValue;
+import io.sarl.lang.annotation.DefaultValueSource;
+import io.sarl.lang.annotation.DefaultValueUse;
 import io.sarl.lang.annotation.SarlElementType;
+import io.sarl.lang.annotation.SarlSourceCode;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
@@ -31,7 +36,8 @@ public class Road extends RoadPolyline {
   
   private int speedLimit;
   
-  public Road(final int beginX, final int beginY, final int endX, final int endY, final int speedLimit) {
+  @DefaultValueSource
+  public Road(final int beginX, final int beginY, final int endX, final int endY, @DefaultValue("road_elements.Road#NEW_0") final int speedLimit) {
     super();
     this.beginX = beginX;
     this.beginY = beginY;
@@ -46,6 +52,13 @@ public class Road extends RoadPolyline {
     double _pow_1 = Math.pow((endY - beginY), 2);
     this.distanceKilometers = Math.sqrt((_pow + _pow_1));
   }
+  
+  /**
+   * Default value for the parameter speedLimit
+   */
+  @SyntheticMember
+  @SarlSourceCode("50")
+  private static final int $DEFAULT_VALUE$NEW_0 = 50;
   
   @Pure
   public ArrayList<RoadObject> getObjects() {
@@ -156,6 +169,25 @@ public class Road extends RoadPolyline {
     throw new IllegalArgumentException("This UUID doesn\'t exist");
   }
   
+  public void disp() {
+    InputOutput.<String>println(("    beginX=" + Integer.valueOf(this.beginX)));
+    InputOutput.<String>println(("    beginY=" + Integer.valueOf(this.beginY)));
+    InputOutput.<String>println(("    endX=" + Integer.valueOf(this.endX)));
+    InputOutput.<String>println(("    endY=" + Integer.valueOf(this.endY)));
+    InputOutput.<String>print("    [");
+    for (final RoadObject obj : this.objects) {
+      String _plus = (obj + " ");
+      InputOutput.<String>print(_plus);
+    }
+    InputOutput.<String>print("]");
+  }
+  
+  @DefaultValueUse("int,int,int,int,int")
+  @SyntheticMember
+  public Road(final int beginX, final int beginY, final int endX, final int endY) {
+    this(beginX, beginY, endX, endY, $DEFAULT_VALUE$NEW_0);
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -209,5 +241,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10689191688L;
+  private static final long serialVersionUID = -10593594356L;
 }

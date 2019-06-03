@@ -28,8 +28,8 @@ class RoadTest {
 	static void setUp() {
 		road = new Road(10,20,30,40,50);
 		tLight = new TrafficLight(4,null,0,0);
-		car = new Car(3,null,0,0);
-		car2 = new Car(4,null,0,0);
+		car = new Car(3,null,null ,0,0);
+		car2 = new Car(4,null,null,0,0);
 		road.addObject(car);
 		road.addObject(car2);
 	}

@@ -1,6 +1,9 @@
 package application;
 
+import agents.EnvAgent;
 import com.google.common.base.Objects;
+import io.sarl.bootstrap.SRE;
+import io.sarl.bootstrap.SREBootstrap;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -13,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.arakhne.afc.gis.io.shape.GISShapeFileReader;
+import org.arakhne.afc.gis.mapelement.MapComposedElement;
 import org.arakhne.afc.gis.mapelement.MapElement;
 import org.arakhne.afc.gis.maplayer.MapElementLayer;
 import org.arakhne.afc.gis.maplayer.MultiMapLayer;
@@ -28,60 +32,31 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d;
 import org.arakhne.afc.nodefx.ZoomablePane;
 import org.arakhne.afc.vmutil.Resources;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
-import road_elements.GPS;
 import road_elements.Road;
+import road_elements.RoadObject;
 import road_elements.ShapeReader;
+import road_elements.TrafficLayers;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Simulation extends Application {
+  private TrafficLayers trafficLayers = new TrafficLayers(new ArrayList<Road>(), new ArrayList<RoadObject>());
+  
   @Pure
-  public RoadNetworkLayer getRoads() {
-    ArrayList<Road> roadList = new ArrayList<Road>();
-    Road _road = new Road(0, 0, 0, 20, 100);
-    roadList.add(_road);
-    Road _road_1 = new Road(0, 20, 0, 100, 100);
-    roadList.add(_road_1);
-    Road _road_2 = new Road(0, 100, 100, 100, 100);
-    roadList.add(_road_2);
-    Road _road_3 = new Road(100, 100, 100, 50, 100);
-    roadList.add(_road_3);
-    Road _road_4 = new Road(100, 50, 100, 0, 100);
-    roadList.add(_road_4);
-    Road _road_5 = new Road(100, 0, 0, 0, 100);
-    roadList.add(_road_5);
-    Road _road_6 = new Road(0, 20, 20, 20, 70);
-    roadList.add(_road_6);
-    Road _road_7 = new Road(50, 50, 100, 50, 70);
-    roadList.add(_road_7);
-    Road _road_8 = new Road(20, 20, 50, 20, 50);
-    roadList.add(_road_8);
-    Road _road_9 = new Road(20, 50, 50, 50, 50);
-    roadList.add(_road_9);
-    Road _road_10 = new Road(20, 30, 50, 30, 50);
-    roadList.add(_road_10);
-    Road _road_11 = new Road(20, 20, 20, 30, 50);
-    roadList.add(_road_11);
-    Road _road_12 = new Road(20, 30, 20, 50, 50);
-    roadList.add(_road_12);
-    Road _road_13 = new Road(50, 20, 50, 30, 50);
-    roadList.add(_road_13);
-    Road _road_14 = new Road(50, 30, 50, 50, 50);
-    roadList.add(_road_14);
-    Rectangle2d worldRect = new Rectangle2d();
-    worldRect.setFromCorners((-200), (-200), 200, 200);
-    StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
-    for (final Road road : roadList) {
-      network.addRoadSegment(road);
-    }
-    Point2d p1 = new Point2d(0, 0);
-    Point2d p2 = new Point2d(100, 100);
-    InputOutput.<Road>println(GPS.nextRoad(p1, p2, network));
-    return new RoadNetworkLayer(network);
+  public TrafficLayers getTrafficLayers() {
+    return this.trafficLayers;
+  }
+  
+  @Pure
+  public TrafficLayers getRoads() {
+    ArrayList<Road> roads = TrafficLayers.roadListFactory();
+    ArrayList<RoadObject> cars = new ArrayList<RoadObject>();
+    return new TrafficLayers(roads, cars);
   }
   
   @Override
@@ -89,12 +64,11 @@ public class Simulation extends Application {
     BorderPane root = new BorderPane();
     ShapeReader reader = new ShapeReader();
     File file = new File("src/main/resources/application/quartier_polyline.shp");
-    MapElementLayer<?> _loadShapeFile = this.loadShapeFile(file);
-    RoadNetworkLayer loadedRoads = ((RoadNetworkLayer) _loadShapeFile);
-    MultiMapLayer<RoadNetworkLayer> rootLayer = new MultiMapLayer<RoadNetworkLayer>();
-    rootLayer.addMapLayer(loadedRoads);
-    GisCanvas<MultiMapLayer<RoadNetworkLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<RoadNetworkLayer>>(rootLayer);
-    ZoomablePane<MultiMapLayer<RoadNetworkLayer>> scrollPane = new ZoomablePane<MultiMapLayer<RoadNetworkLayer>>(_gisCanvas);
+    this.trafficLayers = this.getRoads();
+    MultiMapLayer<TrafficLayers> rootLayer = new MultiMapLayer<TrafficLayers>();
+    rootLayer.addMapLayer(this.trafficLayers);
+    GisCanvas<MultiMapLayer<TrafficLayers>> _gisCanvas = new GisCanvas<MultiMapLayer<TrafficLayers>>(rootLayer);
+    ZoomablePane<MultiMapLayer<TrafficLayers>> scrollPane = new ZoomablePane<MultiMapLayer<TrafficLayers>>(_gisCanvas);
     root.setCenter(scrollPane);
     Scene scene = new Scene(root, 1024, 768);
     scene.getStylesheets().add("application.css");
@@ -104,9 +78,11 @@ public class Simulation extends Application {
     primaryStage.setTitle("Traffic Simulation");
     primaryStage.setScene(scene);
     primaryStage.show();
+    SREBootstrap bootstrap = SRE.getBootstrap();
+    bootstrap.startAgent(EnvAgent.class, this.trafficLayers);
   }
   
-  public MapElementLayer<?> loadShapeFile(final File file) {
+  public MapElementLayer<?> loadShapeFile2(final File file) {
     try {
       StandardRoadNetwork network = null;
       MapElementLayer<MapElement> layer = null;
@@ -165,6 +141,83 @@ public class Simulation extends Application {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  public static MultiMapLayer shapeToLayers() {
+    try {
+      ArrayList<Road> list = new ArrayList<Road>();
+      File file = new File("src/main/resources/application/quartier_polyline.shp");
+      GISShapeFileReader reader = new GISShapeFileReader(file);
+      Rectangle2d worldRect = new Rectangle2d();
+      ESRIBounds esriBounds = reader.getBoundsFromHeader();
+      worldRect.setFromCorners(
+        esriBounds.getMinX(), 
+        esriBounds.getMinY(), 
+        esriBounds.getMaxX(), 
+        esriBounds.getMaxY());
+      MultiMapLayer<MapElementLayer<? extends MapElement>> multiMapLayer = new MultiMapLayer<MapElementLayer<? extends MapElement>>();
+      RoadNetworkLayer roadNetworkLayer = null;
+      TreeMapElementLayer<MapElement> mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect);
+      StandardRoadNetwork network = new StandardRoadNetwork(worldRect);
+      ShapeElementType _shapeElementType = reader.getShapeElementType();
+      boolean _equals = Objects.equal(_shapeElementType, ShapeElementType.POLYLINE);
+      if (_equals) {
+        reader.setMapElementType(RoadPolyline.class);
+      }
+      MapElement element = null;
+      int count = 0;
+      while (((element = reader.read()) != null)) {
+        {
+          if ((element instanceof RoadPolyline)) {
+            RoadPolyline sgmt = ((RoadPolyline)element);
+            if ((network == null)) {
+              StandardRoadNetwork _standardRoadNetwork = new StandardRoadNetwork(worldRect);
+              network = _standardRoadNetwork;
+            }
+            Iterable<MapComposedElement.PointGroup> _groups = sgmt.groups();
+            for (final MapComposedElement.PointGroup group : _groups) {
+              for (int i = 0; (i < (IterableExtensions.size(group.points()) - 1)); i++) {
+                {
+                  double _x = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[i].getX();
+                  int xBegin = ((int) _x);
+                  double _y = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[i].getY();
+                  int yBegin = ((int) _y);
+                  double _x_1 = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[(i + 1)].getX();
+                  int xEnd = ((int) _x_1);
+                  double _y_1 = ((Point2d[])Conversions.unwrapArray(group.points(), Point2d.class))[(i + 1)].getY();
+                  int yEnd = ((int) _y_1);
+                  Road road = new Road(xBegin, yBegin, xEnd, yEnd);
+                  network.addRoadSegment(road);
+                }
+              }
+            }
+          }
+          count++;
+        }
+      }
+      RoadNetworkLayer _roadNetworkLayer = new RoadNetworkLayer(network);
+      roadNetworkLayer = _roadNetworkLayer;
+      multiMapLayer.addMapLayer(roadNetworkLayer);
+      multiMapLayer.addMapLayer(mapElementLayer);
+      return multiMapLayer;
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public boolean equals(final Object obj) {
+    return super.equals(obj);
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public int hashCode() {
+    int result = super.hashCode();
+    return result;
   }
   
   @SyntheticMember

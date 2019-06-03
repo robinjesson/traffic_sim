@@ -45,7 +45,7 @@ public class Driver extends Agent {
   protected synchronized void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint) {
     this.currentPoint = startPoint;
     this.arrivalPoint = arrivalPoint;
-    Car _car = new Car(pos1D, firstRoad, 0, 0);
+    Car _car = new Car(pos1D, firstRoad, null);
     this.car = _car;
     this.speed = 0;
   }
