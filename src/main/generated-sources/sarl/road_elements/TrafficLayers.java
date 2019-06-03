@@ -90,11 +90,17 @@ public class TrafficLayers extends MultiMapLayer {
   public static ArrayList<RoadObject> carListFactory(final ArrayList<Road> roads) {
     ArrayList<RoadObject> carList = new ArrayList<RoadObject>();
     for (final Road road : roads) {
-      for (int i = 0; (i < 1); i++) {
-        {
-          int posRandom = 0;
-          Car _car = new Car(posRandom, road, 0, 0);
-          carList.add(_car);
+      {
+        double _random = Math.random();
+        int nbCarRandom = ((int) (_random * 3));
+        for (int i = 0; (i < nbCarRandom); i++) {
+          {
+            double _random_1 = Math.random();
+            double _distanceKilometers = road.getDistanceKilometers();
+            int posRandom = ((int) (_random_1 * _distanceKilometers));
+            Car _car = new Car(posRandom, road, 0, 0);
+            carList.add(_car);
+          }
         }
       }
     }

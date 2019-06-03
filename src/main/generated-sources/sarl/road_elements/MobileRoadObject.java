@@ -17,9 +17,11 @@ import road_elements.RoadObject;
 public class MobileRoadObject extends RoadObject {
   private RoadConnection entryRoadConnection;
   
-  public MobileRoadObject(final int pos1D, final Road currentRoad, final double x, final double y) {
-    super(pos1D, currentRoad, x, y);
-    this.entryRoadConnection = this.entryRoadConnection;
+  public MobileRoadObject(final int pos1D, final Road currentRoad, final RoadConnection entryRoadConnection) {
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The constructor RoadObject(Road, double, double) is not applicable for the arguments (int,Road)"
+      + "\nType mismatch: cannot convert from int to Road"
+      + "\nType mismatch: cannot convert from Road to double");
   }
   
   @Override
@@ -49,5 +51,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 3475038639L;
+  private static final long serialVersionUID = 1650355249L;
 }

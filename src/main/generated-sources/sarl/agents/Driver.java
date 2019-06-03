@@ -4,7 +4,6 @@ import events.ArrivedAtEndRoad;
 import events.Influence;
 import events.Perception;
 import io.sarl.core.DefaultContextInteractions;
-import io.sarl.core.Initialize;
 import io.sarl.core.Logging;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
@@ -77,9 +76,6 @@ public class Driver extends Agent {
     return this.arrivalPoint;
   }
   
-  private void $behaviorUnit$Initialize$2(final Initialize occurrence) {
-  }
-  
   @Extension
   @ImportedCapacityFeature(Logging.class)
   @SyntheticMember
@@ -108,14 +104,6 @@ public class Driver extends Agent {
       this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class);
     }
     return $castSkill(DefaultContextInteractions.class, this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-  }
-  
-  @SyntheticMember
-  @PerceptGuardEvaluator
-  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
-    assert occurrence != null;
-    assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$2(occurrence));
   }
   
   @SyntheticMember

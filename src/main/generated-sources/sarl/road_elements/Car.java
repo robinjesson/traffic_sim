@@ -3,7 +3,6 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
@@ -16,12 +15,9 @@ import road_elements.Road;
 @SuppressWarnings("all")
 public class Car extends MobileRoadObject {
   public Car(final int pos1D, final Road currentRoad, final double x, final double y) {
-    super(pos1D, currentRoad, x, y);
-    Road _road = super.getRoad();
-    if ((_road != null)) {
-      super.getRoad().addObject(this);
-      InputOutput.<Road>println(this.getRoad());
-    }
+    throw new Error("Unresolved compilation problems:"
+      + "\nInvalid number of arguments. The constructor MobileRoadObject(int, Road, RoadConnection) is not applicable for the arguments (int,Road,double,double)"
+      + "\nType mismatch: cannot convert from double to RoadConnection");
   }
   
   @Override
