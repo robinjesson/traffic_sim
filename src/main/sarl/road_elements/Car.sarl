@@ -3,16 +3,18 @@
  */
 package road_elements
 
+import application.Simulation
+
 /** 
  * @author robin
  * 
  */
 class Car extends MobileRoadObject {	
-	new(pos1D : int, currentRoad:Road, x:double, y:double){
+	new(pos1D : int, currentRoad:Road, trafficLayers:TrafficLayers, x:double = 0, y:double = 0){
 		super(pos1D, currentRoad,x,y)
 		if(super.road !== null){
 			super.road.addObject(this)
-			println(road)
 		}
+		trafficLayers.addCar(this)
 	}
 }

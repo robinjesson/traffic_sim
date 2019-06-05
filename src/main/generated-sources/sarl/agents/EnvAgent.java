@@ -1,10 +1,8 @@
 package agents;
 
 import agents.Driver;
-import agents.DriverNormal;
 import events.ArrivedAtDestination;
 import events.Influence;
-import events.Perception;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
 import io.sarl.core.Logging;
@@ -21,10 +19,17 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.arakhne.afc.gis.mapelement.MapElement;
+import org.arakhne.afc.gis.maplayer.MapElementLayer;
+import org.arakhne.afc.gis.road.primitive.RoadSegment;
+import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
+import road_elements.Road;
+import road_elements.TrafficLayers;
 
 /**
  * @author robin
@@ -36,13 +41,16 @@ public class EnvAgent extends Agent {
   private int time = 0;
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.spawn(DriverNormal.class, Integer.valueOf(1));
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    Perception _perception = new Perception();
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_perception);
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was started.");
+    Object _get = occurrence.parameters[0];
+    TrafficLayers tl = ((TrafficLayers) _get);
+    InputOutput.<MapElementLayer<MapElement>>print(tl.getMapElementLayer());
+    RoadSegment _get_1 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[0];
+    Car voiture = new Car(0, ((Road) _get_1), tl);
+    RoadSegment _get_2 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[0];
+    Car voiture3 = new Car(1000, ((Road) _get_2), tl);
+    RoadSegment _get_3 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[2];
+    Car voiture2 = new Car(1, ((Road) _get_3), tl);
+    InputOutput.<MapElementLayer<MapElement>>print(tl.getMapElementLayer());
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {

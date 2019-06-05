@@ -69,31 +69,37 @@ class TrafficLayers extends MultiMapLayer {
 		roadList.add(new Road(50, 30, 50, 50, 50))
 		return roadList
 	}
-	
+	/*
 	def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
-		var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
-		/*for(road:roads){
-			
+		var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()			
+	
+		 for(road:roads){
 			var nbCarRandom = (Math.random() * 3) as int
-			//println(road.distanceKilometers+" "+posRandom)
 			for (var i = 0; i < nbCarRandom; i++) {
 				var posRandom = (Math.random() * road.distanceKilometers) as int
 				carList.add(new Car(posRandom, road, 0, 0))
 			}
-			
-		 * }
-		 */
+		 }
+	
 		for (road : roads) {
-
-			// println(road.distanceKilometers+" "+posRandom)
 			for (var i = 0; i < 1; i++) {
 				var posRandom = 0 as int
-				carList.add(new Car(posRandom, road, 0, 0))
+				carList.add(new Car(posRandom, road,  0, 0))
 			}
-			
 		}
 		return carList
 	}
+		*/
+		def addCar(car : Car) {
+			this.mapElementLayer.addMapElement(car)
+		}
 	
+	def getMapElementLayer() : MapElementLayer<MapElement> {
+		return this.mapElementLayer
+	}
+	
+	def getRoadNetworkLayer() : RoadNetworkLayer {
+		return this.roadNetworkLayer
+	}
 	
 }

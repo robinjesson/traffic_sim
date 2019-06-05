@@ -31,7 +31,7 @@ agent Driver {
 	synchronized def initProperties(pos1D : int, firstRoad : Road, startPoint : Point2d, arrivalPoint : Point2d) : void {
 		this.currentPoint = startPoint
 		this.arrivalPoint = arrivalPoint
-		this.car = new Car(pos1D, firstRoad,0,0)
+		this.car = new Car(pos1D, firstRoad,null)
 		this.speed = 0
 	}
 

@@ -87,18 +87,39 @@ public class TrafficLayers extends MultiMapLayer {
     return roadList;
   }
   
-  public static ArrayList<RoadObject> carListFactory(final ArrayList<Road> roads) {
-    ArrayList<RoadObject> carList = new ArrayList<RoadObject>();
-    for (final Road road : roads) {
-      for (int i = 0; (i < 1); i++) {
-        {
-          int posRandom = 0;
-          Car _car = new Car(posRandom, road, 0, 0);
-          carList.add(_car);
-        }
-      }
-    }
-    return carList;
+  /**
+   * def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
+   * var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
+   * 
+   * for(road:roads){
+   * var nbCarRandom = (Math.random() * 3) as int
+   * for (var i = 0; i < nbCarRandom; i++) {
+   * var posRandom = (Math.random() * road.distanceKilometers) as int
+   * carList.add(new Car(posRandom, road, 0, 0))
+   * }
+   * }
+   * 
+   * for (road : roads) {
+   * for (var i = 0; i < 1; i++) {
+   * var posRandom = 0 as int
+   * carList.add(new Car(posRandom, road,  0, 0))
+   * }
+   * }
+   * return carList
+   * }
+   */
+  public boolean addCar(final Car car) {
+    return this.mapElementLayer.addMapElement(car);
+  }
+  
+  @Pure
+  public MapElementLayer<MapElement> getMapElementLayer() {
+    return this.mapElementLayer;
+  }
+  
+  @Pure
+  public RoadNetworkLayer getRoadNetworkLayer() {
+    return this.roadNetworkLayer;
   }
   
   @Override
@@ -128,5 +149,5 @@ public class TrafficLayers extends MultiMapLayer {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1090961658L;
+  private static final long serialVersionUID = 2859716412L;
 }

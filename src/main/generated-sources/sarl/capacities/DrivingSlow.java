@@ -31,11 +31,13 @@ public class DrivingSlow extends Skill implements Drive {
   }
   
   @Override
+  @Pure
   public int speedUp(final int maxSpeed, final int currentSpeed) {
     return 0;
   }
   
   @Override
+  @Pure
   public int brake(final int currentSpeed) {
     return 0;
   }

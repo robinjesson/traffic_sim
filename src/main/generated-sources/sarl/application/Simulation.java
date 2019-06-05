@@ -1,6 +1,9 @@
 package application;
 
+import agents.EnvAgent;
 import com.google.common.base.Objects;
+import io.sarl.bootstrap.SRE;
+import io.sarl.bootstrap.SREBootstrap;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -9,10 +12,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.arakhne.afc.gis.io.shape.GISShapeFileReader;
 import org.arakhne.afc.gis.mapelement.MapComposedElement;
@@ -34,34 +35,41 @@ import org.arakhne.afc.vmutil.Resources;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import road_elements.Car;
+import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
+import road_elements.RoadObject;
+import road_elements.ShapeReader;
+import road_elements.TrafficLayers;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Simulation extends Application {
-  /**
-   * def getRoads : TrafficLayers {
-   * 
-   * var roads = Simulation::shapeToList
-   * var cars = new ArrayList<RoadObject>()// TrafficLayers::carListFactory(roads)
-   * return new TrafficLayers(roads, cars)
-   * }
-   */
+  private TrafficLayers trafficLayers = new TrafficLayers(new ArrayList<Road>(), new ArrayList<RoadObject>());
+  
+  @Pure
+  public TrafficLayers getTrafficLayers() {
+    return this.trafficLayers;
+  }
+  
+  @Pure
+  public TrafficLayers getRoads() {
+    ArrayList<Road> roads = TrafficLayers.roadListFactory();
+    ArrayList<RoadObject> cars = new ArrayList<RoadObject>();
+    return new TrafficLayers(roads, cars);
+  }
+  
   @Override
   public void start(final Stage primaryStage) throws Exception {
-    File file = new File("src/main/resources/application/roads-line.shp");
-    MultiMapLayer loadedResource = Simulation.shapeToLayers();
     BorderPane root = new BorderPane();
-    Label messageBar = new Label("");
-    messageBar.setTextAlignment(TextAlignment.CENTER);
-    MultiMapLayer<MultiMapLayer> rootLayer = new MultiMapLayer<MultiMapLayer>();
-    rootLayer.addMapLayer(loadedResource);
-    GisCanvas<MultiMapLayer<MultiMapLayer>> _gisCanvas = new GisCanvas<MultiMapLayer<MultiMapLayer>>(rootLayer);
-    ZoomablePane<MultiMapLayer<MultiMapLayer>> scrollPane = new ZoomablePane<MultiMapLayer<MultiMapLayer>>(_gisCanvas);
+    ShapeReader reader = new ShapeReader();
+    File file = new File("src/main/resources/application/quartier_polyline.shp");
+    this.trafficLayers = this.getRoads();
+    MultiMapLayer<TrafficLayers> rootLayer = new MultiMapLayer<TrafficLayers>();
+    rootLayer.addMapLayer(this.trafficLayers);
+    GisCanvas<MultiMapLayer<TrafficLayers>> _gisCanvas = new GisCanvas<MultiMapLayer<TrafficLayers>>(rootLayer);
+    ZoomablePane<MultiMapLayer<TrafficLayers>> scrollPane = new ZoomablePane<MultiMapLayer<TrafficLayers>>(_gisCanvas);
     root.setCenter(scrollPane);
-    root.setBottom(messageBar);
     Scene scene = new Scene(root, 1024, 768);
     scene.getStylesheets().add("application.css");
     InputStream _resourceAsStream = Resources.getResourceAsStream(Simulation.class, "/traffic_light_32.png");
@@ -70,6 +78,8 @@ public class Simulation extends Application {
     primaryStage.setTitle("Traffic Simulation");
     primaryStage.setScene(scene);
     primaryStage.show();
+    SREBootstrap bootstrap = SRE.getBootstrap();
+    bootstrap.startAgent(EnvAgent.class, this.trafficLayers);
   }
   
   public MapElementLayer<?> loadShapeFile2(final File file) {
@@ -156,10 +166,14 @@ public class Simulation extends Application {
       }
       MapElement element = null;
       int count = 0;
-      while ((((element = reader.read()) != null) && (count < 2))) {
+      while (((element = reader.read()) != null)) {
         {
           if ((element instanceof RoadPolyline)) {
             RoadPolyline sgmt = ((RoadPolyline)element);
+            if ((network == null)) {
+              StandardRoadNetwork _standardRoadNetwork = new StandardRoadNetwork(worldRect);
+              network = _standardRoadNetwork;
+            }
             Iterable<MapComposedElement.PointGroup> _groups = sgmt.groups();
             for (final MapComposedElement.PointGroup group : _groups) {
               for (int i = 0; (i < (IterableExtensions.size(group.points()) - 1)); i++) {
@@ -174,8 +188,6 @@ public class Simulation extends Application {
                   int yEnd = ((int) _y_1);
                   Road road = new Road(xBegin, yBegin, xEnd, yEnd);
                   network.addRoadSegment(road);
-                  Car car = new Car(0, road, 0, 0);
-                  mapElementLayer.addMapElement(car);
                 }
               }
             }
@@ -191,6 +203,21 @@ public class Simulation extends Application {
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public boolean equals(final Object obj) {
+    return super.equals(obj);
+  }
+  
+  @Override
+  @Pure
+  @SyntheticMember
+  public int hashCode() {
+    int result = super.hashCode();
+    return result;
   }
   
   @SyntheticMember

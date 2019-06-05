@@ -8,17 +8,14 @@ package application
  * 
  */
 
+import agents.EnvAgent
+import io.sarl.bootstrap.SRE
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
-import java.net.URL
 import java.util.ArrayList
 import javafx.application.Application
 import javafx.scene.Scene
-import javafx.scene.control.Label
 import javafx.scene.image.Image
 import javafx.scene.layout.BorderPane
-import javafx.scene.text.TextAlignment
 import javafx.stage.Stage
 import org.arakhne.afc.gis.io.shape.GISShapeFileReader
 import org.arakhne.afc.gis.mapelement.MapElement
@@ -30,58 +27,59 @@ import org.arakhne.afc.gis.road.StandardRoadNetwork
 import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
 import org.arakhne.afc.gis.road.primitive.RoadNetworkException
 import org.arakhne.afc.gis.ui.GisCanvas
-import org.arakhne.afc.io.dbase.DBaseFileFilter
 import org.arakhne.afc.io.shape.ShapeElementType
-import org.arakhne.afc.math.geometry.d2.d.Point2d
 import org.arakhne.afc.math.geometry.d2.d.Rectangle2d
 import org.arakhne.afc.nodefx.ZoomablePane
-import org.arakhne.afc.vmutil.FileSystem
 import org.arakhne.afc.vmutil.Resources
-import road_elements.*
-
+import road_elements.Road
+import road_elements.RoadObject
+import road_elements.TrafficLayers
 
 class Simulation extends Application {
 
-	/*def getRoads : TrafficLayers {
-
-		var roads = Simulation::shapeToList
+	var trafficLayers = new TrafficLayers(new ArrayList<Road>(), new ArrayList<RoadObject>())
+	
+	def getTrafficLayers : TrafficLayers{
+		return this.trafficLayers;
+	}
+	
+	def getRoads : TrafficLayers {
+		var roads = TrafficLayers::roadListFactory
 		var cars = new ArrayList<RoadObject>()// TrafficLayers::carListFactory(roads)
 		return new TrafficLayers(roads, cars)
-	}*/
+	}
 
 	@Override
 	def start(primaryStage : Stage) throws Exception {
-		// var filename : StringBuilder		
-		// var simpleName = typeof(Test).simpleName
-        
-		var file : File = new File("src/main/resources/application/roads-line.shp")
-        var loadedResource = shapeToLayers()
-		//var loadedResource : RoadNetworkLayer = loadShapeFile2(file) as RoadNetworkLayer
-		
-
 		var root = new BorderPane()
-
-		var messageBar = new Label("")
-		messageBar.setTextAlignment(TextAlignment.CENTER)
-
+		var reader : road_elements.ShapeReader = new road_elements.ShapeReader()
+		
+		var file : File = new File("src/main/resources/application/quartier_polyline.shp")
+		// var file : File = new File("src/main/resources/application/roads-line.shp")
+		
+        // var loadedResourceOK = shapeToLayers()	
+		// var loadedRoads : RoadNetworkLayer = loadShapeFile2(file) as RoadNetworkLayer
+		
+		this.trafficLayers = getRoads()
 		var rootLayer = new MultiMapLayer
-		rootLayer.addMapLayer(loadedResource)
+		rootLayer.addMapLayer(this.trafficLayers)
 
 		var scrollPane = new ZoomablePane(new GisCanvas(rootLayer));
-
+		
 		root.setCenter(scrollPane)
-
-		root.setBottom(messageBar)
 
 		var scene = new Scene(root, 1024, 768)
 		scene.getStylesheets().add("application.css")
-		// scene.stylesheets.add(class.getResource("application.css").toExternalForm)
 		
 		var applicationIcon32 = new Image(Resources::getResourceAsStream(typeof(Simulation), "/traffic_light_32.png"))
 		primaryStage.getIcons().add(applicationIcon32)
 		primaryStage.setTitle("Traffic Simulation")
 		primaryStage.setScene(scene)
 		primaryStage.show()
+		
+		
+		var bootstrap = SRE.getBootstrap()
+		bootstrap.startAgent(EnvAgent,this.trafficLayers)
 	}
 
 	def loadShapeFile2(file : File) : MapElementLayer<?> {
@@ -153,25 +151,26 @@ class Simulation extends Application {
 			esriBounds.getMaxY()
 		)
 		var multiMapLayer = new MultiMapLayer
-		var roadNetworkLayer : RoadNetworkLayer
+		var roadNetworkLayer : RoadNetworkLayer = null
 		var mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect)
-		var network = new StandardRoadNetwork(worldRect)
-
-
 		
+		var network = new StandardRoadNetwork(worldRect)		
 
 		if (reader.getShapeElementType() == ShapeElementType.POLYLINE) {
 			reader.setMapElementType(typeof(RoadPolyline))
 		}
 
 		var element : MapElement
-		var count=0
-		while ((element = reader.read()) !== null && count<2) {
+		var count= 0
+		while ((element = reader.read()) !== null) {
+			
 			if (element instanceof RoadPolyline) {
 				var sgmt = element
 				
+				if (network === null) {
+					network = new StandardRoadNetwork(worldRect);
+				}
 		
-				
 				for(group:sgmt.groups){
 					for(var i=0;i<group.points.size-1;i++){
 						var xBegin = group.points.get(i).x as int
@@ -181,15 +180,16 @@ class Simulation extends Application {
 
 						var road = new Road(xBegin, yBegin, xEnd, yEnd)
 						network.addRoadSegment(road)
-						
+						/*
 						var car : Car = new Car(0, road, 0, 0)
+						//print(car)
 						mapElementLayer.addMapElement(car)
-						
-						//println(road)
+						//print(mapElementLayer)
+						*/
 					}
 				}
 				
-			}
+			} 
 			count++
 		}
 		
