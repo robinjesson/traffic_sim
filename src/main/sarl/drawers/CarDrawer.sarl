@@ -13,7 +13,6 @@ class CarDrawer implements Drawer<Car> {
 	def draw(gc:ZoomableGraphicsContext, element:Car):void {
 		var currentRoad:Road=element.road
 		var pos1D:int=element.getPos1D(); 
-		println(pos1D)
 		var t:double=0;
 		/*if(element.isOnRight()) */
 			t=pos1D/currentRoad.getDistanceKilometers();

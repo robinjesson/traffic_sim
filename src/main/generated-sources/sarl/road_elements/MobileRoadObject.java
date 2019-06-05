@@ -7,6 +7,7 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 import road_elements.RoadObject;
+import road_elements.TrafficLayers;
 
 /**
  * @author tiantian
@@ -17,8 +18,15 @@ import road_elements.RoadObject;
 public class MobileRoadObject extends RoadObject {
   private RoadConnection entryRoadConnection;
   
-  public MobileRoadObject(final int pos1D, final Road currentRoad) {
+  private TrafficLayers trafficLayers;
+  
+  public MobileRoadObject(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
     super(pos1D, currentRoad);
+    this.trafficLayers = trafficLayers;
+  }
+  
+  public void removeFromLayer() {
+    this.trafficLayers.getMapElementLayer().removeMapElement(this);
   }
   
   @Override
@@ -48,5 +56,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 4014466383L;
+  private static final long serialVersionUID = 1863120533L;
 }

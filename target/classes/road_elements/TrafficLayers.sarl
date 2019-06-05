@@ -89,10 +89,19 @@ class TrafficLayers extends MultiMapLayer {
 		}
 		return carList
 	}
-		*/
-		def addCar(car : Car) {
-			this.mapElementLayer.addMapElement(car)
-		}
+	*/
+	
+	def addCar(car : Car) {
+		this.mapElementLayer.addMapElement(car)
+	}
+	
+	def removeCar(car : Car) : void{
+		this.mapElementLayer.removeMapElement(car)
+	}
+	
+	def refresh : void{
+		this.mapElementLayer.repaint
+	}
 	
 	def getMapElementLayer() : MapElementLayer<MapElement> {
 		return this.mapElementLayer

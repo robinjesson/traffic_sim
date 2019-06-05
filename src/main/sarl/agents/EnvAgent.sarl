@@ -24,6 +24,8 @@ import org.arakhne.afc.gis.road.primitive.RoadNetwork
 import io.sarl.core.Lifecycle
 import java.util.UUID
 import java.util.TreeMap
+import events.ArrivedAtEndRoad
+import events.MoveForward
 
 /** 
  * @author robin
@@ -51,30 +53,41 @@ agent EnvAgent {
 		 */
 		// print(tl.mapElementLayer)
 		spawnCarAndAgent
-		emit(new Perception)
+		spawnCarAndAgent
+		//emit(new Perception)[elt|elt.UUID==id]
 	}
 
 	on Influence {
-		/*var car = occurrence.influencedCar
-		var ^agent = occurrence.^agent as Driver
-		// info("influence"+ car.toString)
-		var xAgent = ^agent.arrivalPoint.x
-		var yAgent = ^agent.arrivalPoint.y
-		if (car.x == xAgent && car.y == yAgent)
-			emit(new ArrivedAtDestination())*/
-		var influencedCar = this.getCarByAgentId(occurrence.agentId)
-		//influencedCar.pos1D=influencedCar.pos1D+1 // ATTENTION les voitures ne sont dessinés qu'une fois
-		//info("influence")
-		emit(new Perception)
+		var agentId = occurrence.agentId
+		var car = this.getCarByAgentId(agentId)
+		
+		
+		if(car.coordinates.equals(occurrence.arrivalPoint)){
+			emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
+			return;
+		}
+		if(car.coordinates.equals(car.road.end)){
+			emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
+			return;
+		}
+		car.pos1D = car.pos1D + 1  // ATTENTION les voitures ne bougent pas : il faut zoomer/dézoomer pouvoir l'avancement
+		info("influence")
+		emit(new MoveForward)
+		
+		
+		
 	}
 
-	def spawnCarAndAgent() : UUID {
+
+	def spawnCarAndAgent(time:int=0) : UUID {
+		while(this.time<0){}
+		
 		var nbRoads = this.network.roadSegments.size
 		var indexRoadRandom = (Math.random() * nbRoads) as int
 		var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
 		//A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
 		var car = new Car(0, selectedRoad, this.trafficLayers)
-		var id = DriverNormal.spawn(car)
+		var id = DriverNormal.spawn(car,this.network)
 		agentId_Cars.put(id,car)
 		return id
 	}

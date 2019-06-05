@@ -10,7 +10,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
-import org.eclipse.xtext.xbase.lib.InputOutput;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
@@ -83,6 +83,16 @@ public class Road extends RoadPolyline {
   @Pure
   public int getEndY() {
     return this.endY;
+  }
+  
+  @Pure
+  public Point2d getBegin() {
+    return new Point2d(this.beginX, this.beginY);
+  }
+  
+  @Pure
+  public Point2d getEnd() {
+    return new Point2d(this.endX, this.endY);
   }
   
   public boolean addObject(final RoadObject obj) {
@@ -169,19 +179,6 @@ public class Road extends RoadPolyline {
     throw new IllegalArgumentException("This UUID doesn\'t exist");
   }
   
-  public void disp() {
-    InputOutput.<String>println(("    beginX=" + Integer.valueOf(this.beginX)));
-    InputOutput.<String>println(("    beginY=" + Integer.valueOf(this.beginY)));
-    InputOutput.<String>println(("    endX=" + Integer.valueOf(this.endX)));
-    InputOutput.<String>println(("    endY=" + Integer.valueOf(this.endY)));
-    InputOutput.<String>print("    [");
-    for (final RoadObject obj : this.objects) {
-      String _plus = (obj + " ");
-      InputOutput.<String>print(_plus);
-    }
-    InputOutput.<String>print("]");
-  }
-  
   @DefaultValueUse("int,int,int,int,int")
   @SyntheticMember
   public Road(final int beginX, final int beginY, final int endX, final int endY) {
@@ -241,5 +238,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10593594356L;
+  private static final long serialVersionUID = -10461596596L;
 }

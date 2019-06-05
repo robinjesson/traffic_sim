@@ -12,9 +12,15 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection
 class MobileRoadObject extends RoadObject {
 	
 	var entryRoadConnection : RoadConnection
+	var trafficLayers : TrafficLayers
 
-	new(pos1D : int, currentRoad : Road/*entryRoadConnection : RoadConnection*/) {
+	new(pos1D : int, currentRoad : Road, trafficLayers:TrafficLayers/* entryRoadConnection : RoadConnection*/) {
 		super(pos1D, currentRoad)
+		this.trafficLayers=trafficLayers
 		//this.entryRoadConnection = entryRoadConnection
+	}
+	
+	def removeFromLayer:void{
+		this.trafficLayers.mapElementLayer.removeMapElement(this)
 	}
 }

@@ -1,10 +1,10 @@
 package events;
 
-import events.Perception;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Address;
+import io.sarl.lang.core.Event;
 
 /**
  * @author robin
@@ -12,7 +12,7 @@ import io.sarl.lang.core.Address;
 @SarlSpecification("0.9")
 @SarlElementType(15)
 @SuppressWarnings("all")
-public class ArrivedAtDestination extends Perception {
+public class ArrivedAtDestination extends Event {
   @SyntheticMember
   public ArrivedAtDestination() {
     super();
@@ -24,5 +24,5 @@ public class ArrivedAtDestination extends Perception {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -698425157L;
+  private static final long serialVersionUID = 588368462L;
 }

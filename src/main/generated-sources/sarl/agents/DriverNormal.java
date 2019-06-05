@@ -3,6 +3,7 @@ package agents;
 import agents.Driver;
 import capacities.Drive;
 import capacities.DrivingNormal;
+import events.Influence;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Destroy;
 import io.sarl.core.Initialize;
@@ -19,6 +20,7 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
@@ -37,8 +39,14 @@ public class DriverNormal extends Driver {
     this.<DrivingNormal>setSkill(_drivingNormal);
     Object _get = occurrence.parameters[0];
     Car car = ((Car) _get);
-    Point2d _point2d = new Point2d(100, 100);
-    super.initProperties(car, _point2d);
+    Object _get_1 = occurrence.parameters[1];
+    RoadNetwork network = ((RoadNetwork) _get_1);
+    Point2d _point2d = new Point2d(0, 0);
+    super.initProperties(car, _point2d, network);
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    UUID _iD = this.getID();
+    Influence _influence = new Influence(_iD, this.arrivalPoint);
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
   }
   
   private void $behaviorUnit$Destroy$1(final Destroy occurrence) {

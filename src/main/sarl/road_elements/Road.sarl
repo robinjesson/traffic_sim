@@ -3,6 +3,7 @@ package road_elements
 import java.util.ArrayList
 import java.util.UUID
 import org.arakhne.afc.gis.road.RoadPolyline
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * 
@@ -52,6 +53,14 @@ class Road extends RoadPolyline {
 
 	def getEndY : int {
 		return this.endY
+	}
+	
+	public def getBegin : Point2d{
+		return new Point2d(this.beginX,this.beginY)
+	}
+
+	def getEnd : Point2d {
+		return new Point2d(this.endX, this.endY)
 	}
 	
 	def addObject(obj : RoadObject){
@@ -124,15 +133,5 @@ class Road extends RoadPolyline {
 	}
 	
 
-	def disp : void{
-		println("    beginX=" + this.beginX)
-		println("    beginY=" + this.beginY)
-		println("    endX=" + this.endX)
-		println("    endY=" + this.endY)
-		print("    [")
-		for(obj:this.objects){
-			print(obj+" ")
-		}
-		print("]")
-	}
+	
 }

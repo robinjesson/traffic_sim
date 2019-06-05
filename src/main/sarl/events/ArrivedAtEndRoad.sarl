@@ -7,4 +7,4 @@ package events
  * @author robin
  * 
  */
-event ArrivedAtEndRoad extends Perception
+event ArrivedAtEndRoad

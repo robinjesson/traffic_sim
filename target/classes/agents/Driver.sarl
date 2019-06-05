@@ -14,6 +14,10 @@ import io.sarl.core.Logging
 import io.sarl.core.DefaultContextInteractions
 import events.ArrivedAtEndRoad
 import io.sarl.core.Initialize
+import java.util.ArrayList
+import events.ArrivedAtDestination
+import io.sarl.core.Lifecycle
+import events.MoveForward
 
 /** 
  * @author robin
@@ -22,34 +26,40 @@ import io.sarl.core.Initialize
 agent Driver {
 	uses Logging
 	uses DefaultContextInteractions
+	uses Lifecycle
 	
 	protected var currentPoint : Point2d
 	protected var arrivalPoint : Point2d
 	protected var car : Car
-	protected var speed:int
+	protected var speed : int
+	protected var gps : GPS
 
-	synchronized def initProperties(car : Car, arrivalPoint : Point2d) : void {
+	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
 		this.car=car
-		
-		
-		
 		this.currentPoint = this.car.coordinates
 		this.arrivalPoint = arrivalPoint
 		this.speed = 0
+		this.gps=new GPS(this.currentPoint,this.arrivalPoint,network)
 	}
 
 	on ArrivedAtEndRoad {
-		var nextRoadToTake : Road 
 		synchronized (this) {
-			nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.car.getRoad().getRoadNetwork())
+			var nextRoadToTake : Road 
+			nextRoadToTake = this.gps.nextRoad
 			this.car.road = nextRoadToTake
 			this.car.pos1D=0
 		}
+		emit(new Influence(this.ID, this.arrivalPoint))
+	}
+	
+	on ArrivedAtDestination{
+		this.car.removeFromLayer
+		killMe
 	}
 
-	on Perception {
-		//info("perception")
-		emit(new Influence(this.ID))
+	on MoveForward {
+		Thread.sleep(500)
+		emit(new Influence(this.ID, this.arrivalPoint))
 
 	}
 	
@@ -57,7 +67,7 @@ agent Driver {
 		return this.currentPoint
 	}
 
-	def getArrivalPoint : Point2d {
+	def getArrivalPoint : Point2d { 
 		return this.arrivalPoint
 	}
 

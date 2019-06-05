@@ -16,7 +16,7 @@ import road_elements.TrafficLayers;
 @SuppressWarnings("all")
 public class Car extends MobileRoadObject {
   public Car(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
-    super(pos1D, currentRoad);
+    super(pos1D, currentRoad, trafficLayers);
     Road _road = super.getRoad();
     if ((_road != null)) {
       super.getRoad().addObject(this);

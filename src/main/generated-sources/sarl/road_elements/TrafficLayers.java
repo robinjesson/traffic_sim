@@ -112,6 +112,14 @@ public class TrafficLayers extends MultiMapLayer {
     return this.mapElementLayer.addMapElement(car);
   }
   
+  public void removeCar(final Car car) {
+    this.mapElementLayer.removeMapElement(car);
+  }
+  
+  public void refresh() {
+    this.mapElementLayer.repaint();
+  }
+  
   @Pure
   public MapElementLayer<MapElement> getMapElementLayer() {
     return this.mapElementLayer;
@@ -149,5 +157,5 @@ public class TrafficLayers extends MultiMapLayer {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 2859716412L;
+  private static final long serialVersionUID = 2726919203L;
 }
