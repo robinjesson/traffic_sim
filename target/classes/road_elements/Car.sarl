@@ -11,7 +11,7 @@ import application.Simulation
  */
 class Car extends MobileRoadObject {	
 	new(pos1D : int, currentRoad:Road, trafficLayers:TrafficLayers){
-		super(pos1D, currentRoad,0,0)
+		super(pos1D, currentRoad)
 		if(super.road !== null){
 			super.road.addObject(this)
 		}

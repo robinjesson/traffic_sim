@@ -63,7 +63,7 @@ agent EnvAgent {
 		if (car.x == xAgent && car.y == yAgent)
 			emit(new ArrivedAtDestination())*/
 		var influencedCar = this.getCarByAgentId(occurrence.agentId)
-		influencedCar.pos1D=influencedCar.pos1D+1 // ATTENTION les voitures ne sont dessinés qu'une fois
+		//influencedCar.pos1D=influencedCar.pos1D+1 // ATTENTION les voitures ne sont dessinés qu'une fois
 		//info("influence")
 		emit(new Perception)
 	}

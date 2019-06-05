@@ -27,7 +27,7 @@ class RoadTest {
 	@BeforeAll
 	static void setUp() {
 		road = new Road(10,20,30,40,50);
-		tLight = new TrafficLight(4,null,0,0);
+		tLight = new TrafficLight(4,null);
 		car = new Car(3,null,null);
 		car2 = new Car(4,null,null);
 		road.addObject(car);

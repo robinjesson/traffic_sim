@@ -13,8 +13,8 @@ class MobileRoadObject extends RoadObject {
 	
 	var entryRoadConnection : RoadConnection
 
-	new(pos1D : int, currentRoad : Road, x: double, y:double /*entryRoadConnection : RoadConnection*/) {
-		super(pos1D, currentRoad, x, y)
+	new(pos1D : int, currentRoad : Road/*entryRoadConnection : RoadConnection*/) {
+		super(pos1D, currentRoad)
 		//this.entryRoadConnection = entryRoadConnection
 	}
 }

@@ -14,8 +14,8 @@ import road_elements.RoadObject;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class TrafficLight extends RoadObject {
-  public TrafficLight(final int pos1D, final Road currentRoad, final double x, final double y) {
-    super(pos1D, currentRoad, x, y);
+  public TrafficLight(final int pos1D, final Road currentRoad) {
+    super(pos1D, currentRoad);
   }
   
   @Override
@@ -30,5 +30,5 @@ public class TrafficLight extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 637790605L;
+  private static final long serialVersionUID = 1177218349L;
 }

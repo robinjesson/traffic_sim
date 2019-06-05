@@ -38,8 +38,8 @@ class RoadObject extends MapCircle {
 	var road : Road
 	// var onRight : boolean
 	
-	new(pos1D : int = 0 , road:Road, x:double, y:double){
-		super(x,y,10)
+	new(pos1D : int = 0 , road:Road){
+		super(0,0,10)
 		this.pos1D = pos1D;
 		this.uuid = UUID::randomUUID
 		this.road = road

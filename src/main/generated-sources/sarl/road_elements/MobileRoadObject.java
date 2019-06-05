@@ -17,8 +17,8 @@ import road_elements.RoadObject;
 public class MobileRoadObject extends RoadObject {
   private RoadConnection entryRoadConnection;
   
-  public MobileRoadObject(final int pos1D, final Road currentRoad, final double x, final double y) {
-    super(pos1D, currentRoad, x, y);
+  public MobileRoadObject(final int pos1D, final Road currentRoad) {
+    super(pos1D, currentRoad);
   }
   
   @Override
@@ -48,5 +48,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 3475038639L;
+  private static final long serialVersionUID = 4014466383L;
 }

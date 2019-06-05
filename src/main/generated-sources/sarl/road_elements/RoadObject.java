@@ -28,8 +28,8 @@ public class RoadObject extends MapCircle {
   private Road road;
   
   @DefaultValueSource
-  public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final int pos1D, final Road road, final double x, final double y) {
-    super(x, y, 10);
+  public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final int pos1D, final Road road) {
+    super(0, 0, 10);
     this.pos1D = pos1D;
     this.uuid = UUID.randomUUID();
     this.road = road;
@@ -73,10 +73,10 @@ public class RoadObject extends MapCircle {
     return new Point2d(x, y);
   }
   
-  @DefaultValueUse("int,road_elements.Road,double,double")
+  @DefaultValueUse("int,road_elements.Road")
   @SyntheticMember
-  public RoadObject(final Road road, final double x, final double y) {
-    this($DEFAULT_VALUE$NEW_0, road, x, y);
+  public RoadObject(final Road road) {
+    this($DEFAULT_VALUE$NEW_0, road);
   }
   
   @Override
@@ -121,5 +121,5 @@ public class RoadObject extends MapCircle {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1190351113L;
+  private static final long serialVersionUID = 1729778857L;
 }
