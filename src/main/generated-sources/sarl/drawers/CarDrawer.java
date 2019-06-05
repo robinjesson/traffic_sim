@@ -6,6 +6,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import javafx.scene.paint.Color;
 import org.arakhne.afc.nodefx.Drawer;
 import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.Road;
@@ -20,6 +21,7 @@ public class CarDrawer implements Drawer<Car> {
   public void draw(final ZoomableGraphicsContext gc, final Car element) {
     Road currentRoad = element.getRoad();
     int pos1D = element.getPos1D();
+    InputOutput.<Integer>println(Integer.valueOf(pos1D));
     double t = 0;
     double _distanceKilometers = currentRoad.getDistanceKilometers();
     t = (pos1D / _distanceKilometers);
@@ -33,6 +35,7 @@ public class CarDrawer implements Drawer<Car> {
     gc.setStroke(Color.RED);
     gc.fillRect((x - (CarDrawer.width / 2)), (y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
     gc.strokeRect((x - (CarDrawer.width / 2)), (y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
+    gc.restore();
   }
   
   @Override

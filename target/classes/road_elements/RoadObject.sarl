@@ -20,6 +20,7 @@ import org.arakhne.afc.gis.mapelement.MapPoint
 import org.arakhne.afc.gis.primitive.GISElement
 import org.arakhne.afc.vmutil.json.JsonBuffer
 import org.arakhne.afc.gis.mapelement.MapCircle
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * 
@@ -59,6 +60,13 @@ class RoadObject extends MapCircle {
 	
 	def setPos1D(pos1D : int) : void {
 		this.pos1D = pos1D
+	}
+	
+	def getCoordinates : Point2d {
+		var t = pos1D / this.road.getDistanceKilometers();
+		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
+		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
+		return new Point2d(x,y)
 	}
 	
 	/*def isOnRight :boolean{

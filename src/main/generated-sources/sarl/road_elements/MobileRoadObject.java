@@ -19,7 +19,6 @@ public class MobileRoadObject extends RoadObject {
   
   public MobileRoadObject(final int pos1D, final Road currentRoad, final double x, final double y) {
     super(pos1D, currentRoad, x, y);
-    this.entryRoadConnection = this.entryRoadConnection;
   }
   
   @Override

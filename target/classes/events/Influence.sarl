@@ -13,11 +13,9 @@ import agents.Driver
  * 
  */
 event Influence{
-	var influencedCar:Car
-	var ^agent:Agent
+	var agentId:UUID
 	
-	new(car : Car, ^agent:Driver){
-		this.influencedCar = car
-		this.^agent=^agent
+	new(agentId:UUID){
+		this.agentId=agentId
 	}
 }

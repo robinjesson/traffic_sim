@@ -1,14 +1,13 @@
 package events;
 
-import agents.Driver;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import io.sarl.lang.core.Agent;
 import io.sarl.lang.core.Event;
+import java.util.Objects;
+import java.util.UUID;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
-import road_elements.Car;
 
 /**
  * @author robin
@@ -17,19 +16,26 @@ import road_elements.Car;
 @SarlElementType(15)
 @SuppressWarnings("all")
 public class Influence extends Event {
-  public Car influencedCar;
+  public UUID agentId;
   
-  public Agent agent;
-  
-  public Influence(final Car car, final Driver agent) {
-    this.influencedCar = car;
-    this.agent = agent;
+  public Influence(final UUID agentId) {
+    this.agentId = agentId;
   }
   
   @Override
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Influence other = (Influence) obj;
+    if (!Objects.equals(this.agentId, other.agentId)) {
+      return false;
+    }
     return super.equals(obj);
   }
   
@@ -38,6 +44,8 @@ public class Influence extends Event {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
+    final int prime = 31;
+    result = prime * result + Objects.hashCode(this.agentId);
     return result;
   }
   
@@ -48,10 +56,9 @@ public class Influence extends Event {
   @Pure
   protected void toString(final ToStringBuilder builder) {
     super.toString(builder);
-    builder.add("influencedCar", this.influencedCar);
-    builder.add("agent", this.agent);
+    builder.add("agentId", this.agentId);
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -184095211L;
+  private static final long serialVersionUID = 1641586949L;
 }

@@ -10,6 +10,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import java.util.Objects;
 import java.util.UUID;
 import org.arakhne.afc.gis.mapelement.MapCircle;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
@@ -57,6 +58,19 @@ public class RoadObject extends MapCircle {
   
   public void setPos1D(final int pos1D) {
     this.pos1D = pos1D;
+  }
+  
+  @Pure
+  public Point2d getCoordinates() {
+    double _distanceKilometers = this.road.getDistanceKilometers();
+    double t = (this.pos1D / _distanceKilometers);
+    int _beginX = this.road.getBeginX();
+    int _endX = this.road.getEndX();
+    double x = (((1 - t) * _beginX) + (t * _endX));
+    int _beginY = this.road.getBeginY();
+    int _endY = this.road.getEndY();
+    double y = (((1 - t) * _beginY) + (t * _endY));
+    return new Point2d(x, y);
   }
   
   @DefaultValueUse("int,road_elements.Road,double,double")
@@ -107,5 +121,5 @@ public class RoadObject extends MapCircle {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1663872184L;
+  private static final long serialVersionUID = 1190351113L;
 }

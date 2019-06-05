@@ -25,8 +25,9 @@ agent DriverNormal extends Driver {
 	uses Drive
 	
 	on Initialize{
-		//setSkill(new DrivingNormal)
-		super.initProperties(0,null, new Point2d(0, 0), new Point2d(100, 100))
+		setSkill(new DrivingNormal)
+		var car = occurrence.parameters.get(0) as Car
+		super.initProperties(car, new Point2d(100, 100))
 		
 	}
 	

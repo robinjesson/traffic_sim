@@ -1,10 +1,11 @@
 package agents;
 
-import agents.Driver;
-import events.ArrivedAtDestination;
+import agents.DriverNormal;
 import events.Influence;
+import events.Perception;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
+import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
@@ -17,15 +18,14 @@ import io.sarl.lang.core.DynamicSkillProvider;
 import io.sarl.lang.core.Skill;
 import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
+import java.util.TreeMap;
 import java.util.UUID;
 import javax.inject.Inject;
-import org.arakhne.afc.gis.mapelement.MapElement;
-import org.arakhne.afc.gis.maplayer.MapElementLayer;
+import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.Road;
@@ -40,29 +40,47 @@ import road_elements.TrafficLayers;
 public class EnvAgent extends Agent {
   private int time = 0;
   
+  private RoadNetwork network;
+  
+  private TrafficLayers trafficLayers;
+  
+  private final TreeMap<UUID, Car> agentId_Cars = new TreeMap<UUID, Car>();
+  
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     Object _get = occurrence.parameters[0];
-    TrafficLayers tl = ((TrafficLayers) _get);
-    InputOutput.<MapElementLayer<MapElement>>print(tl.getMapElementLayer());
-    RoadSegment _get_1 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[0];
-    Car voiture = new Car(0, ((Road) _get_1), tl);
-    RoadSegment _get_2 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[0];
-    Car voiture3 = new Car(1000, ((Road) _get_2), tl);
-    RoadSegment _get_3 = ((RoadSegment[])Conversions.unwrapArray(tl.getRoadNetworkLayer().getRoadNetwork().getRoadSegments(), RoadSegment.class))[2];
-    Car voiture2 = new Car(1, ((Road) _get_3), tl);
-    InputOutput.<MapElementLayer<MapElement>>print(tl.getMapElementLayer());
+    this.trafficLayers = ((TrafficLayers) _get);
+    this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
+    this.spawnCarAndAgent();
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    Perception _perception = new Perception();
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_perception);
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
-    Car car = occurrence.influencedCar;
-    Driver agent = ((Driver) occurrence.agent);
-    double xAgent = agent.arrivalPoint.getX();
-    double yAgent = agent.arrivalPoint.getY();
-    if (((car.getX() == xAgent) && (car.getY() == yAgent))) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      ArrivedAtDestination _arrivedAtDestination = new ArrivedAtDestination();
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_arrivedAtDestination);
-    }
+    Car influencedCar = this.getCarByAgentId(occurrence.agentId);
+    int _pos1D = influencedCar.getPos1D();
+    influencedCar.setPos1D((_pos1D + 1));
+    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+    Perception _perception = new Perception();
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_perception);
+  }
+  
+  protected UUID spawnCarAndAgent() {
+    int nbRoads = this.network.getRoadSegments().size();
+    double _random = Math.random();
+    int indexRoadRandom = ((int) (_random * nbRoads));
+    RoadSegment _get = ((RoadSegment[])Conversions.unwrapArray(this.network.getRoadSegments(), RoadSegment.class))[indexRoadRandom];
+    Road selectedRoad = ((Road) _get);
+    Car car = new Car(0, selectedRoad, this.trafficLayers);
+    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+    UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(DriverNormal.class, car);
+    this.agentId_Cars.put(id, car);
+    return id;
+  }
+  
+  @Pure
+  protected Car getCarByAgentId(final UUID agentId) {
+    return this.agentId_Cars.get(agentId);
   }
   
   @Extension
@@ -93,6 +111,21 @@ public class EnvAgent extends Agent {
       this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = $getSkill(DefaultContextInteractions.class);
     }
     return $castSkill(DefaultContextInteractions.class, this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+  }
+  
+  @Extension
+  @ImportedCapacityFeature(Lifecycle.class)
+  @SyntheticMember
+  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_LIFECYCLE;
+  
+  @SyntheticMember
+  @Pure
+  @Inline(value = "$castSkill(Lifecycle.class, ($0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || $0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $0$getSkill(Lifecycle.class)) : $0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE)", imported = Lifecycle.class)
+  private Lifecycle $CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER() {
+    if (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) {
+      this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class);
+    }
+    return $castSkill(Lifecycle.class, this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
   }
   
   @SyntheticMember

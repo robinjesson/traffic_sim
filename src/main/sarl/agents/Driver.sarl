@@ -28,10 +28,13 @@ agent Driver {
 	protected var car : Car
 	protected var speed:int
 
-	synchronized def initProperties(pos1D : int, firstRoad : Road, startPoint : Point2d, arrivalPoint : Point2d) : void {
-		this.currentPoint = startPoint
+	synchronized def initProperties(car : Car, arrivalPoint : Point2d) : void {
+		this.car=car
+		
+		
+		
+		this.currentPoint = this.car.coordinates
 		this.arrivalPoint = arrivalPoint
-		this.car = new Car(pos1D, firstRoad,null)
 		this.speed = 0
 	}
 
@@ -45,8 +48,8 @@ agent Driver {
 	}
 
 	on Perception {
-		info("perception")
-		emit(new Influence(this.car,this))
+		//info("perception")
+		emit(new Influence(this.ID))
 
 	}
 	

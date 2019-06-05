@@ -42,11 +42,10 @@ public class Driver extends Agent {
   
   protected int speed;
   
-  protected synchronized void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint) {
-    this.currentPoint = startPoint;
+  protected synchronized void initProperties(final Car car, final Point2d arrivalPoint) {
+    this.car = car;
+    this.currentPoint = this.car.getCoordinates();
     this.arrivalPoint = arrivalPoint;
-    Car _car = new Car(pos1D, firstRoad, null);
-    this.car = _car;
     this.speed = 0;
   }
   
@@ -60,10 +59,9 @@ public class Driver extends Agent {
   }
   
   private void $behaviorUnit$Perception$1(final Perception occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("perception");
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    Influence _influence = new Influence(this.car, this);
+    UUID _iD = this.getID();
+    Influence _influence = new Influence(_iD);
     _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
   }
   
