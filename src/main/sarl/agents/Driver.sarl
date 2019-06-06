@@ -18,6 +18,7 @@ import java.util.ArrayList
 import events.ArrivedAtDestination
 import io.sarl.core.Lifecycle
 import events.MoveForward
+import org.arakhne.afc.gis.road.primitive.RoadConnection
 
 /** 
  * @author robin
@@ -33,6 +34,7 @@ agent Driver {
 	protected var car : Car
 	protected var speed : int
 	protected var gps : GPS
+	protected var normalDirection = true
 
 	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
 		this.car=car
@@ -40,26 +42,53 @@ agent Driver {
 		this.arrivalPoint = arrivalPoint
 		this.speed = 0
 		this.gps=new GPS(this.currentPoint,this.arrivalPoint,network)
+		
 	}
 
 	on ArrivedAtEndRoad {
+		info("ARRIVED END OF ROAD")
 		synchronized (this) {
-			var nextRoadToTake : Road 
-			nextRoadToTake = this.gps.nextRoad
+			var nextRoadToTake = this.gps.nextRoad
+			if(nextRoadToTake===null)
+				this.killThis
+				
 			this.car.road = nextRoadToTake
-			this.car.pos1D=0
+			info(nextRoadToTake.beginX + " " + nextRoadToTake.beginY + "; " + nextRoadToTake.endX + " " + nextRoadToTake.endY)
+			info(this.car.coordinates)
+			if(this.currentPoint.equals(nextRoadToTake.begin)){
+				this.car.pos1D = 0
+				this.normalDirection=true
+			}
+			else if(this.currentPoint.equals(nextRoadToTake.end)){
+				this.car.pos1D = this.car.road.distanceKilometers
+				this.normalDirection=false
+			}
+			emit(new Influence(this.ID, this.arrivalPoint))
 		}
-		emit(new Influence(this.ID, this.arrivalPoint))
+		
 	}
 	
-	on ArrivedAtDestination{
+	on ArrivedAtDestination {
+		this.killThis
+	}
+	
+	def killThis : void {
 		this.car.removeFromLayer
 		killMe
 	}
 
 	on MoveForward {
-		Thread.sleep(500)
-		emit(new Influence(this.ID, this.arrivalPoint))
+		synchronized(this){
+			if(this.normalDirection){
+				this.car.pos1D = this.car.pos1D + 1 // ATTENTION les voitures ne bougent pas : il faut zoomer/dézoomer pouvoir l'avancement
+			}
+			else {
+				this.car.pos1D = this.car.pos1D - 1
+			}
+			this.currentPoint=this.car.coordinates
+			Thread.sleep(250)
+			emit(new Influence(this.ID, this.arrivalPoint))
+		}
 
 	}
 	

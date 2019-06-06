@@ -29,9 +29,13 @@ public class GPS {
   
   @Pure
   public Road getNextRoad() {
-    Road r = this.listRoads.get(0);
-    this.listRoads.remove(0);
-    return r;
+    boolean _hastNextRoad = this.hastNextRoad();
+    if (_hastNextRoad) {
+      Road r = this.listRoads.get(0);
+      this.listRoads.remove(0);
+      return r;
+    }
+    return null;
   }
   
   @Pure

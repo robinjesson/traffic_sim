@@ -3,6 +3,7 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
@@ -25,6 +26,20 @@ public class Car extends MobileRoadObject {
   }
   
   @Override
+  public Point2d getCoordinates() {
+    double _pos1D = this.getPos1D();
+    double _distanceKilometers = this.getRoad().getDistanceKilometers();
+    double t = (_pos1D / _distanceKilometers);
+    int _beginX = this.getRoad().getBeginX();
+    int _endX = this.getRoad().getEndX();
+    double x = (((1 - t) * _beginX) + (t * _endX));
+    int _beginY = this.getRoad().getBeginY();
+    int _endY = this.getRoad().getEndY();
+    double y = (((1 - t) * _beginY) + (t * _endY));
+    return new Point2d(x, y);
+  }
+  
+  @Override
   @Pure
   @SyntheticMember
   public Car clone() {
@@ -36,5 +51,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -201813286L;
+  private static final long serialVersionUID = -675334357L;
 }

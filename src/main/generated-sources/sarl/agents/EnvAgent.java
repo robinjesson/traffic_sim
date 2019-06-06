@@ -62,7 +62,6 @@ public class EnvAgent extends Agent {
     this.trafficLayers = ((TrafficLayers) _get);
     this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
     this.spawnCarAndAgent();
-    this.spawnCarAndAgent();
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
@@ -130,13 +129,33 @@ public class EnvAgent extends Agent {
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_arrivedAtEndRoad, _function_1);
       return;
     }
-    int _pos1D = car.getPos1D();
-    car.setPos1D((_pos1D + 1));
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("influence");
     DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
     MoveForward _moveForward = new MoveForward();
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_moveForward);
+    class $SerializableClosureProxy_2 implements Scope<Address> {
+      
+      private final UUID agentId;
+      
+      public $SerializableClosureProxy_2(final UUID agentId) {
+        this.agentId = agentId;
+      }
+      
+      @Override
+      public boolean matches(final Address elt) {
+        UUID _uUID = elt.getUUID();
+        return Objects.equal(_uUID, agentId);
+      }
+    }
+    final Scope<Address> _function_2 = new Scope<Address>() {
+      @Override
+      public boolean matches(final Address elt) {
+        UUID _uUID = elt.getUUID();
+        return Objects.equal(_uUID, agentId);
+      }
+      private Object writeReplace() throws ObjectStreamException {
+        return new SerializableProxy($SerializableClosureProxy_2.class, agentId);
+      }
+    };
+    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_moveForward, _function_2);
   }
   
   @DefaultValueSource

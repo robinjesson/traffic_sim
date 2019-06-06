@@ -157,11 +157,11 @@ public class Road extends RoadPolyline {
     double dist = 10000;
     ArrayList<Car> _listOfCars = this.listOfCars();
     for (final Car c : _listOfCars) {
-      int _pos1D = c.getPos1D();
-      int _pos1D_1 = car.getPos1D();
+      double _pos1D = c.getPos1D();
+      double _pos1D_1 = car.getPos1D();
       if (((_pos1D - _pos1D_1) < dist)) {
-        int _pos1D_2 = c.getPos1D();
-        int _pos1D_3 = car.getPos1D();
+        double _pos1D_2 = c.getPos1D();
+        double _pos1D_3 = car.getPos1D();
         dist = (_pos1D_2 - _pos1D_3);
       }
     }

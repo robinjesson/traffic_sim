@@ -12,20 +12,17 @@ class CarDrawer implements Drawer<Car> {
 	@Override
 	def draw(gc:ZoomableGraphicsContext, element:Car):void {
 		var currentRoad:Road=element.road
-		var pos1D:int=element.getPos1D(); 
-		var t:double=0;
-		/*if(element.isOnRight()) */
-			t=pos1D/currentRoad.getDistanceKilometers();
-		/*else 
-			t=(currentRoad.getDistanceKilometers()-pos1D)/currentRoad.getDistanceKilometers();*/
+		var pos1D=element.getPos1D(); 
 		
+			
+		var coord=element.coordinates
+
 		
-		var x:double=(1-t)*currentRoad.getBeginX()+t*currentRoad.getEndX();
-		var y : double = (1 - t) * currentRoad.getBeginY() + t * currentRoad.getEndY();
 		gc.fill = Color::RED
 		gc.stroke = Color::RED
-		gc.fillRect(x - CarDrawer::width / 2, y - CarDrawer::width/2, CarDrawer::width, CarDrawer::width);
-		gc.strokeRect(x - CarDrawer::width / 2, y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
+		gc.fillRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
+		gc.strokeRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width,
+			CarDrawer::width);
 		gc.restore
 	}
 

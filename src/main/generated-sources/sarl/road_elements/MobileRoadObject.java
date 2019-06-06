@@ -20,7 +20,7 @@ public class MobileRoadObject extends RoadObject {
   
   private TrafficLayers trafficLayers;
   
-  public MobileRoadObject(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
+  public MobileRoadObject(final double pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
     super(pos1D, currentRoad);
     this.trafficLayers = trafficLayers;
   }
@@ -56,5 +56,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1863120533L;
+  private static final long serialVersionUID = 2240737139L;
 }

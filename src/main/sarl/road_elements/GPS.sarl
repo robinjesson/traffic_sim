@@ -22,9 +22,12 @@ class GPS {
 	}
 	
 	def getNextRoad : Road{
-		var r = this.listRoads.get(0)
-		this.listRoads.remove(0)
-		return r
+		if(this.hastNextRoad){
+			var r = this.listRoads.get(0)
+			this.listRoads.remove(0)
+			return r
+		}
+		return null
 	}
 	
 	def hastNextRoad : boolean{

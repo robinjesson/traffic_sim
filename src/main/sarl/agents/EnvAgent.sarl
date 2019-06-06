@@ -53,7 +53,7 @@ agent EnvAgent {
 		 */
 		// print(tl.mapElementLayer)
 		spawnCarAndAgent
-		spawnCarAndAgent
+		//spawnCarAndAgent
 		//emit(new Perception)[elt|elt.UUID==id]
 	}
 
@@ -66,16 +66,13 @@ agent EnvAgent {
 			emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
 			return;
 		}
+		
 		if(car.coordinates.equals(car.road.end)){
 			emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
 			return;
 		}
-		car.pos1D = car.pos1D + 1  // ATTENTION les voitures ne bougent pas : il faut zoomer/dézoomer pouvoir l'avancement
-		info("influence")
-		emit(new MoveForward)
 		
-		
-		
+		emit(new MoveForward)[elt|elt.UUID == agentId]
 	}
 
 

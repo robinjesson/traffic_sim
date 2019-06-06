@@ -33,12 +33,12 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 class RoadObject extends MapCircle {
 	
-	var pos1D : int
+	var pos1D : double
 	val uuid : UUID
 	var road : Road
 	// var onRight : boolean
 	
-	new(pos1D : int = 0 , road:Road){
+	new(pos1D : double = 0 , road:Road){
 		super(0,0,10)
 		this.pos1D = pos1D;
 		this.uuid = UUID::randomUUID
@@ -54,11 +54,11 @@ class RoadObject extends MapCircle {
 		this.road = road
 	}
 	
-	def getPos1D:int{
+	def getPos1D:double{
 		return this.pos1D
 	}
 	
-	def setPos1D(pos1D : int) : void {
+	def setPos1D(pos1D : double) : void {
 		this.pos1D = pos1D
 	}
 	
