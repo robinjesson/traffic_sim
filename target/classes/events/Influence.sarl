@@ -1,0 +1,24 @@
+/** 
+ * 
+ */
+package events
+
+import java.util.UUID
+import road_elements.Car
+import io.sarl.lang.core.Agent
+import agents.Driver
+import org.arakhne.afc.math.geometry.d2.d.Point2d
+
+/** 
+ * @author robin
+ * 
+ */
+event Influence{
+	var agentId:UUID
+	var arrivalPoint : Point2d
+	
+	new(agentId:UUID, aPoint:Point2d){
+		this.agentId=agentId
+		this.arrivalPoint=aPoint
+	}
+}
