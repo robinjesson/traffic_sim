@@ -10,6 +10,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import java.util.Objects;
 import java.util.UUID;
 import org.arakhne.afc.gis.mapelement.MapCircle;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
@@ -20,15 +21,15 @@ import road_elements.Road;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class RoadObject extends MapCircle {
-  private int pos1D;
+  private double pos1D;
   
   private final UUID uuid;
   
   private Road road;
   
   @DefaultValueSource
-  public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final int pos1D, final Road road, final double x, final double y) {
-    super(x, y, 10);
+  public RoadObject(@DefaultValue("road_elements.RoadObject#NEW_0") final double pos1D, final Road road) {
+    super(0, 0, 10);
     this.pos1D = pos1D;
     this.uuid = UUID.randomUUID();
     this.road = road;
@@ -39,7 +40,7 @@ public class RoadObject extends MapCircle {
    */
   @SyntheticMember
   @SarlSourceCode("0")
-  private static final int $DEFAULT_VALUE$NEW_0 = 0;
+  private static final double $DEFAULT_VALUE$NEW_0 = 0;
   
   @Pure
   public Road getRoad() {
@@ -51,18 +52,31 @@ public class RoadObject extends MapCircle {
   }
   
   @Pure
-  public int getPos1D() {
+  public double getPos1D() {
     return this.pos1D;
   }
   
-  public void setPos1D(final int pos1D) {
+  public void setPos1D(final double pos1D) {
     this.pos1D = pos1D;
   }
   
-  @DefaultValueUse("int,road_elements.Road,double,double")
+  @Pure
+  public Point2d getCoordinates() {
+    double _distanceKilometers = this.road.getDistanceKilometers();
+    double t = (this.pos1D / _distanceKilometers);
+    int _beginX = this.road.getBeginX();
+    int _endX = this.road.getEndX();
+    double x = (((1 - t) * _beginX) + (t * _endX));
+    int _beginY = this.road.getBeginY();
+    int _endY = this.road.getEndY();
+    double y = (((1 - t) * _beginY) + (t * _endY));
+    return new Point2d(x, y);
+  }
+  
+  @DefaultValueUse("double,road_elements.Road")
   @SyntheticMember
-  public RoadObject(final Road road, final double x, final double y) {
-    this($DEFAULT_VALUE$NEW_0, road, x, y);
+  public RoadObject(final Road road) {
+    this($DEFAULT_VALUE$NEW_0, road);
   }
   
   @Override
@@ -76,7 +90,7 @@ public class RoadObject extends MapCircle {
     if (getClass() != obj.getClass())
       return false;
     RoadObject other = (RoadObject) obj;
-    if (other.pos1D != this.pos1D)
+    if (Double.doubleToLongBits(other.pos1D) != Double.doubleToLongBits(this.pos1D))
       return false;
     if (!Objects.equals(this.uuid, other.uuid)) {
       return false;
@@ -90,7 +104,7 @@ public class RoadObject extends MapCircle {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + this.pos1D;
+    result = prime * result + (int) (Double.doubleToLongBits(this.pos1D) ^ (Double.doubleToLongBits(this.pos1D) >>> 32));
     result = prime * result + Objects.hashCode(this.uuid);
     return result;
   }
@@ -107,5 +121,5 @@ public class RoadObject extends MapCircle {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1663872184L;
+  private static final long serialVersionUID = -5085379509L;
 }

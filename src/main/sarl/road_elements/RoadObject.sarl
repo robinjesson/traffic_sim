@@ -20,6 +20,7 @@ import org.arakhne.afc.gis.mapelement.MapPoint
 import org.arakhne.afc.gis.primitive.GISElement
 import org.arakhne.afc.vmutil.json.JsonBuffer
 import org.arakhne.afc.gis.mapelement.MapCircle
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * 
@@ -32,13 +33,13 @@ import org.arakhne.afc.gis.mapelement.MapCircle
 
 class RoadObject extends MapCircle {
 	
-	var pos1D : int
+	var pos1D : double
 	val uuid : UUID
 	var road : Road
 	// var onRight : boolean
 	
-	new(pos1D : int = 0 , road:Road, x:double, y:double){
-		super(x,y,10)
+	new(pos1D : double = 0 , road:Road){
+		super(0,0,10)
 		this.pos1D = pos1D;
 		this.uuid = UUID::randomUUID
 		this.road = road
@@ -53,12 +54,19 @@ class RoadObject extends MapCircle {
 		this.road = road
 	}
 	
-	def getPos1D:int{
+	def getPos1D:double{
 		return this.pos1D
 	}
 	
-	def setPos1D(pos1D : int) : void {
+	def setPos1D(pos1D : double) : void {
 		this.pos1D = pos1D
+	}
+	
+	def getCoordinates : Point2d {
+		var t = pos1D / this.road.getDistanceKilometers();
+		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
+		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
+		return new Point2d(x,y)
 	}
 	
 	/*def isOnRight :boolean{

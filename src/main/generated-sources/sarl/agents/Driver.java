@@ -1,9 +1,12 @@
 package agents;
 
+import events.ArrivedAtDestination;
 import events.ArrivedAtEndRoad;
 import events.Influence;
-import events.Perception;
+import events.MoveForward;
 import io.sarl.core.DefaultContextInteractions;
+import io.sarl.core.Initialize;
+import io.sarl.core.Lifecycle;
 import io.sarl.core.Logging;
 import io.sarl.lang.annotation.ImportedCapacityFeature;
 import io.sarl.lang.annotation.PerceptGuardEvaluator;
@@ -18,7 +21,9 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
+import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -41,29 +46,85 @@ public class Driver extends Agent {
   
   protected int speed;
   
-  protected synchronized void initProperties(final int pos1D, final Road firstRoad, final Point2d startPoint, final Point2d arrivalPoint) {
-    this.currentPoint = startPoint;
+  protected GPS gps;
+  
+  protected boolean normalDirection = true;
+  
+  protected synchronized void initProperties(final Car car, final Point2d arrivalPoint, final RoadNetwork network) {
+    this.car = car;
+    this.currentPoint = this.car.getCoordinates();
     this.arrivalPoint = arrivalPoint;
-    Car _car = new Car(pos1D, firstRoad, 0, 0);
-    this.car = _car;
     this.speed = 0;
+    GPS _gPS = new GPS(this.currentPoint, this.arrivalPoint, network);
+    this.gps = _gPS;
   }
   
   private void $behaviorUnit$ArrivedAtEndRoad$0(final ArrivedAtEndRoad occurrence) {
-    Road nextRoadToTake = null;
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("ARRIVED END OF ROAD");
     synchronized (this) {
-      nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.car.getRoad().getRoadNetwork());
+      Road nextRoadToTake = this.gps.getNextRoad();
+      if ((nextRoadToTake == null)) {
+        this.killThis();
+      }
       this.car.setRoad(nextRoadToTake);
-      this.car.setPos1D(0);
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      int _beginX = nextRoadToTake.getBeginX();
+      String _plus = (Integer.valueOf(_beginX) + " ");
+      int _beginY = nextRoadToTake.getBeginY();
+      int _endX = nextRoadToTake.getEndX();
+      int _endY = nextRoadToTake.getEndY();
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info((((((_plus + Integer.valueOf(_beginY)) + "; ") + Integer.valueOf(_endX)) + " ") + Integer.valueOf(_endY)));
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_2.info(this.car.getCoordinates());
+      boolean _equals = this.currentPoint.equals(nextRoadToTake.getBegin());
+      if (_equals) {
+        this.car.setPos1D(0);
+        this.normalDirection = true;
+      } else {
+        boolean _equals_1 = this.currentPoint.equals(nextRoadToTake.getEnd());
+        if (_equals_1) {
+          this.car.setPos1D(this.car.getRoad().getDistanceKilometers());
+          this.normalDirection = false;
+        }
+      }
+      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+      UUID _iD = this.getID();
+      Influence _influence = new Influence(_iD, this.arrivalPoint);
+      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
     }
   }
   
-  private void $behaviorUnit$Perception$1(final Perception occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("perception");
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    Influence _influence = new Influence(this.car, this);
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
+  private void $behaviorUnit$ArrivedAtDestination$1(final ArrivedAtDestination occurrence) {
+    this.killThis();
+  }
+  
+  protected void killThis() {
+    this.car.removeFromLayer();
+    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+    _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
+  }
+  
+  private void $behaviorUnit$MoveForward$2(final MoveForward occurrence) {
+    try {
+      synchronized (this) {
+        if (this.normalDirection) {
+          double _pos1D = this.car.getPos1D();
+          this.car.setPos1D((_pos1D + 1));
+        } else {
+          double _pos1D_1 = this.car.getPos1D();
+          this.car.setPos1D((_pos1D_1 - 1));
+        }
+        this.currentPoint = this.car.getCoordinates();
+        Thread.sleep(250);
+        DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+        UUID _iD = this.getID();
+        Influence _influence = new Influence(_iD, this.arrivalPoint);
+        _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
+      }
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @Pure
@@ -74,6 +135,9 @@ public class Driver extends Agent {
   @Pure
   protected Point2d getArrivalPoint() {
     return this.arrivalPoint;
+  }
+  
+  private void $behaviorUnit$Initialize$3(final Initialize occurrence) {
   }
   
   @Extension
@@ -106,12 +170,43 @@ public class Driver extends Agent {
     return $castSkill(DefaultContextInteractions.class, this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
   }
   
+  @Extension
+  @ImportedCapacityFeature(Lifecycle.class)
+  @SyntheticMember
+  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_LIFECYCLE;
+  
+  @SyntheticMember
+  @Pure
+  @Inline(value = "$castSkill(Lifecycle.class, ($0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || $0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $0$getSkill(Lifecycle.class)) : $0$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE)", imported = Lifecycle.class)
+  private Lifecycle $CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER() {
+    if (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) {
+      this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = $getSkill(Lifecycle.class);
+    }
+    return $castSkill(Lifecycle.class, this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+  }
+  
   @SyntheticMember
   @PerceptGuardEvaluator
-  private void $guardEvaluator$Perception(final Perception occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+  private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Perception$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$3(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$ArrivedAtDestination(final ArrivedAtDestination occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtDestination$1(occurrence));
+  }
+  
+  @SyntheticMember
+  @PerceptGuardEvaluator
+  private void $guardEvaluator$MoveForward(final MoveForward occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
+    assert occurrence != null;
+    assert ___SARLlocal_runnableCollection != null;
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MoveForward$2(occurrence));
   }
   
   @SyntheticMember
@@ -135,6 +230,8 @@ public class Driver extends Agent {
     Driver other = (Driver) obj;
     if (other.speed != this.speed)
       return false;
+    if (other.normalDirection != this.normalDirection)
+      return false;
     return super.equals(obj);
   }
   
@@ -145,6 +242,7 @@ public class Driver extends Agent {
     int result = super.hashCode();
     final int prime = 31;
     result = prime * result + this.speed;
+    result = prime * result + (this.normalDirection ? 1231 : 1237);
     return result;
   }
   

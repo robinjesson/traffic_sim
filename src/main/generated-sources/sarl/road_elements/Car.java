@@ -3,9 +3,11 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
+import road_elements.TrafficLayers;
 
 /**
  * @author robin
@@ -14,10 +16,27 @@ import road_elements.Road;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Car extends MobileRoadObject {
-  public Car(final int pos1D, final Road currentRoad, final double x, final double y) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The constructor MobileRoadObject(int, Road, RoadConnection) is not applicable for the arguments (int,Road,double,double)"
-      + "\nType mismatch: cannot convert from double to RoadConnection");
+  public Car(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
+    super(pos1D, currentRoad, trafficLayers);
+    Road _road = super.getRoad();
+    if ((_road != null)) {
+      super.getRoad().addObject(this);
+    }
+    trafficLayers.addCar(this);
+  }
+  
+  @Override
+  public Point2d getCoordinates() {
+    double _pos1D = this.getPos1D();
+    double _distanceKilometers = this.getRoad().getDistanceKilometers();
+    double t = (_pos1D / _distanceKilometers);
+    int _beginX = this.getRoad().getBeginX();
+    int _endX = this.getRoad().getEndX();
+    double x = (((1 - t) * _beginX) + (t * _endX));
+    int _beginY = this.getRoad().getBeginY();
+    int _endY = this.getRoad().getEndY();
+    double y = (((1 - t) * _beginY) + (t * _endY));
+    return new Point2d(x, y);
   }
   
   @Override
@@ -32,5 +51,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 637790605L;
+  private static final long serialVersionUID = -675334357L;
 }

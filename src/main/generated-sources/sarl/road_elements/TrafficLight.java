@@ -15,10 +15,7 @@ import road_elements.RoadObject;
 @SuppressWarnings("all")
 public class TrafficLight extends RoadObject {
   public TrafficLight(final int pos1D, final Road currentRoad) {
-    throw new Error("Unresolved compilation problems:"
-      + "\nInvalid number of arguments. The constructor RoadObject(Road, double, double) is not applicable for the arguments (int,Road)"
-      + "\nType mismatch: cannot convert from int to Road"
-      + "\nType mismatch: cannot convert from Road to double");
+    super(pos1D, currentRoad);
   }
   
   @Override

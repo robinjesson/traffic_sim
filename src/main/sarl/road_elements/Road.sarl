@@ -3,6 +3,7 @@ package road_elements
 import java.util.ArrayList
 import java.util.UUID
 import org.arakhne.afc.gis.road.RoadPolyline
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * 
@@ -21,7 +22,7 @@ class Road extends RoadPolyline {
 	var distanceKilometers : double
 	var speedLimit : int
 	
-	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int){
+	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int=50){
 		super()
 		this.beginX = beginX
 		this.beginY = beginY
@@ -52,6 +53,14 @@ class Road extends RoadPolyline {
 
 	def getEndY : int {
 		return this.endY
+	}
+	
+	public def getBegin : Point2d{
+		return new Point2d(this.beginX,this.beginY)
+	}
+
+	def getEnd : Point2d {
+		return new Point2d(this.endX, this.endY)
 	}
 	
 	def addObject(obj : RoadObject){
@@ -103,9 +112,9 @@ class Road extends RoadPolyline {
 	def getFrontCarDistance(car : Car) : double{
 		for(roadCar as Car : this.listOfCars){
 			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
+	}
 	*/
 
-}
 	def getFrontCarDistance(car:Car):double{
 		var dist:double=10000;
 		for(c:this.listOfCars){
@@ -122,4 +131,7 @@ class Road extends RoadPolyline {
 		}
 		throw new IllegalArgumentException("This UUID doesn't exist")
 	}
+	
+
+	
 }

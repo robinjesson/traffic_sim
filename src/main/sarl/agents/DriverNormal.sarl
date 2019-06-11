@@ -14,6 +14,7 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Road
 import road_elements.Car
 import capacities.DrivingNormal
+import org.arakhne.afc.gis.road.primitive.RoadNetwork
 
 /** 
  * @author robin
@@ -25,8 +26,11 @@ agent DriverNormal extends Driver {
 	uses Drive
 	
 	on Initialize{
-		//setSkill(new DrivingNormal)
-		super.initProperties(0,null, new Point2d(0, 0), new Point2d(100, 100))
+		setSkill(new DrivingNormal)
+		var car = occurrence.parameters.get(0) as Car
+		var network = occurrence.parameters.get(1) as RoadNetwork
+		super.initProperties(car, new Point2d(0, 0), network)
+		emit(new Influence(this.ID, this.arrivalPoint))
 		
 	}
 	

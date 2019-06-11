@@ -87,24 +87,47 @@ public class TrafficLayers extends MultiMapLayer {
     return roadList;
   }
   
-  public static ArrayList<RoadObject> carListFactory(final ArrayList<Road> roads) {
-    ArrayList<RoadObject> carList = new ArrayList<RoadObject>();
-    for (final Road road : roads) {
-      {
-        double _random = Math.random();
-        int nbCarRandom = ((int) (_random * 3));
-        for (int i = 0; (i < nbCarRandom); i++) {
-          {
-            double _random_1 = Math.random();
-            double _distanceKilometers = road.getDistanceKilometers();
-            int posRandom = ((int) (_random_1 * _distanceKilometers));
-            Car _car = new Car(posRandom, road, 0, 0);
-            carList.add(_car);
-          }
-        }
-      }
-    }
-    return carList;
+  /**
+   * def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
+   * var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
+   * 
+   * for(road:roads){
+   * var nbCarRandom = (Math.random() * 3) as int
+   * for (var i = 0; i < nbCarRandom; i++) {
+   * var posRandom = (Math.random() * road.distanceKilometers) as int
+   * carList.add(new Car(posRandom, road, 0, 0))
+   * }
+   * }
+   * 
+   * for (road : roads) {
+   * for (var i = 0; i < 1; i++) {
+   * var posRandom = 0 as int
+   * carList.add(new Car(posRandom, road,  0, 0))
+   * }
+   * }
+   * return carList
+   * }
+   */
+  public boolean addCar(final Car car) {
+    return this.mapElementLayer.addMapElement(car);
+  }
+  
+  public void removeCar(final Car car) {
+    this.mapElementLayer.removeMapElement(car);
+  }
+  
+  public void refresh() {
+    this.mapElementLayer.repaint();
+  }
+  
+  @Pure
+  public MapElementLayer<MapElement> getMapElementLayer() {
+    return this.mapElementLayer;
+  }
+  
+  @Pure
+  public RoadNetworkLayer getRoadNetworkLayer() {
+    return this.roadNetworkLayer;
   }
   
   @Override
@@ -134,5 +157,5 @@ public class TrafficLayers extends MultiMapLayer {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1090961658L;
+  private static final long serialVersionUID = 2726919203L;
 }

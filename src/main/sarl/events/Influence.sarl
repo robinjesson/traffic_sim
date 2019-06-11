@@ -7,17 +7,18 @@ import java.util.UUID
 import road_elements.Car
 import io.sarl.lang.core.Agent
 import agents.Driver
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * @author robin
  * 
  */
 event Influence{
-	var influencedCar:Car
-	var ^agent:Agent
+	var agentId:UUID
+	var arrivalPoint : Point2d
 	
-	new(car : Car, ^agent:Driver){
-		this.influencedCar = car
-		this.^agent=^agent
+	new(agentId:UUID, aPoint:Point2d){
+		this.agentId=agentId
+		this.arrivalPoint=aPoint
 	}
 }

@@ -13,6 +13,12 @@ import events.Influence
 import io.sarl.core.Logging
 import io.sarl.core.DefaultContextInteractions
 import events.ArrivedAtEndRoad
+import io.sarl.core.Initialize
+import java.util.ArrayList
+import events.ArrivedAtDestination
+import io.sarl.core.Lifecycle
+import events.MoveForward
+import org.arakhne.afc.gis.road.primitive.RoadConnection
 
 /** 
  * @author robin
@@ -21,31 +27,68 @@ import events.ArrivedAtEndRoad
 agent Driver {
 	uses Logging
 	uses DefaultContextInteractions
+	uses Lifecycle
 	
 	protected var currentPoint : Point2d
 	protected var arrivalPoint : Point2d
 	protected var car : Car
-	protected var speed:int
+	protected var speed : int
+	protected var gps : GPS
+	protected var normalDirection = true
 
-	synchronized def initProperties(pos1D : int, firstRoad : Road, startPoint : Point2d, arrivalPoint : Point2d) : void {
-		this.currentPoint = startPoint
+	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
+		this.car=car
+		this.currentPoint = this.car.coordinates
 		this.arrivalPoint = arrivalPoint
-		this.car = new Car(pos1D, firstRoad,0,0)
 		this.speed = 0
+		this.gps=new GPS(this.currentPoint,this.arrivalPoint,network)
+		
 	}
 
 	on ArrivedAtEndRoad {
-		var nextRoadToTake : Road 
+		info("ARRIVED END OF ROAD")
 		synchronized (this) {
-			nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.car.getRoad().getRoadNetwork())
+			var nextRoadToTake = this.gps.nextRoad
+			if(nextRoadToTake===null)
+				this.killThis
+				
 			this.car.road = nextRoadToTake
-			this.car.pos1D=0
+			info(nextRoadToTake.beginX + " " + nextRoadToTake.beginY + "; " + nextRoadToTake.endX + " " + nextRoadToTake.endY)
+			info(this.car.coordinates)
+			if(this.currentPoint.equals(nextRoadToTake.begin)){
+				this.car.pos1D = 0
+				this.normalDirection=true
+			}
+			else if(this.currentPoint.equals(nextRoadToTake.end)){
+				this.car.pos1D = this.car.road.distanceKilometers
+				this.normalDirection=false
+			}
+			emit(new Influence(this.ID, this.arrivalPoint))
 		}
+		
+	}
+	
+	on ArrivedAtDestination {
+		this.killThis
+	}
+	
+	def killThis : void {
+		this.car.removeFromLayer
+		killMe
 	}
 
-	on Perception {
-		info("perception")
-		emit(new Influence(this.car,this))
+	on MoveForward {
+		synchronized(this){
+			if(this.normalDirection){
+				this.car.pos1D = this.car.pos1D + 1 // ATTENTION les voitures ne bougent pas : il faut zoomer/dézoomer pouvoir l'avancement
+			}
+			else {
+				this.car.pos1D = this.car.pos1D - 1
+			}
+			this.currentPoint=this.car.coordinates
+			Thread.sleep(250)
+			emit(new Influence(this.ID, this.arrivalPoint))
+		}
 
 	}
 	
@@ -53,9 +96,11 @@ agent Driver {
 		return this.currentPoint
 	}
 
-	def getArrivalPoint : Point2d {
+	def getArrivalPoint : Point2d { 
 		return this.arrivalPoint
 	}
-	
 
+	on Initialize {
+		// emit(new AgentDeparture)
+	}	
 }

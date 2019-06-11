@@ -1,11 +1,16 @@
 package road_elements;
 
+import io.sarl.lang.annotation.DefaultValue;
+import io.sarl.lang.annotation.DefaultValueSource;
+import io.sarl.lang.annotation.DefaultValueUse;
 import io.sarl.lang.annotation.SarlElementType;
+import io.sarl.lang.annotation.SarlSourceCode;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
@@ -31,7 +36,8 @@ public class Road extends RoadPolyline {
   
   private int speedLimit;
   
-  public Road(final int beginX, final int beginY, final int endX, final int endY, final int speedLimit) {
+  @DefaultValueSource
+  public Road(final int beginX, final int beginY, final int endX, final int endY, @DefaultValue("road_elements.Road#NEW_0") final int speedLimit) {
     super();
     this.beginX = beginX;
     this.beginY = beginY;
@@ -46,6 +52,13 @@ public class Road extends RoadPolyline {
     double _pow_1 = Math.pow((endY - beginY), 2);
     this.distanceKilometers = Math.sqrt((_pow + _pow_1));
   }
+  
+  /**
+   * Default value for the parameter speedLimit
+   */
+  @SyntheticMember
+  @SarlSourceCode("50")
+  private static final int $DEFAULT_VALUE$NEW_0 = 50;
   
   @Pure
   public ArrayList<RoadObject> getObjects() {
@@ -70,6 +83,16 @@ public class Road extends RoadPolyline {
   @Pure
   public int getEndY() {
     return this.endY;
+  }
+  
+  @Pure
+  public Point2d getBegin() {
+    return new Point2d(this.beginX, this.beginY);
+  }
+  
+  @Pure
+  public Point2d getEnd() {
+    return new Point2d(this.endX, this.endY);
   }
   
   public boolean addObject(final RoadObject obj) {
@@ -120,6 +143,46 @@ public class Road extends RoadPolyline {
   @Pure
   public double getSpeedLimitMS() {
     return (this.speedLimit * 3.6);
+  }
+  
+  /**
+   * }
+   * def getFrontCarDistance(car : Car) : double{
+   * for(roadCar as Car : this.listOfCars){
+   * if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
+   * }
+   */
+  @Pure
+  public double getFrontCarDistance(final Car car) {
+    double dist = 10000;
+    ArrayList<Car> _listOfCars = this.listOfCars();
+    for (final Car c : _listOfCars) {
+      double _pos1D = c.getPos1D();
+      double _pos1D_1 = car.getPos1D();
+      if (((_pos1D - _pos1D_1) < dist)) {
+        double _pos1D_2 = c.getPos1D();
+        double _pos1D_3 = car.getPos1D();
+        dist = (_pos1D_2 - _pos1D_3);
+      }
+    }
+    return 0;
+  }
+  
+  @Pure
+  public RoadObject getObjectsByUUID(final UUID id) {
+    for (final RoadObject current : this.objects) {
+      UUID _uUID = current.getUUID();
+      if ((_uUID == id)) {
+        return current;
+      }
+    }
+    throw new IllegalArgumentException("This UUID doesn\'t exist");
+  }
+  
+  @DefaultValueUse("int,int,int,int,int")
+  @SyntheticMember
+  public Road(final int beginX, final int beginY, final int endX, final int endY) {
+    this(beginX, beginY, endX, endY, $DEFAULT_VALUE$NEW_0);
   }
   
   @Override
@@ -175,5 +238,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10705506299L;
+  private static final long serialVersionUID = -10461596596L;
 }

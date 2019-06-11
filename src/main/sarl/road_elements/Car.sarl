@@ -3,16 +3,29 @@
  */
 package road_elements
 
-import org.arakhne.afc.gis.road.primitive.RoadConnection
+import application.Simulation
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
 /** 
  * @author robin
  * 
  */
 class Car extends MobileRoadObject {	
-	new(pos1D : int, currentRoad:Road, x:double, y:double){
-		super(pos1D, currentRoad,x,y)
-		if(super.road!==null)
+	
+	new(pos1D : int, currentRoad:Road, trafficLayers:TrafficLayers){
+		super(pos1D, currentRoad, trafficLayers)
+		if(super.road !== null){
 			super.road.addObject(this)
+		}
+		trafficLayers.addCar(this)
+	}
+	
+	@Override
+	def getCoordinates : Point2d {
+		var t = pos1D / this.road.getDistanceKilometers()
+		
+		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
+		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
+		return new Point2d(x, y)
 	}
 }
