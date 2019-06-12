@@ -9,6 +9,7 @@ import org.arakhne.afc.gis.road.path.astar.RoadAStar;
 import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
@@ -18,12 +19,37 @@ import road_elements.Road;
 public class GPS {
   private ArrayList<Road> listRoads = new ArrayList<Road>();
   
+  private ArrayList<Point2d> listPoints = new ArrayList<Point2d>();
+  
   public GPS(final Point2d current, final Point2d end, final RoadNetwork network) {
     RoadAStar aStar = new RoadAStar();
     RoadPath path = aStar.solve(current, end, network);
     int count = 0;
     for (final RoadSegment roadSegment : path) {
-      this.listRoads.add(((Road) roadSegment));
+      {
+        Road r = ((Road) roadSegment);
+        this.listRoads.add(r);
+      }
+    }
+    this.transform(current);
+    InputOutput.<String>println(("GPS      " + this.listPoints));
+  }
+  
+  private void transform(final Point2d current) {
+    this.listPoints.add(current);
+    Point2d lastPointAdded = current;
+    for (final Road road : this.listRoads) {
+      boolean _equals = road.getBegin().equals(lastPointAdded);
+      if (_equals) {
+        this.listPoints.add(road.getEnd());
+        lastPointAdded = road.getEnd();
+      } else {
+        boolean _equals_1 = road.getEnd().equals(lastPointAdded);
+        if (_equals_1) {
+          this.listPoints.add(road.getBegin());
+          lastPointAdded = road.getBegin();
+        }
+      }
     }
   }
   
@@ -39,9 +65,26 @@ public class GPS {
   }
   
   @Pure
+  public Point2d getNextPoint() {
+    int _size = this.listPoints.size();
+    if ((_size == 0)) {
+      return null;
+    }
+    Point2d p = this.listPoints.get(0);
+    this.listPoints.remove(p);
+    return p;
+  }
+  
+  @Pure
   public boolean hastNextRoad() {
     int _size = this.listRoads.size();
     return (_size != 0);
+  }
+  
+  @Override
+  @Pure
+  public String toString() {
+    return this.listRoads.toString();
   }
   
   @Override

@@ -67,6 +67,27 @@ class TrafficLayers extends MultiMapLayer {
 		roadList.add(new Road(20, 30, 20, 50, 50))
 		roadList.add(new Road(50, 20, 50, 30, 50))
 		roadList.add(new Road(50, 30, 50, 50, 50))
+
+		/*
+		roadList.add(new Road(0, 20, 0, 0, 100))
+		roadList.add(new Road(0, 100, 0, 20, 100))
+		roadList.add(new Road(100, 100, 0, 100, 100))
+		roadList.add(new Road(100, 50, 100, 100, 100))
+		roadList.add(new Road(100, 0, 100, 50, 100))
+		roadList.add(new Road(0, 0, 100, 0, 100))
+
+		// bretelles
+		roadList.add(new Road(20, 20, 0, 20, 70))
+		roadList.add(new Road(100, 50, 50, 50, 70))
+
+		// ville
+		roadList.add(new Road(50, 20, 20, 20, 50))
+		roadList.add(new Road(50, 50, 20, 50, 50))
+		roadList.add(new Road(50, 30, 20, 30, 50))
+		roadList.add(new Road(20, 30, 20, 20, 50))
+		roadList.add(new Road(20, 50, 20, 30, 50))
+		roadList.add(new Road(50, 30, 50, 20, 50))
+		roadList.add(new Road(50, 50, 50, 30, 50))*/
 		return roadList
 	}
 	/*

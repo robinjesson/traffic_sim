@@ -19,6 +19,9 @@ import events.ArrivedAtDestination
 import io.sarl.core.Lifecycle
 import events.MoveForward
 import org.arakhne.afc.gis.road.primitive.RoadConnection
+import capacities.Drive
+import capacities.DrivingNormal
+import io.sarl.core.Destroy
 
 /** 
  * @author robin
@@ -28,20 +31,49 @@ agent Driver {
 	uses Logging
 	uses DefaultContextInteractions
 	uses Lifecycle
+	uses Drive
 	
 	protected var currentPoint : Point2d
 	protected var arrivalPoint : Point2d
 	protected var car : Car
-	protected var speed : int
 	protected var gps : GPS
-	protected var normalDirection = true
+	
+	protected var begSegment : Point2d
+	protected var endSegment : Point2d
+
+	on Initialize {
+		synchronized(this){
+			setSkill(new DrivingNormal)
+			var network = occurrence.parameters.get(1) as RoadNetwork
+			
+			this.car = occurrence.parameters.get(0) as Car
+			
+			//this.car.setCoordinates(this.begSegment, this.endSegment)
+			this.currentPoint = this.car.coordinates
+			this.arrivalPoint = new Point2d(50, 50)
+			this.gps = new GPS(this.currentPoint, this.arrivalPoint, network)
+			this.car.road = this.gps.nextRoad
+			this.begSegment = this.gps.nextPoint
+			this.endSegment = this.gps.nextPoint
+			
+			
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+			
+		}
+
+	}
+
+	on Destroy {
+		info("The agent was stopped.")
+	}
 
 	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
-		this.car=car
+		
+		this.car.road = this.gps.nextRoad
+		this.begSegment=this.gps.nextPoint
+		this.endSegment = this.gps.nextPoint
+		this.car.setCoordinates(this.begSegment, this.endSegment)
 		this.currentPoint = this.car.coordinates
-		this.arrivalPoint = arrivalPoint
-		this.speed = 0
-		this.gps=new GPS(this.currentPoint,this.arrivalPoint,network)
 		
 	}
 
@@ -49,26 +81,24 @@ agent Driver {
 		info("ARRIVED END OF ROAD")
 		synchronized (this) {
 			var nextRoadToTake = this.gps.nextRoad
-			if(nextRoadToTake===null)
+			this.begSegment = this.endSegment
+			this.endSegment = this.gps.nextPoint
+			if (this.endSegment === null)
 				this.killThis
-				
+			this.car.setCoordinates(this.begSegment, this.endSegment)
+			/*
+			this.car.road.removeObject(this.car)
 			this.car.road = nextRoadToTake
-			info(nextRoadToTake.beginX + " " + nextRoadToTake.beginY + "; " + nextRoadToTake.endX + " " + nextRoadToTake.endY)
-			info(this.car.coordinates)
-			if(this.currentPoint.equals(nextRoadToTake.begin)){
-				this.car.pos1D = 0
-				this.normalDirection=true
-			}
-			else if(this.currentPoint.equals(nextRoadToTake.end)){
-				this.car.pos1D = this.car.road.distanceKilometers
-				this.normalDirection=false
-			}
-			emit(new Influence(this.ID, this.arrivalPoint))
+			this.car.road.addObject(this.car)
+			*/
+			this.car.pos1D = 0
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
-		
+		 
 	}
 	
 	on ArrivedAtDestination {
+		info("ARRIVED AT DESTINATION")
 		this.killThis
 	}
 	
@@ -79,15 +109,18 @@ agent Driver {
 
 	on MoveForward {
 		synchronized(this){
-			if(this.normalDirection){
+			/*if(this.normalDirection){
 				this.car.pos1D = this.car.pos1D + 1 // ATTENTION les voitures ne bougent pas : il faut zoomer/dézoomer pouvoir l'avancement
 			}
 			else {
 				this.car.pos1D = this.car.pos1D - 1
-			}
+			}*/
+			this.car.pos1D = this.car.pos1D + 1
+			this.car.setCoordinates(this.begSegment,this.endSegment)
 			this.currentPoint=this.car.coordinates
+			println(this.currentPoint.x+" "+this.currentPoint.y)
 			Thread.sleep(250)
-			emit(new Influence(this.ID, this.arrivalPoint))
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
 
 	}

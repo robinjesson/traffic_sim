@@ -9,6 +9,7 @@ import java.util.ArrayList
 
 class GPS {
 	private var listRoads : ArrayList<Road> = new ArrayList<Road> 
+	private var listPoints : ArrayList<Point2d> = new ArrayList<Point2d>
 	
 	new(current : Point2d, end : Point2d, network : RoadNetwork)  {
 		var aStar:RoadAStar =new RoadAStar();
@@ -16,9 +17,30 @@ class GPS {
 
 		var count : int = 0
 		for (roadSegment : path) {
-			this.listRoads.add(roadSegment as Road)
+			var r = roadSegment as Road
+			this.listRoads.add(r)
+			//println(r.beginX + " " + r.beginY + "; " + r.endX + " " +r.endY)
 		}
 		
+		//var roadNotUsed=this.nextRoad
+		this.transform(current)
+		println("GPS      "+this.listPoints)
+		
+	}
+	
+	private def transform(current : Point2d) : void {
+		this.listPoints.add(current)
+		var lastPointAdded = current 
+		for(road:this.listRoads){
+			if (road.begin.equals(lastPointAdded)) {
+				this.listPoints.add(road.end)
+				lastPointAdded = road.end
+			}
+			else if (road.end.equals(lastPointAdded)) {
+				this.listPoints.add(road.begin)
+				lastPointAdded=road.begin
+			}
+		}
 	}
 	
 	def getNextRoad : Road{
@@ -30,7 +52,21 @@ class GPS {
 		return null
 	}
 	
+	def getNextPoint : Point2d{
+		if(this.listPoints.size==0)
+			return null
+			
+		var p = this.listPoints.get(0)
+		this.listPoints.remove(p)
+		return p
+	}
+	
 	def hastNextRoad : boolean{
 		return this.listRoads.size!=0
+	}
+
+	@Override
+	def toString() : String {
+		return this.listRoads.toString
 	}
 }

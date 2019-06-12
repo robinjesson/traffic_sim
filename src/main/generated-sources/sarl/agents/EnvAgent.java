@@ -1,6 +1,6 @@
 package agents;
 
-import agents.DriverNormal;
+import agents.Driver;
 import com.google.common.base.Objects;
 import events.ArrivedAtDestination;
 import events.ArrivedAtEndRoad;
@@ -62,6 +62,10 @@ public class EnvAgent extends Agent {
     this.trafficLayers = ((TrafficLayers) _get);
     this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
     this.spawnCarAndAgent();
+    this.spawnCarAndAgent();
+    this.spawnCarAndAgent();
+    this.spawnCarAndAgent();
+    this.spawnCarAndAgent();
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
@@ -98,7 +102,7 @@ public class EnvAgent extends Agent {
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_arrivedAtDestination, _function);
       return;
     }
-    boolean _equals_1 = car.getCoordinates().equals(car.getRoad().getEnd());
+    boolean _equals_1 = car.getCoordinates().equals(occurrence.endPoint);
     if (_equals_1) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       ArrivedAtEndRoad _arrivedAtEndRoad = new ArrivedAtEndRoad();
@@ -159,7 +163,7 @@ public class EnvAgent extends Agent {
   }
   
   @DefaultValueSource
-  protected UUID spawnCarAndAgent(@DefaultValue("agents.EnvAgent#SPAWNCARANDAGENT_0") final int time) {
+  protected synchronized UUID spawnCarAndAgent(@DefaultValue("agents.EnvAgent#SPAWNCARANDAGENT_0") final int time) {
     while ((this.time < 0)) {
     }
     int nbRoads = this.network.getRoadSegments().size();
@@ -167,9 +171,11 @@ public class EnvAgent extends Agent {
     int indexRoadRandom = ((int) (_random * nbRoads));
     RoadSegment _get = ((RoadSegment[])Conversions.unwrapArray(this.network.getRoadSegments(), RoadSegment.class))[indexRoadRandom];
     Road selectedRoad = ((Road) _get);
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(selectedRoad);
     Car car = new Car(0, selectedRoad, this.trafficLayers);
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-    UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(DriverNormal.class, car, this.network);
+    UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(Driver.class, car, this.network);
     this.agentId_Cars.put(id, car);
     return id;
   }

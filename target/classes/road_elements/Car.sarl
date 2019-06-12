@@ -5,12 +5,18 @@ package road_elements
 
 import application.Simulation
 import org.arakhne.afc.math.geometry.d2.d.Point2d
+import javafx.scene.paint.Color
 
 /** 
  * @author robin
  * 
  */
-class Car extends MobileRoadObject {	
+class Car extends MobileRoadObject {
+	
+	public var normalDirection : boolean = true	
+	public var colour : Color
+	var x:double
+	var y:double
 	
 	new(pos1D : int, currentRoad:Road, trafficLayers:TrafficLayers){
 		super(pos1D, currentRoad, trafficLayers)
@@ -18,14 +24,53 @@ class Car extends MobileRoadObject {
 			super.road.addObject(this)
 		}
 		trafficLayers.addCar(this)
+		
+		var r=(Math.random*9) as int
+		println(r)
+		switch(r){
+			case 0:
+				this.colour=Color::WHITE
+			case 1:
+				this.colour = Color::BLACK
+			case 2:
+				this.colour = Color::RED
+			case 3:
+				this.colour = Color::ORANGE
+			case 4:
+				this.colour = Color::YELLOW
+			case 5:
+				this.colour = Color::GREEN
+			case 6:
+				this.colour = Color::BLUE
+			case 7:
+				this.colour = Color::INDIGO
+			case 8:
+				this.colour = Color::PURPLE
+	
+		}
+		this.setCoordinates(currentRoad.begin,currentRoad.end)
 	}
 	
 	@Override
 	def getCoordinates : Point2d {
-		var t = pos1D / this.road.getDistanceKilometers()
+		/*var t = pos1D / this.road.getDistanceKilometers()
 		
 		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
 		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
-		return new Point2d(x, y)
+		return new Point2d(x, y)*/
+		return new Point2d(this.x, this.y)
 	}
+	
+	def setCoordinates(beg : Point2d, end : Point2d) : void {
+		var dist = Math.sqrt(Math.pow((end.x - beg.x), 2) + Math.pow((end.y - beg.y), 2))
+		var t = pos1D / dist
+
+		this.x = (1 - t) * beg.x + t * end.x;
+		this.y = (1 - t) * beg.y + t * end.y;
+		//return new Point2d(this.x, this.y)
+	}
+
+	
+	
+	
 }

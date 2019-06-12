@@ -16,9 +16,11 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d
 event Influence{
 	var agentId:UUID
 	var arrivalPoint : Point2d
+	var endPoint : Point2d
 	
-	new(agentId:UUID, aPoint:Point2d){
+	new(agentId:UUID, aPoint:Point2d, endPoint : Point2d){
 		this.agentId=agentId
 		this.arrivalPoint=aPoint
+		this.endPoint=endPoint
 	}
 }

@@ -53,6 +53,10 @@ agent EnvAgent {
 		 */
 		// print(tl.mapElementLayer)
 		spawnCarAndAgent
+		spawnCarAndAgent
+		spawnCarAndAgent
+		spawnCarAndAgent
+		spawnCarAndAgent
 		//spawnCarAndAgent
 		//emit(new Perception)[elt|elt.UUID==id]
 	}
@@ -67,7 +71,7 @@ agent EnvAgent {
 			return;
 		}
 		
-		if(car.coordinates.equals(car.road.end)){
+		if (car.coordinates.equals(occurrence.endPoint)) {
 			emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
 			return;
 		}
@@ -76,15 +80,16 @@ agent EnvAgent {
 	}
 
 
-	def spawnCarAndAgent(time:int=0) : UUID {
+	synchronized def spawnCarAndAgent(time:int=0) : UUID {
 		while(this.time<0){}
 		
 		var nbRoads = this.network.roadSegments.size
 		var indexRoadRandom = (Math.random() * nbRoads) as int
 		var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
+		info(selectedRoad)
 		//A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
 		var car = new Car(0, selectedRoad, this.trafficLayers)
-		var id = DriverNormal.spawn(car,this.network)
+		var id = Driver.spawn(car,this.network)
 		agentId_Cars.put(id,car)
 		return id
 	}

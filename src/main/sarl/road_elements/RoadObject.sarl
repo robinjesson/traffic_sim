@@ -63,7 +63,7 @@ class RoadObject extends MapCircle {
 	}
 	
 	def getCoordinates : Point2d {
-		var t = pos1D / this.road.getDistanceKilometers();
+		var t = this.pos1D / this.road.getDistanceKilometers();
 		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
 		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
 		return new Point2d(x,y)

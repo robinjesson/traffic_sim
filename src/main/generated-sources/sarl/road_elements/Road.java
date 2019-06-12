@@ -60,6 +60,18 @@ public class Road extends RoadPolyline {
   @SarlSourceCode("50")
   private static final int $DEFAULT_VALUE$NEW_0 = 50;
   
+  @DefaultValueSource
+  public Road(final Point2d beg, final Point2d end, @DefaultValue("road_elements.Road#NEW_1") final int speed) {
+    this(((int) beg.getX()), ((int) beg.getY()), ((int) end.getX()), ((int) end.getY()), speed);
+  }
+  
+  /**
+   * Default value for the parameter speed
+   */
+  @SyntheticMember
+  @SarlSourceCode("50")
+  private static final int $DEFAULT_VALUE$NEW_1 = 50;
+  
   @Pure
   public ArrayList<RoadObject> getObjects() {
     return this.objects;
@@ -97,6 +109,10 @@ public class Road extends RoadPolyline {
   
   public boolean addObject(final RoadObject obj) {
     return this.objects.add(obj);
+  }
+  
+  public boolean removeObject(final RoadObject obj) {
+    return this.objects.remove(obj);
   }
   
   public RoadObject removeObject(final UUID id) {
@@ -185,6 +201,12 @@ public class Road extends RoadPolyline {
     this(beginX, beginY, endX, endY, $DEFAULT_VALUE$NEW_0);
   }
   
+  @DefaultValueUse("org.arakhne.afc.math.geometry.d2.d.Point2d,org.arakhne.afc.math.geometry.d2.d.Point2d,int")
+  @SyntheticMember
+  public Road(final Point2d beg, final Point2d end) {
+    this(beg, end, $DEFAULT_VALUE$NEW_1);
+  }
+  
   @Override
   @Pure
   @SyntheticMember
@@ -238,5 +260,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10461596596L;
+  private static final long serialVersionUID = -8087935310L;
 }

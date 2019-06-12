@@ -21,9 +21,12 @@ public class Influence extends Event {
   
   public Point2d arrivalPoint;
   
-  public Influence(final UUID agentId, final Point2d aPoint) {
+  public Point2d endPoint;
+  
+  public Influence(final UUID agentId, final Point2d aPoint, final Point2d endPoint) {
     this.agentId = agentId;
     this.arrivalPoint = aPoint;
+    this.endPoint = endPoint;
   }
   
   @Override
@@ -62,8 +65,9 @@ public class Influence extends Event {
     super.toString(builder);
     builder.add("agentId", this.agentId);
     builder.add("arrivalPoint", this.arrivalPoint);
+    builder.add("endPoint", this.endPoint);
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 2993990032L;
+  private static final long serialVersionUID = 5568295221L;
 }

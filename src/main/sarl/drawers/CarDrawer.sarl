@@ -18,8 +18,8 @@ class CarDrawer implements Drawer<Car> {
 		var coord=element.coordinates
 
 		
-		gc.fill = Color::RED
-		gc.stroke = Color::RED
+		gc.fill = element.colour
+		gc.stroke = element.colour
 		gc.fillRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
 		gc.strokeRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width,
 			CarDrawer::width);
