@@ -25,14 +25,17 @@ public class GPS {
     RoadAStar aStar = new RoadAStar();
     RoadPath path = aStar.solve(current, end, network);
     int count = 0;
-    for (final RoadSegment roadSegment : path) {
-      {
-        Road r = ((Road) roadSegment);
-        this.listRoads.add(r);
+    int _size = path.size();
+    if ((_size != 0)) {
+      for (final RoadSegment roadSegment : path) {
+        {
+          Road r = ((Road) roadSegment);
+          this.listRoads.add(r);
+        }
       }
+      this.transform(current);
+      InputOutput.<String>println(("GPS      " + this.listPoints));
     }
-    this.transform(current);
-    InputOutput.<String>println(("GPS      " + this.listPoints));
   }
   
   private void transform(final Point2d current) {
@@ -55,8 +58,8 @@ public class GPS {
   
   @Pure
   public Road getNextRoad() {
-    boolean _hastNextRoad = this.hastNextRoad();
-    if (_hastNextRoad) {
+    boolean _hasNextRoad = this.hasNextRoad();
+    if (_hasNextRoad) {
       Road r = this.listRoads.get(0);
       this.listRoads.remove(0);
       return r;
@@ -76,7 +79,7 @@ public class GPS {
   }
   
   @Pure
-  public boolean hastNextRoad() {
+  public boolean hasNextRoad() {
     int _size = this.listRoads.size();
     return (_size != 0);
   }

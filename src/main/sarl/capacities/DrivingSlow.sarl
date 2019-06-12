@@ -34,4 +34,9 @@ skill DrivingSlow implements Drive {
 		// TODO Auto-generated code.
 		0
 	}
+	
+	def getSpeed : int {
+		return 1
+	}
+	
 }

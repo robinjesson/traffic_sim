@@ -46,6 +46,10 @@ public class DrivingDangerous extends Skill implements Drive {
     return (currentSpeed - 2);
   }
   
+  public int getSpeed() {
+    return 2;
+  }
+  
   @Extension
   @ImportedCapacityFeature(Logging.class)
   @SyntheticMember

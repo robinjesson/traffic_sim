@@ -12,6 +12,8 @@ import io.sarl.lang.core.Capacity;
 @SarlElementType(20)
 @SuppressWarnings("all")
 public interface Drive extends Capacity {
+  public abstract int getSpeed();
+  
   /**
    * Returns the new speed after speeding up
    */
@@ -28,6 +30,15 @@ public interface Drive extends Capacity {
   public static class ContextAwareCapacityWrapper<C extends Drive> extends Capacity.ContextAwareCapacityWrapper<C> implements Drive {
     public ContextAwareCapacityWrapper(final C capacity, final AgentTrait caller) {
       super(capacity, caller);
+    }
+    
+    public int getSpeed() {
+      try {
+        ensureCallerInLocalThread();
+        return this.capacity.getSpeed();
+      } finally {
+        resetCallerInLocalThread();
+      }
     }
     
     public int speedUp(final int maxSpeed, final int currentSpeed) {

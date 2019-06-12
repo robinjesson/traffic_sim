@@ -48,6 +48,10 @@ public class DrivingNormal extends Skill implements Drive {
     return (currentSpeed - 1);
   }
   
+  public int getSpeed() {
+    return 1;
+  }
+  
   @Extension
   @ImportedCapacityFeature(Logging.class)
   @SyntheticMember

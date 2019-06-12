@@ -10,6 +10,9 @@ import io.sarl.core.Logging
  * 
  */
 capacity Drive {
+	
+	def getSpeed():int
+	
 	/**
 	 * Returns the new speed after speeding up
 	 */

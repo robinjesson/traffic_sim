@@ -38,4 +38,9 @@ skill DrivingNormal implements Drive {
 	override def brake(currentSpeed : int) : int {
 		return currentSpeed - 1
 	}
+	
+	def getSpeed : int {
+		return 1
+	}
+	
 }

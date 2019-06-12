@@ -53,10 +53,10 @@ agent EnvAgent {
 		 */
 		// print(tl.mapElementLayer)
 		spawnCarAndAgent
+		/*spawnCarAndAgent
 		spawnCarAndAgent
 		spawnCarAndAgent
-		spawnCarAndAgent
-		spawnCarAndAgent
+		spawnCarAndAgent*/
 		//spawnCarAndAgent
 		//emit(new Perception)[elt|elt.UUID==id]
 	}
@@ -71,7 +71,7 @@ agent EnvAgent {
 			return;
 		}
 		
-		if (car.coordinates.equals(occurrence.endPoint)) {
+		if (car.coordinates.equals(occurrence.nextPoint)) {
 			emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
 			return;
 		}
