@@ -6,7 +6,7 @@ import io.sarl.lang.annotation.SyntheticMember;
 import io.sarl.lang.core.Event;
 import java.util.Objects;
 import java.util.UUID;
-import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
@@ -16,11 +16,11 @@ import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 public class Influence extends Event {
   public UUID agentId;
   
-  public Point2d arrivalPoint;
+  public Point2D arrivalPoint;
   
-  public Point2d nextPoint;
+  public Point2D nextPoint;
   
-  public Influence(final UUID agentId, final Point2d aPoint, final Point2d nextPoint) {
+  public Influence(final UUID agentId, final Point2D aPoint, final Point2D nextPoint) {
     this.agentId = agentId;
     this.arrivalPoint = aPoint;
     this.nextPoint = nextPoint;
@@ -66,5 +66,5 @@ public class Influence extends Event {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 5059968541L;
+  private static final long serialVersionUID = 4923141297L;
 }

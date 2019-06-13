@@ -8,7 +8,7 @@ import org.arakhne.afc.gis.road.path.RoadPath;
 import org.arakhne.afc.gis.road.path.astar.RoadAStar;
 import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
-import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
@@ -18,9 +18,9 @@ import road_elements.Road;
 public class GPS {
   private ArrayList<Road> listRoads = new ArrayList<Road>();
   
-  private ArrayList<Point2d> listPoints = new ArrayList<Point2d>();
+  private ArrayList<Point2D> listPoints = new ArrayList<Point2D>();
   
-  public GPS(final Point2d current, final Point2d end, final RoadNetwork network) {
+  public GPS(final Point2D current, final Point2D end, final RoadNetwork network) {
     RoadAStar aStar = new RoadAStar();
     RoadPath path = aStar.solve(current, end, network);
     int count = 0;
@@ -33,9 +33,9 @@ public class GPS {
     this.transform(current);
   }
   
-  private void transform(final Point2d current) {
+  private void transform(final Point2D current) {
     this.listPoints.add(current);
-    Point2d lastPointAdded = current;
+    Point2D lastPointAdded = current;
     for (final Road road : this.listRoads) {
       boolean _equals = road.getBegin().equals(lastPointAdded);
       if (_equals) {
@@ -63,12 +63,12 @@ public class GPS {
   }
   
   @Pure
-  public Point2d getNextPoint() {
+  public Point2D getNextPoint() {
     int _size = this.listPoints.size();
     if ((_size == 0)) {
       return null;
     }
-    Point2d p = this.listPoints.get(0);
+    Point2D p = this.listPoints.get(0);
     this.listPoints.remove(p);
     return p;
   }

@@ -8,6 +8,8 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d
 import javafx.scene.paint.Color
 import java.util.Random
 import events.Influence
+import org.arakhne.afc.math.geometry.d1.d.Point1d
+import org.arakhne.afc.math.geometry.d2.Point2D
 
 /** 
  * @author robin
@@ -21,8 +23,8 @@ class Car extends MobileRoadObject {
 	var y:double
 	var influence : Influence
 	
-	new(pos1D : int, currentRoad:Road, trafficLayers:TrafficLayers){
-		super(pos1D, currentRoad, trafficLayers)
+	new(position : Point1d, currentRoad:Road, trafficLayers:TrafficLayers){
+		super(position, currentRoad, trafficLayers)
 		if(super.road !== null){
 			super.road.addObject(this)
 		}
@@ -32,7 +34,7 @@ class Car extends MobileRoadObject {
 		this.color = randomColorPicker
 	}
 	
-	@Override
+	
 	def getCoordinates : Point2d {
 		/*var t = pos1D / this.road.getDistanceKilometers()
 		
@@ -42,9 +44,9 @@ class Car extends MobileRoadObject {
 		return new Point2d(this.x, this.y)
 	}
 	
-	def setCoordinates(beg : Point2d, end : Point2d) : void {
+	def setCoordinates(beg : Point2D, end : Point2D) : void {
 		var dist = Math.sqrt(Math.pow((end.x - beg.x), 2) + Math.pow((end.y - beg.y), 2))
-		var t = pos1D / dist
+		var t = this.position.x / dist
 
 		this.x = (1 - t) * beg.x + t * end.x;
 		this.y = (1 - t) * beg.y + t * end.y;

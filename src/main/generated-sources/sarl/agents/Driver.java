@@ -26,9 +26,12 @@ import java.util.Collection;
 import java.util.UUID;
 import javax.inject.Inject;
 import org.arakhne.afc.gis.road.primitive.RoadNetwork;
+import org.arakhne.afc.math.geometry.d1.d.Point1d;
+import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.GPS;
@@ -49,9 +52,9 @@ public class Driver extends Agent {
   
   protected GPS gps;
   
-  protected Point2d begSegment;
+  protected Point2D begSegment;
   
-  protected Point2d endSegment;
+  protected Point2D endSegment;
   
   private EnvAgent env;
   
@@ -80,7 +83,8 @@ public class Driver extends Agent {
       }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
-      Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);
+      Point2D<?, ?> _lastPoint = this.car.getPosition().getSegment().getLastPoint();
+      Influence _influence = new Influence(_iD, this.arrivalPoint, _lastPoint);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
     }
   }
@@ -100,14 +104,16 @@ public class Driver extends Agent {
       if ((this.endSegment == null)) {
         this.killThis();
       }
-      this.car.setCoordinates(this.begSegment, this.endSegment);
+      this.car.setCoordinates(this.car.getPosition().getSegment().getFirstPoint(), this.car.getPosition().getSegment().getLastPoint());
       this.car.getRoad().removeObject(this.car);
       this.car.setRoad(nextRoadToTake);
       this.car.getRoad().addObject(this.car);
-      this.car.setPos1D(0);
+      Point1d _position = this.car.getPosition();
+      _position.setX(0);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
-      Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);
+      Point2D<?, ?> _lastPoint = this.car.getPosition().getSegment().getLastPoint();
+      Influence _influence = new Influence(_iD, this.arrivalPoint, _lastPoint);
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_influence);
     }
   }
@@ -128,12 +134,17 @@ public class Driver extends Agent {
   
   private void $behaviorUnit$MoveForward$4(final MoveForward occurrence) {
     synchronized (this) {
-      double _pos1D = this.car.getPos1D();
+      Point1d _position = this.car.getPosition();
+      double _x = this.car.getPosition().getX();
       Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
       int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
-      this.car.setPos1D((_pos1D + _speed));
+      _position.setX((_x + _speed));
       this.car.setCoordinates(this.begSegment, this.endSegment);
       this.currentPoint = this.car.getCoordinates();
+      double _x_1 = this.currentPoint.getX();
+      String _plus = (Double.valueOf(_x_1) + " ");
+      double _y = this.currentPoint.getY();
+      InputOutput.<String>println((_plus + Double.valueOf(_y)));
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
       Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);

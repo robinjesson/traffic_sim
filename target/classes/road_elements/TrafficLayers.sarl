@@ -120,11 +120,11 @@ class TrafficLayers extends MultiMapLayer {
 		this.mapElementLayer.addMapElement(tl)
 	}
 	
-	def removeCar(car : Car) : void{
+	def removeCar(car : Car) : void {
 		this.mapElementLayer.removeMapElement(car)
 	}
 	
-	def refresh : void{
+	def refresh : void {
 		this.mapElementLayer.repaint
 	}
 	

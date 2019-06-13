@@ -18,6 +18,7 @@ import java.util.TreeMap
 import events.ArrivedAtEndRoad
 import events.MoveForward
 import java.util.concurrent.atomic.AtomicInteger
+import org.arakhne.afc.math.geometry.d1.d.Point1d
 
 /** 
  * @author robin
@@ -69,7 +70,7 @@ agent EnvAgent {
 	}
 
 	def computeInfluences {
-		info(this.nbInfluenceToCompute)
+		// info(this.nbInfluenceToCompute)
 		Thread::sleep(250)
 		for (b : agentId_Cars.entrySet) {
 			var body = b.value
@@ -91,7 +92,7 @@ agent EnvAgent {
 
 		this.nbInfluenceToCompute.set(0)
 
-		info(this.nbInfluenceToCompute)
+		// info(this.nbInfluenceToCompute)
 		this.time.incrementAndGet
 
 	}
@@ -109,7 +110,7 @@ agent EnvAgent {
 		var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
 		info(selectedRoad)
 		// A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
-		var car = new Car(0, selectedRoad, this.trafficLayers)
+		var car = new Car(new Point1d(selectedRoad, 0, 1), selectedRoad, this.trafficLayers)
 		var id = Driver.spawn(car, this.network, this)
 		agentId_Cars.put(id, car)
 		return id

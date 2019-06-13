@@ -5,12 +5,13 @@ import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.gis.road.path.RoadPath;
 import java.util.ArrayList
+import org.arakhne.afc.math.geometry.d2.Point2D
 
 class GPS {
 	var listRoads : ArrayList<Road> = new ArrayList<Road> 
-	var listPoints : ArrayList<Point2d> = new ArrayList<Point2d>
+	var listPoints : ArrayList<Point2D> = new ArrayList<Point2D>
 	
-	new(current : Point2d, end : Point2d, network : RoadNetwork)  {
+	new(current : Point2D, end : Point2D, network : RoadNetwork)  {
 		var aStar:RoadAStar = new RoadAStar();
 		var path : RoadPath = aStar.solve(current, end, network);
 
@@ -27,7 +28,7 @@ class GPS {
 		// println("GPS    :  "+this.listPoints)
 }
 
-	private def transform(current : Point2d) : void {
+	private def transform(current : Point2D) : void {
 		this.listPoints.add(current)
 		var lastPointAdded = current 
 		
@@ -52,7 +53,7 @@ class GPS {
 		return null
 	}
 	
-	def getNextPoint : Point2d {
+	def getNextPoint : Point2D {
 		if(this.listPoints.size == 0)
 			return null
 			

@@ -1,18 +1,17 @@
 package drawers;
 
-import org.arakhne.afc.nodefx.Drawer;
-import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
+import org.arakhne.afc.nodefx.Drawer
+import org.arakhne.afc.nodefx.ZoomableGraphicsContext
 import road_elements.Car
 import road_elements.Road
-import javafx.scene.paint.Color
 
 class CarDrawer implements Drawer<Car> {
-	static val width:int=2
+	static val width : int = 2
 	
 	@Override
 	def draw(gc:ZoomableGraphicsContext, element:Car):void {
-		var currentRoad:Road=element.road
-		var pos1D=element.getPos1D(); 
+		var currentRoad : Road = element.road
+		var position = element.position.x; 
 		
 			
 		var coord=element.coordinates

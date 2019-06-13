@@ -14,6 +14,8 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d
  * 
  */
 class Road extends RoadPolyline {
+	
+	
 	var objects : ArrayList<RoadObject>
 	var beginX : int
 	var beginY : int
@@ -113,22 +115,6 @@ class Road extends RoadPolyline {
 
 	def getSpeedLimitMS() : double {
 		return this.speedLimit*3.6
-	}
-	
-	/*
-	}
-	def getFrontCarDistance(car : Car) : double{
-		for(roadCar as Car : this.listOfCars){
-			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
-	}
-	*/
-
-	def getFrontCarDistance(car:Car):double{
-		var dist:double=10000;
-		for(c:this.listOfCars){
-			if(c.pos1D-car.pos1D<dist)
-				dist = c.pos1D - car.pos1D
-		}
 	}
 
 	def getObjectsByUUID(id : UUID) : RoadObject {

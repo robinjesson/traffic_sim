@@ -82,7 +82,7 @@ class Simulation extends Application {
 		
 		
 		var bootstrap = SRE.getBootstrap()
-		bootstrap.startAgent(EnvAgent,this.trafficLayers)
+		bootstrap.startAgent(EnvAgent, this.trafficLayers)
 	}
 
 	def loadShapeFile2(file : File) : MapElementLayer<?> {

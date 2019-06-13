@@ -19,7 +19,7 @@ public class CarDrawer implements Drawer<Car> {
   @Override
   public void draw(final ZoomableGraphicsContext gc, final Car element) {
     Road currentRoad = element.getRoad();
-    double pos1D = element.getPos1D();
+    double position = element.getPosition().getX();
     Point2d coord = element.getCoordinates();
     gc.setFill(element.color);
     gc.setStroke(element.color);

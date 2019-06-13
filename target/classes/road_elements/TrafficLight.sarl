@@ -3,13 +3,15 @@
  */
 package road_elements
 
+import org.arakhne.afc.math.geometry.d1.d.Point1d
+
 /** 
  * @author tiantian
  * 
  */
 class TrafficLight extends RoadObject {
 	
-	new(pos1D : int, currentRoad : Road) {
-		super(pos1D, currentRoad)
+	new(position : Point1d, currentRoad : Road) {
+		super(position, currentRoad)
 	}
 }

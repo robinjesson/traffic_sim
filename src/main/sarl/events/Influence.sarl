@@ -2,13 +2,14 @@ package events
 
 import java.util.UUID
 import org.arakhne.afc.math.geometry.d2.d.Point2d
+import org.arakhne.afc.math.geometry.d2.Point2D
 
 event Influence{
 	var agentId : UUID
-	var arrivalPoint : Point2d
-	var nextPoint : Point2d
+	var arrivalPoint : Point2D
+	var nextPoint : Point2D
 	
-	new(agentId : UUID, aPoint : Point2d, nextPoint : Point2d) {
+	new(agentId : UUID, aPoint : Point2D, nextPoint : Point2D) {
 		this.agentId = agentId
 		this.arrivalPoint = aPoint
 		this.nextPoint = nextPoint

@@ -6,6 +6,8 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import org.arakhne.afc.math.geometry.d1.d.Point1d;
+import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
@@ -29,8 +31,8 @@ public class Car extends MobileRoadObject {
   
   private Influence influence;
   
-  public Car(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
-    super(pos1D, currentRoad, trafficLayers);
+  public Car(final Point1d position, final Road currentRoad, final TrafficLayers trafficLayers) {
+    super(position, currentRoad, trafficLayers);
     Road _road = super.getRoad();
     if ((_road != null)) {
       super.getRoad().addObject(this);
@@ -40,12 +42,12 @@ public class Car extends MobileRoadObject {
     this.color = this.randomColorPicker();
   }
   
-  @Override
+  @Pure
   public Point2d getCoordinates() {
     return new Point2d(this.x, this.y);
   }
   
-  public void setCoordinates(final Point2d beg, final Point2d end) {
+  public void setCoordinates(final Point2D beg, final Point2D end) {
     double _x = end.getX();
     double _x_1 = beg.getX();
     double _pow = Math.pow((_x - _x_1), 2);
@@ -53,11 +55,11 @@ public class Car extends MobileRoadObject {
     double _y_1 = beg.getY();
     double _pow_1 = Math.pow((_y - _y_1), 2);
     double dist = Math.sqrt((_pow + _pow_1));
-    double _pos1D = this.getPos1D();
-    double t = (_pos1D / dist);
-    double _x_2 = beg.getX();
-    double _x_3 = end.getX();
-    this.x = (((1 - t) * _x_2) + (t * _x_3));
+    double _x_2 = this.getPosition().getX();
+    double t = (_x_2 / dist);
+    double _x_3 = beg.getX();
+    double _x_4 = end.getX();
+    this.x = (((1 - t) * _x_3) + (t * _x_4));
     double _y_2 = beg.getY();
     double _y_3 = end.getY();
     this.y = (((1 - t) * _y_2) + (t * _y_3));
@@ -125,5 +127,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 1403804494L;
+  private static final long serialVersionUID = -257972405L;
 }

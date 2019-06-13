@@ -22,6 +22,7 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection
 import capacities.Drive
 import capacities.DrivingNormal
 import io.sarl.core.Destroy
+import org.arakhne.afc.math.geometry.d2.Point2D
 
 /** 
  * @author robin
@@ -38,8 +39,8 @@ agent Driver {
 	protected var car : Car
 	protected var gps : GPS
 
-	protected var begSegment : Point2d
-	protected var endSegment : Point2d
+	protected var begSegment : Point2D
+	protected var endSegment : Point2D
 	var env : EnvAgent
 
 	on Initialize {
@@ -63,7 +64,7 @@ agent Driver {
 				return
 			}
 
-			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+			emit(new Influence(this.ID, this.arrivalPoint, this.car.position.segment.lastPoint))
 
 		}
 
@@ -94,14 +95,14 @@ agent Driver {
 			// info("ENDSEG " + this.endSegment)
 			if (this.endSegment === null)
 				this.killThis
-			this.car.setCoordinates(this.begSegment, this.endSegment)
-
+				
+			this.car.setCoordinates(this.car.position.segment.firstPoint, this.car.position.segment.lastPoint)
 			this.car.road.removeObject(this.car)
 			this.car.road = nextRoadToTake
 			this.car.road.addObject(this.car)
-
-			this.car.pos1D = 0
-			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+			this.car.position.x = 0
+			
+			emit(new Influence(this.ID, this.arrivalPoint, this.car.position.segment.lastPoint))
 		}
 
 	}
@@ -120,10 +121,10 @@ agent Driver {
 
 	on MoveForward {
 		synchronized (this) {
-			this.car.pos1D = this.car.pos1D + speed
+			this.car.position.x = this.car.position.x + speed
 			this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.currentPoint = this.car.coordinates
-			// println(this.currentPoint.x+" "+this.currentPoint.y)
+			println(this.currentPoint.x+" "+this.currentPoint.y)
 			// Thread.sleep(250)
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
