@@ -29,12 +29,16 @@ import io.sarl.lang.util.ClearableReference;
 import io.sarl.lang.util.SerializableProxy;
 import java.io.ObjectStreamException;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -42,127 +46,161 @@ import road_elements.Car;
 import road_elements.Road;
 import road_elements.TrafficLayers;
 
+/**
+ * @author robin
+ */
 @SarlSpecification("0.9")
 @SarlElementType(19)
 @SuppressWarnings("all")
 public class EnvAgent extends Agent {
-  private int time = 0;
-  
   private RoadNetwork network;
   
   private TrafficLayers trafficLayers;
   
   private final TreeMap<UUID, Car> agentId_Cars = new TreeMap<UUID, Car>();
   
+  private AtomicInteger nbInfluenceToCompute = new AtomicInteger();
+  
+  private AtomicInteger time = new AtomicInteger();
+  
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    synchronized (this) {
-      Object _get = occurrence.parameters[0];
-      this.trafficLayers = ((TrafficLayers) _get);
-      this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
-    }
-    this.spawnCarAndAgent();
-    this.spawnCarAndAgent();
-    this.spawnCarAndAgent();
+    this.nbInfluenceToCompute.set(0);
+    this.time.set(0);
+    Object _get = occurrence.parameters[0];
+    this.trafficLayers = ((TrafficLayers) _get);
+    this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
     this.spawnCarAndAgent();
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
     UUID agentId = occurrence.agentId;
     Car car = this.getCarByAgentId(agentId);
-    boolean _equals = car.getCoordinates().equals(occurrence.arrivalPoint);
-    if (_equals) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      ArrivedAtDestination _arrivedAtDestination = new ArrivedAtDestination();
-      class $SerializableClosureProxy implements Scope<Address> {
-        
-        private final UUID agentId;
-        
-        public $SerializableClosureProxy(final UUID agentId) {
-          this.agentId = agentId;
-        }
-        
-        @Override
-        public boolean matches(final Address elt) {
-          UUID _uUID = elt.getUUID();
-          return Objects.equal(_uUID, agentId);
-        }
-      }
-      final Scope<Address> _function = new Scope<Address>() {
-        @Override
-        public boolean matches(final Address elt) {
-          UUID _uUID = elt.getUUID();
-          return Objects.equal(_uUID, agentId);
-        }
-        private Object writeReplace() throws ObjectStreamException {
-          return new SerializableProxy($SerializableClosureProxy.class, agentId);
-        }
-      };
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_arrivedAtDestination, _function);
-      return;
+    car.setInfluence(occurrence);
+    this.nbInfluenceToCompute.incrementAndGet();
+    int _size = this.agentId_Cars.size();
+    if ((this.nbInfluenceToCompute.intValue() >= _size)) {
+      this.computeInfluences();
     }
-    boolean _equals_1 = car.getCoordinates().equals(occurrence.nextPoint);
-    if (_equals_1) {
-      DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-      ArrivedAtEndRoad _arrivedAtEndRoad = new ArrivedAtEndRoad();
-      class $SerializableClosureProxy_1 implements Scope<Address> {
-        
-        private final UUID agentId;
-        
-        public $SerializableClosureProxy_1(final UUID agentId) {
-          this.agentId = agentId;
-        }
-        
-        @Override
-        public boolean matches(final Address elt) {
-          UUID _uUID = elt.getUUID();
-          return Objects.equal(_uUID, agentId);
+  }
+  
+  protected void computeInfluences() {
+    try {
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(this.nbInfluenceToCompute);
+      Thread.sleep(250);
+      Set<Map.Entry<UUID, Car>> _entrySet = this.agentId_Cars.entrySet();
+      for (final Map.Entry<UUID, Car> b : _entrySet) {
+        {
+          Car body = b.getValue();
+          UUID agentId = body.getInfluence().agentId;
+          Car car = this.getCarByAgentId(agentId);
+          boolean _equals = car.getCoordinates().equals(body.getInfluence().arrivalPoint);
+          if (_equals) {
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            ArrivedAtDestination _arrivedAtDestination = new ArrivedAtDestination();
+            class $SerializableClosureProxy implements Scope<Address> {
+              
+              private final UUID agentId;
+              
+              public $SerializableClosureProxy(final UUID agentId) {
+                this.agentId = agentId;
+              }
+              
+              @Override
+              public boolean matches(final Address elt) {
+                UUID _uUID = elt.getUUID();
+                return Objects.equal(_uUID, agentId);
+              }
+            }
+            final Scope<Address> _function = new Scope<Address>() {
+              @Override
+              public boolean matches(final Address elt) {
+                UUID _uUID = elt.getUUID();
+                return Objects.equal(_uUID, agentId);
+              }
+              private Object writeReplace() throws ObjectStreamException {
+                return new SerializableProxy($SerializableClosureProxy.class, agentId);
+              }
+            };
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_arrivedAtDestination, _function);
+            return;
+          }
+          boolean _equals_1 = car.getCoordinates().equals(body.getInfluence().nextPoint);
+          if (_equals_1) {
+            DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+            ArrivedAtEndRoad _arrivedAtEndRoad = new ArrivedAtEndRoad();
+            class $SerializableClosureProxy_1 implements Scope<Address> {
+              
+              private final UUID agentId;
+              
+              public $SerializableClosureProxy_1(final UUID agentId) {
+                this.agentId = agentId;
+              }
+              
+              @Override
+              public boolean matches(final Address elt) {
+                UUID _uUID = elt.getUUID();
+                return Objects.equal(_uUID, agentId);
+              }
+            }
+            final Scope<Address> _function_1 = new Scope<Address>() {
+              @Override
+              public boolean matches(final Address elt) {
+                UUID _uUID = elt.getUUID();
+                return Objects.equal(_uUID, agentId);
+              }
+              private Object writeReplace() throws ObjectStreamException {
+                return new SerializableProxy($SerializableClosureProxy_1.class, agentId);
+              }
+            };
+            _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_arrivedAtEndRoad, _function_1);
+            return;
+          }
+          DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
+          MoveForward _moveForward = new MoveForward();
+          class $SerializableClosureProxy_2 implements Scope<Address> {
+            
+            private final UUID agentId;
+            
+            public $SerializableClosureProxy_2(final UUID agentId) {
+              this.agentId = agentId;
+            }
+            
+            @Override
+            public boolean matches(final Address elt) {
+              UUID _uUID = elt.getUUID();
+              return Objects.equal(_uUID, agentId);
+            }
+          }
+          final Scope<Address> _function_2 = new Scope<Address>() {
+            @Override
+            public boolean matches(final Address elt) {
+              UUID _uUID = elt.getUUID();
+              return Objects.equal(_uUID, agentId);
+            }
+            private Object writeReplace() throws ObjectStreamException {
+              return new SerializableProxy($SerializableClosureProxy_2.class, agentId);
+            }
+          };
+          _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_moveForward, _function_2);
         }
       }
-      final Scope<Address> _function_1 = new Scope<Address>() {
-        @Override
-        public boolean matches(final Address elt) {
-          UUID _uUID = elt.getUUID();
-          return Objects.equal(_uUID, agentId);
-        }
-        private Object writeReplace() throws ObjectStreamException {
-          return new SerializableProxy($SerializableClosureProxy_1.class, agentId);
-        }
-      };
-      _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1.emit(_arrivedAtEndRoad, _function_1);
-      return;
+      this.nbInfluenceToCompute.set(0);
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1 = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER_1.info(this.nbInfluenceToCompute);
+      this.time.incrementAndGet();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
     }
-    DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
-    MoveForward _moveForward = new MoveForward();
-    class $SerializableClosureProxy_2 implements Scope<Address> {
-      
-      private final UUID agentId;
-      
-      public $SerializableClosureProxy_2(final UUID agentId) {
-        this.agentId = agentId;
-      }
-      
-      @Override
-      public boolean matches(final Address elt) {
-        UUID _uUID = elt.getUUID();
-        return Objects.equal(_uUID, agentId);
-      }
-    }
-    final Scope<Address> _function_2 = new Scope<Address>() {
-      @Override
-      public boolean matches(final Address elt) {
-        UUID _uUID = elt.getUUID();
-        return Objects.equal(_uUID, agentId);
-      }
-      private Object writeReplace() throws ObjectStreamException {
-        return new SerializableProxy($SerializableClosureProxy_2.class, agentId);
-      }
-    };
-    _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_2.emit(_moveForward, _function_2);
+  }
+  
+  protected Car removeAgentAndCar(final UUID idAgent) {
+    return this.agentId_Cars.remove(idAgent);
   }
   
   @DefaultValueSource
   protected synchronized UUID spawnCarAndAgent(@DefaultValue("agents.EnvAgent#SPAWNCARANDAGENT_0") final int time) {
-    while ((this.time < 0)) {
+    while ((this.time.intValue() < 0)) {
     }
     int nbRoads = this.network.getRoadSegments().size();
     double _random = Math.random();
@@ -173,7 +211,7 @@ public class EnvAgent extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(selectedRoad);
     Car car = new Car(0, selectedRoad, this.trafficLayers);
     Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-    UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(Driver.class, car, this.network);
+    UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(Driver.class, car, this.network, this);
     this.agentId_Cars.put(id, car);
     return id;
   }
@@ -261,15 +299,6 @@ public class EnvAgent extends Agent {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    EnvAgent other = (EnvAgent) obj;
-    if (other.time != this.time)
-      return false;
     return super.equals(obj);
   }
   
@@ -278,8 +307,6 @@ public class EnvAgent extends Agent {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
-    final int prime = 31;
-    result = prime * result + this.time;
     return result;
   }
   

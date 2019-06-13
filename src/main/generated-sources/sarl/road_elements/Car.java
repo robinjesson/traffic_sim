@@ -1,5 +1,6 @@
 package road_elements;
 
+import events.Influence;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
@@ -26,6 +27,8 @@ public class Car extends MobileRoadObject {
   
   private double y;
   
+  private Influence influence;
+  
   public Car(final int pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
     super(pos1D, currentRoad, trafficLayers);
     Road _road = super.getRoad();
@@ -34,7 +37,7 @@ public class Car extends MobileRoadObject {
     }
     trafficLayers.addCar(this);
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
-    this.color = Color.WHITE;
+    this.color = this.randomColorPicker();
   }
   
   @Override
@@ -67,6 +70,15 @@ public class Car extends MobileRoadObject {
     float g = rand.nextFloat();
     float b = rand.nextFloat();
     return new Color(r, g, b, 1);
+  }
+  
+  public Influence setInfluence(final Influence influence) {
+    return this.influence = influence;
+  }
+  
+  @Pure
+  public Influence getInfluence() {
+    return this.influence;
   }
   
   @Override
@@ -113,5 +125,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -1255941507L;
+  private static final long serialVersionUID = 1403804494L;
 }
