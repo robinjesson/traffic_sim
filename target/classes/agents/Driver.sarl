@@ -2,10 +2,7 @@ package agents
 
 import capacities.Drive
 import capacities.DrivingNormal
-import events.ArrivedAtDestination
-import events.ArrivedAtEndRoad
 import events.Influence
-import events.MoveForward
 import io.sarl.core.DefaultContextInteractions
 import io.sarl.core.Destroy
 import io.sarl.core.Initialize
@@ -15,6 +12,9 @@ import org.arakhne.afc.gis.road.primitive.RoadNetwork
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Car
 import road_elements.GPS
+import events.ArrivedAtEndRoad
+import events.ArrivedAtDestination
+import events.MoveForward
 
 agent Driver {
 	uses Logging
@@ -53,10 +53,32 @@ agent Driver {
 			this.endSegment = this.gps.nextPoint
 	
 			if(this.endSegment === null) this.killThis
-
+			
+			if(!this.gps.hasNextRoad){
+				this.killThis
+				return
+			}
+			
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
+
+
 	}
+
+	on Destroy {
+		info("The agent was stopped.")
+	}
+
+	/*synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
+		
+		this.car.road = this.gps.nextRoad
+		this.begSegment=this.gps.nextPoint
+		this.endSegment = this.gps.nextPoint
+		this.car.setCoordinates(this.begSegment, this.endSegment)
+		this.currentPoint = this.car.coordinates
+		
+	}*/
+
 
 	on ArrivedAtEndRoad {
 		info("ARRIVED END OF ROAD")
@@ -65,16 +87,17 @@ agent Driver {
 			
 			this.begSegment = this.endSegment
 			this.endSegment = this.gps.nextPoint
+			//info("NEXTROADTOTOKE " + nextRoadToTake.beginX + " " + nextRoadToTake.beginY + " - " + nextRoadToTake.endX + " " +nextRoadToTake.endY)
+			//info("BEGSEG " + this.begSegment)
+			//info("ENDSEG " + this.endSegment)
 			if (this.endSegment === null)
 				this.killThis
 				
 			this.car.setCoordinates(this.begSegment, this.endSegment)
 			
-			/*
 			this.car.road.removeObject(this.car)
 			this.car.road = nextRoadToTake
 			this.car.road.addObject(this.car)
-			*/
 			
 			this.car.pos1D = 0
 			
@@ -95,12 +118,12 @@ agent Driver {
 			else {
 				this.car.pos1D = this.car.pos1D - 1
 			}*/
-			
-			this.car.pos1D = this.car.pos1D + 1
+
+			this.car.pos1D = this.car.pos1D + speed
 			this.car.setCoordinates(this.begSegment,this.endSegment)
-			this.currentPoint = this.car.coordinates
-			
-			// println(this.currentPoint.x + " " + this.currentPoint.y)
+			this.currentPoint=this.car.coordinates
+			//println(this.currentPoint.x+" "+this.currentPoint.y)
+
 			Thread.sleep(250)
 			
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))

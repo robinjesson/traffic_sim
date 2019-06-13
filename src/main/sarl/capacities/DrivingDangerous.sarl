@@ -38,4 +38,9 @@ skill DrivingDangerous implements Drive {
 	def brake(currentSpeed : int) : int {
 		return currentSpeed - 2
 	}
+	
+	def getSpeed : int {
+		return 2
+	}
+	
 }

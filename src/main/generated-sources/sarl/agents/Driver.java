@@ -77,6 +77,11 @@ public class Driver extends Agent {
       if ((this.endSegment == null)) {
         this.killThis();
       }
+      boolean _hasNextRoad = this.gps.hasNextRoad();
+      if ((!_hasNextRoad)) {
+        this.killThis();
+        return;
+      }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
       Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);
@@ -84,7 +89,12 @@ public class Driver extends Agent {
     }
   }
   
-  private void $behaviorUnit$ArrivedAtEndRoad$1(final ArrivedAtEndRoad occurrence) {
+  private void $behaviorUnit$Destroy$1(final Destroy occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
+  }
+  
+  private void $behaviorUnit$ArrivedAtEndRoad$2(final ArrivedAtEndRoad occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("ARRIVED END OF ROAD");
     synchronized (this) {
@@ -95,6 +105,9 @@ public class Driver extends Agent {
         this.killThis();
       }
       this.car.setCoordinates(this.begSegment, this.endSegment);
+      this.car.getRoad().removeObject(this.car);
+      this.car.setRoad(nextRoadToTake);
+      this.car.getRoad().addObject(this.car);
       this.car.setPos1D(0);
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
@@ -103,17 +116,19 @@ public class Driver extends Agent {
     }
   }
   
-  private void $behaviorUnit$ArrivedAtDestination$2(final ArrivedAtDestination occurrence) {
+  private void $behaviorUnit$ArrivedAtDestination$3(final ArrivedAtDestination occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("ARRIVED AT DESTINATION");
     this.killThis();
   }
   
-  private void $behaviorUnit$MoveForward$3(final MoveForward occurrence) {
+  private void $behaviorUnit$MoveForward$4(final MoveForward occurrence) {
     try {
       synchronized (this) {
         double _pos1D = this.car.getPos1D();
-        this.car.setPos1D((_pos1D + 1));
+        Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
+        int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
+        this.car.setPos1D((_pos1D + _speed));
         this.car.setCoordinates(this.begSegment, this.endSegment);
         this.currentPoint = this.car.getCoordinates();
         Thread.sleep(250);
@@ -127,7 +142,7 @@ public class Driver extends Agent {
     }
   }
   
-  private void $behaviorUnit$Destroy$4(final Destroy occurrence) {
+  private void $behaviorUnit$Destroy$5(final Destroy occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
@@ -221,7 +236,7 @@ public class Driver extends Agent {
   private void $guardEvaluator$ArrivedAtDestination(final ArrivedAtDestination occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtDestination$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtDestination$3(occurrence));
   }
   
   @SyntheticMember
@@ -229,7 +244,8 @@ public class Driver extends Agent {
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$4(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$5(occurrence));
   }
   
   @SyntheticMember
@@ -237,15 +253,26 @@ public class Driver extends Agent {
   private void $guardEvaluator$MoveForward(final MoveForward occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MoveForward$3(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MoveForward$4(occurrence));
   }
   
+  /**
+   * synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
+   * 
+   * this.car.road = this.gps.nextRoad
+   * this.begSegment=this.gps.nextPoint
+   * this.endSegment = this.gps.nextPoint
+   * this.car.setCoordinates(this.begSegment, this.endSegment)
+   * this.currentPoint = this.car.coordinates
+   * 
+   * }
+   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$ArrivedAtEndRoad(final ArrivedAtEndRoad occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtEndRoad$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtEndRoad$2(occurrence));
   }
   
   @Override

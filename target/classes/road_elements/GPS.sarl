@@ -15,6 +15,7 @@ class GPS {
 		var path : RoadPath = aStar.solve(current, end, network);
 
 		var count : int = 0
+
 		
 		for (roadSegment : path) {
 			var r = roadSegment as Road
@@ -24,9 +25,8 @@ class GPS {
 		this.transform(current)
 		
 		// println("GPS    :  "+this.listPoints)
-		
-	}
-	
+}
+
 	private def transform(current : Point2d) : void {
 		this.listPoints.add(current)
 		var lastPointAdded = current 
@@ -44,7 +44,7 @@ class GPS {
 	}
 	
 	def getNextRoad : Road {
-		if(this.hastNextRoad){
+		if(this.hasNextRoad){
 			var r = this.listRoads.get(0)
 			this.listRoads.remove(0)
 			return r
@@ -52,8 +52,8 @@ class GPS {
 		return null
 	}
 	
-	def getNextPoint : Point2d{
-		if(this.listPoints.size==0)
+	def getNextPoint : Point2d {
+		if(this.listPoints.size == 0)
 			return null
 			
 		var p = this.listPoints.get(0)
@@ -61,8 +61,8 @@ class GPS {
 		return p
 	}
 	
-	def hastNextRoad : boolean{
-		return this.listRoads.size!=0
+	def hasNextRoad : boolean{
+		return this.listRoads.size != 0
 	}
 
 	@Override

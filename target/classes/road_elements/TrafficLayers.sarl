@@ -115,6 +115,10 @@ class TrafficLayers extends MultiMapLayer {
 	def addCar(car : Car) {
 		this.mapElementLayer.addMapElement(car)
 	}
+
+	def addTrafficLight(tl : TrafficLight) {
+		this.mapElementLayer.addMapElement(tl)
+	}
 	
 	def removeCar(car : Car) : void{
 		this.mapElementLayer.removeMapElement(car)

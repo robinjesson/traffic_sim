@@ -1,6 +1,9 @@
 package capacities
 
 capacity Drive {
+	
+	def getSpeed():int
+	
 	/**
 	 * Returns the new speed after speeding up
 	 */

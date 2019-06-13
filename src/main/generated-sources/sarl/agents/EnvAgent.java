@@ -100,7 +100,7 @@ public class EnvAgent extends Agent {
       _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER.emit(_arrivedAtDestination, _function);
       return;
     }
-    boolean _equals_1 = car.getCoordinates().equals(occurrence.endPoint);
+    boolean _equals_1 = car.getCoordinates().equals(occurrence.nextPoint);
     if (_equals_1) {
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER_1 = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       ArrivedAtEndRoad _arrivedAtEndRoad = new ArrivedAtEndRoad();

@@ -53,8 +53,8 @@ public class GPS {
   
   @Pure
   public Road getNextRoad() {
-    boolean _hastNextRoad = this.hastNextRoad();
-    if (_hastNextRoad) {
+    boolean _hasNextRoad = this.hasNextRoad();
+    if (_hasNextRoad) {
       Road r = this.listRoads.get(0);
       this.listRoads.remove(0);
       return r;
@@ -74,7 +74,7 @@ public class GPS {
   }
   
   @Pure
-  public boolean hastNextRoad() {
+  public boolean hasNextRoad() {
     int _size = this.listRoads.size();
     return (_size != 0);
   }

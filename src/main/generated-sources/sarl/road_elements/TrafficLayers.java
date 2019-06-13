@@ -16,6 +16,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.Road;
 import road_elements.RoadObject;
+import road_elements.TrafficLight;
 
 /**
  * @author robin
@@ -112,6 +113,10 @@ public class TrafficLayers extends MultiMapLayer {
     return this.mapElementLayer.addMapElement(car);
   }
   
+  public boolean addTrafficLight(final TrafficLight tl) {
+    return this.mapElementLayer.addMapElement(tl);
+  }
+  
   public void removeCar(final Car car) {
     this.mapElementLayer.removeMapElement(car);
   }
@@ -157,5 +162,5 @@ public class TrafficLayers extends MultiMapLayer {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 2726919203L;
+  private static final long serialVersionUID = 3224744016L;
 }

@@ -42,6 +42,11 @@ public class DrivingSlow extends Skill implements Drive {
     return 0;
   }
   
+  @Pure
+  public int getSpeed() {
+    return 1;
+  }
+  
   @Extension
   @ImportedCapacityFeature(Logging.class)
   @SyntheticMember
