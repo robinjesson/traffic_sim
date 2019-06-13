@@ -64,7 +64,7 @@ agent Driver {
 				return
 			}
 
-			emit(new Influence(this.ID, this.arrivalPoint, this.car.position.segment.lastPoint))
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 
 		}
 
@@ -102,7 +102,7 @@ agent Driver {
 			this.car.road.addObject(this.car)
 			this.car.position.x = 0
 			
-			emit(new Influence(this.ID, this.arrivalPoint, this.car.position.segment.lastPoint))
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
 
 	}
