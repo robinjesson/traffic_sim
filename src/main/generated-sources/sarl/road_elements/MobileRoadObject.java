@@ -23,7 +23,7 @@ public class MobileRoadObject extends RoadObject {
     this.trafficLayers = trafficLayers;
   }
   
-  public void removeFromLayer() {
+  public synchronized void removeFromLayer() {
     this.trafficLayers.getMapElementLayer().removeMapElement(this);
   }
   

@@ -109,29 +109,29 @@ public class TrafficLayers extends MultiMapLayer {
    * return carList
    * }
    */
-  public boolean addCar(final Car car) {
+  public synchronized boolean addCar(final Car car) {
     return this.mapElementLayer.addMapElement(car);
   }
   
-  public boolean addTrafficLight(final TrafficLight tl) {
+  public synchronized boolean addTrafficLight(final TrafficLight tl) {
     return this.mapElementLayer.addMapElement(tl);
   }
   
-  public void removeCar(final Car car) {
+  public synchronized void removeCar(final Car car) {
     this.mapElementLayer.removeMapElement(car);
   }
   
-  public void refresh() {
+  public synchronized void refresh() {
     this.mapElementLayer.repaint();
   }
   
   @Pure
-  public MapElementLayer<MapElement> getMapElementLayer() {
+  public synchronized MapElementLayer<MapElement> getMapElementLayer() {
     return this.mapElementLayer;
   }
   
   @Pure
-  public RoadNetworkLayer getRoadNetworkLayer() {
+  public synchronized RoadNetworkLayer getRoadNetworkLayer() {
     return this.roadNetworkLayer;
   }
   

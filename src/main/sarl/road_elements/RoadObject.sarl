@@ -18,24 +18,23 @@ class RoadObject extends MapCircle {
 		this.road = road
 	}
 
-	def getRoad : Road {
+	synchronized def getRoad : Road {
 		return this.road
 	}
 
-	def setRoad(road : Road) {
+	synchronized def setRoad(road : Road) {
 		this.road = road
 	}
-	
-	def getPosition : Point1d {
+
+	synchronized def getPosition : Point1d {
 		return this.position
 	}
-	
-	def setPosition(position : Point1d) : void {
+
+ 	synchronized def setPosition(position : Point1d) : void {
 		this.position = position
 	}
-	
-	
-	def getCoordinates : Point2d {
+
+	synchronized def getCoordinates : Point2d {
 		var t = this.position.x / this.road.getDistanceFromStart(0);
 		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
 		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();

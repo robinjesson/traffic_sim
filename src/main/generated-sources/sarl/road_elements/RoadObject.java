@@ -30,25 +30,25 @@ public class RoadObject extends MapCircle {
   }
   
   @Pure
-  public Road getRoad() {
+  public synchronized Road getRoad() {
     return this.road;
   }
   
-  public void setRoad(final Road road) {
+  public synchronized void setRoad(final Road road) {
     this.road = road;
   }
   
   @Pure
-  public Point1d getPosition() {
+  public synchronized Point1d getPosition() {
     return this.position;
   }
   
-  public void setPosition(final Point1d position) {
+  public synchronized void setPosition(final Point1d position) {
     this.position = position;
   }
   
   @Pure
-  public Point2d getCoordinates() {
+  public synchronized Point2d getCoordinates() {
     double _x = this.position.getX();
     double _distanceFromStart = this.road.getDistanceFromStart(0);
     double t = (_x / _distanceFromStart);
