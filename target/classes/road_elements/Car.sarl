@@ -6,6 +6,7 @@ package road_elements
 import application.Simulation
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import javafx.scene.paint.Color
+import java.util.Random
 
 /** 
  * @author robin
@@ -14,7 +15,7 @@ import javafx.scene.paint.Color
 class Car extends MobileRoadObject {
 	
 	public var normalDirection : boolean = true	
-	public var colour : Color
+	public var color : Color
 	var x:double
 	var y:double
 	
@@ -24,31 +25,9 @@ class Car extends MobileRoadObject {
 			super.road.addObject(this)
 		}
 		trafficLayers.addCar(this)
-		
-		var r=(Math.random*9) as int
-		println(r)
-		switch(r){
-			case 0:
-				this.colour=Color::WHITE
-			case 1:
-				this.colour = Color::BLACK
-			case 2:
-				this.colour = Color::RED
-			case 3:
-				this.colour = Color::ORANGE
-			case 4:
-				this.colour = Color::YELLOW
-			case 5:
-				this.colour = Color::GREEN
-			case 6:
-				this.colour = Color::BLUE
-			case 7:
-				this.colour = Color::INDIGO
-			case 8:
-				this.colour = Color::PURPLE
-	
-		}
+
 		this.setCoordinates(currentRoad.begin,currentRoad.end)
+		this.color = Color::WHITE // randomColorPicker
 	}
 	
 	@Override
@@ -70,6 +49,40 @@ class Car extends MobileRoadObject {
 		//return new Point2d(this.x, this.y)
 	}
 
+	def randomColorPicker : Color {
+		var rand = new Random();
+		
+		var r = rand.nextFloat();
+		var g = rand.nextFloat();
+		var b = rand.nextFloat();
+		
+		return new Color(r,g,b,1)
+		
+		/*
+		// Find another way, make enum ?
+		var n = (Math.random * 9) as int
+		switch (n) {
+			case 0:
+				this.colour = Color::WHITE
+			case 1:
+				this.colour = Color::BLACK
+			case 2:
+				this.colour = Color::RED
+			case 3:
+				this.colour = Color::ORANGE
+			case 4:
+				this.colour = Color::YELLOW
+			case 5:
+				this.colour = Color::GREEN
+			case 6:
+				this.colour = Color::BLUE
+			case 7:
+				this.colour = Color::INDIGO
+			case 8:
+				this.colour = Color::PURPLE
+		}
+		*/
+	}
 	
 	
 	

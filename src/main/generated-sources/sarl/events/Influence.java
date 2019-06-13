@@ -10,9 +10,6 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import org.eclipse.xtext.xbase.lib.util.ToStringBuilder;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(15)
 @SuppressWarnings("all")

@@ -42,9 +42,6 @@ import road_elements.Car;
 import road_elements.Road;
 import road_elements.TrafficLayers;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(19)
 @SuppressWarnings("all")
@@ -58,10 +55,11 @@ public class EnvAgent extends Agent {
   private final TreeMap<UUID, Car> agentId_Cars = new TreeMap<UUID, Car>();
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
-    Object _get = occurrence.parameters[0];
-    this.trafficLayers = ((TrafficLayers) _get);
-    this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
-    this.spawnCarAndAgent();
+    synchronized (this) {
+      Object _get = occurrence.parameters[0];
+      this.trafficLayers = ((TrafficLayers) _get);
+      this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
+    }
     this.spawnCarAndAgent();
     this.spawnCarAndAgent();
     this.spawnCarAndAgent();

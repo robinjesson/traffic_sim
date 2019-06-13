@@ -3,9 +3,9 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import java.util.Random;
 import javafx.scene.paint.Color;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
@@ -20,7 +20,7 @@ import road_elements.TrafficLayers;
 public class Car extends MobileRoadObject {
   public boolean normalDirection = true;
   
-  public Color colour;
+  public Color color;
   
   private double x;
   
@@ -33,39 +33,8 @@ public class Car extends MobileRoadObject {
       super.getRoad().addObject(this);
     }
     trafficLayers.addCar(this);
-    double _random = Math.random();
-    int r = ((int) (_random * 9));
-    InputOutput.<Integer>println(Integer.valueOf(r));
-    switch (r) {
-      case 0:
-        this.colour = Color.WHITE;
-        break;
-      case 1:
-        this.colour = Color.BLACK;
-        break;
-      case 2:
-        this.colour = Color.RED;
-        break;
-      case 3:
-        this.colour = Color.ORANGE;
-        break;
-      case 4:
-        this.colour = Color.YELLOW;
-        break;
-      case 5:
-        this.colour = Color.GREEN;
-        break;
-      case 6:
-        this.colour = Color.BLUE;
-        break;
-      case 7:
-        this.colour = Color.INDIGO;
-        break;
-      case 8:
-        this.colour = Color.PURPLE;
-        break;
-    }
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
+    this.color = Color.WHITE;
   }
   
   @Override
@@ -89,6 +58,15 @@ public class Car extends MobileRoadObject {
     double _y_2 = beg.getY();
     double _y_3 = end.getY();
     this.y = (((1 - t) * _y_2) + (t * _y_3));
+  }
+  
+  @Pure
+  public Color randomColorPicker() {
+    Random rand = new Random();
+    float r = rand.nextFloat();
+    float g = rand.nextFloat();
+    float b = rand.nextFloat();
+    return new Color(r, g, b, 1);
   }
   
   @Override
@@ -135,5 +113,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -2890513474L;
+  private static final long serialVersionUID = -1255941507L;
 }

@@ -9,7 +9,6 @@ import org.arakhne.afc.gis.road.path.astar.RoadAStar;
 import org.arakhne.afc.gis.road.primitive.RoadNetwork;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
@@ -32,7 +31,6 @@ public class GPS {
       }
     }
     this.transform(current);
-    InputOutput.<String>println(("GPS      " + this.listPoints));
   }
   
   private void transform(final Point2d current) {

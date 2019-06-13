@@ -29,30 +29,34 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.GPS;
 import road_elements.Road;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(19)
 @SuppressWarnings("all")
 public class Driver extends Agent {
-  protected Point2d currentPoint;
-  
-  protected Point2d arrivalPoint;
-  
   protected Car car;
   
   protected GPS gps;
   
+  protected Point2d currentPoint;
+  
+  protected Point2d arrivalPoint;
+  
   protected Point2d begSegment;
   
   protected Point2d endSegment;
+  
+  protected synchronized void initProperties(final Car car, final Point2d arrivalPoint, final RoadNetwork network) {
+    this.car.setRoad(this.gps.getNextRoad());
+    this.begSegment = this.gps.getNextPoint();
+    this.endSegment = this.gps.getNextPoint();
+    this.car.setCoordinates(this.begSegment, this.endSegment);
+    this.currentPoint = this.car.getCoordinates();
+  }
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     synchronized (this) {
@@ -70,6 +74,9 @@ public class Driver extends Agent {
       this.car.setRoad(this.gps.getNextRoad());
       this.begSegment = this.gps.getNextPoint();
       this.endSegment = this.gps.getNextPoint();
+      if ((this.endSegment == null)) {
+        this.killThis();
+      }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
       Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);
@@ -77,20 +84,7 @@ public class Driver extends Agent {
     }
   }
   
-  private void $behaviorUnit$Destroy$1(final Destroy occurrence) {
-    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
-    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
-  }
-  
-  protected synchronized void initProperties(final Car car, final Point2d arrivalPoint, final RoadNetwork network) {
-    this.car.setRoad(this.gps.getNextRoad());
-    this.begSegment = this.gps.getNextPoint();
-    this.endSegment = this.gps.getNextPoint();
-    this.car.setCoordinates(this.begSegment, this.endSegment);
-    this.currentPoint = this.car.getCoordinates();
-  }
-  
-  private void $behaviorUnit$ArrivedAtEndRoad$2(final ArrivedAtEndRoad occurrence) {
+  private void $behaviorUnit$ArrivedAtEndRoad$1(final ArrivedAtEndRoad occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("ARRIVED END OF ROAD");
     synchronized (this) {
@@ -109,29 +103,19 @@ public class Driver extends Agent {
     }
   }
   
-  private void $behaviorUnit$ArrivedAtDestination$3(final ArrivedAtDestination occurrence) {
+  private void $behaviorUnit$ArrivedAtDestination$2(final ArrivedAtDestination occurrence) {
     Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("ARRIVED AT DESTINATION");
     this.killThis();
   }
   
-  protected void killThis() {
-    this.car.removeFromLayer();
-    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
-    _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
-  }
-  
-  private void $behaviorUnit$MoveForward$4(final MoveForward occurrence) {
+  private void $behaviorUnit$MoveForward$3(final MoveForward occurrence) {
     try {
       synchronized (this) {
         double _pos1D = this.car.getPos1D();
         this.car.setPos1D((_pos1D + 1));
         this.car.setCoordinates(this.begSegment, this.endSegment);
         this.currentPoint = this.car.getCoordinates();
-        double _x = this.currentPoint.getX();
-        String _plus = (Double.valueOf(_x) + " ");
-        double _y = this.currentPoint.getY();
-        InputOutput.<String>println((_plus + Double.valueOf(_y)));
         Thread.sleep(250);
         DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
         UUID _iD = this.getID();
@@ -143,17 +127,25 @@ public class Driver extends Agent {
     }
   }
   
+  private void $behaviorUnit$Destroy$4(final Destroy occurrence) {
+    Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+    _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
+  }
+  
+  protected synchronized void killThis() {
+    this.car.removeFromLayer();
+    Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
+    _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.killMe();
+  }
+  
   @Pure
-  protected Point2d getCurrentPoint() {
+  protected synchronized Point2d getCurrentPoint() {
     return this.currentPoint;
   }
   
   @Pure
-  protected Point2d getArrivalPoint() {
+  protected synchronized Point2d getArrivalPoint() {
     return this.arrivalPoint;
-  }
-  
-  private void $behaviorUnit$Initialize$5(final Initialize occurrence) {
   }
   
   @Extension
@@ -222,7 +214,6 @@ public class Driver extends Agent {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$5(occurrence));
   }
   
   @SyntheticMember
@@ -230,7 +221,7 @@ public class Driver extends Agent {
   private void $guardEvaluator$ArrivedAtDestination(final ArrivedAtDestination occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtDestination$3(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtDestination$2(occurrence));
   }
   
   @SyntheticMember
@@ -238,7 +229,7 @@ public class Driver extends Agent {
   private void $guardEvaluator$Destroy(final Destroy occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$1(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$4(occurrence));
   }
   
   @SyntheticMember
@@ -246,7 +237,7 @@ public class Driver extends Agent {
   private void $guardEvaluator$MoveForward(final MoveForward occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MoveForward$4(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$MoveForward$3(occurrence));
   }
   
   @SyntheticMember
@@ -254,7 +245,7 @@ public class Driver extends Agent {
   private void $guardEvaluator$ArrivedAtEndRoad(final ArrivedAtEndRoad occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
     assert occurrence != null;
     assert ___SARLlocal_runnableCollection != null;
-    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtEndRoad$2(occurrence));
+    ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$ArrivedAtEndRoad$1(occurrence));
   }
   
   @Override

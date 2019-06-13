@@ -5,9 +5,6 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.core.AgentTrait;
 import io.sarl.lang.core.Capacity;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(20)
 @SuppressWarnings("all")

@@ -14,9 +14,6 @@ import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")

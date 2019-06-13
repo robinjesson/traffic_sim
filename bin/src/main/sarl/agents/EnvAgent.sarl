@@ -1,0 +1,95 @@
+/** 
+ * 
+ */
+package agents
+
+import io.sarl.core.AgentKilled
+import io.sarl.core.AgentSpawned
+import io.sarl.core.ContextJoined
+import io.sarl.core.ContextLeft
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Logging
+import io.sarl.core.MemberJoined
+import io.sarl.core.MemberLeft
+import events.Influence
+import events.Perception
+import io.sarl.core.DefaultContextInteractions
+import events.ArrivedAtDestination
+import road_elements.Road
+import java.util.ArrayList
+import road_elements.TrafficLayers
+import road_elements.Car
+import org.arakhne.afc.gis.road.primitive.RoadNetwork
+import io.sarl.core.Lifecycle
+import java.util.UUID
+import java.util.TreeMap
+import events.ArrivedAtEndRoad
+import events.MoveForward
+
+/** 
+ * @author robin
+ * 
+ */
+agent EnvAgent {
+	uses Logging
+	uses DefaultContextInteractions
+	uses Lifecycle
+
+	var time : int = 0
+	var network : RoadNetwork
+	var trafficLayers : TrafficLayers
+	val agentId_Cars = new TreeMap<UUID, Car>()
+
+	on Initialize {
+		this.trafficLayers = occurrence.parameters.get(0) as TrafficLayers
+		this.network = this.trafficLayers.roadNetworkLayer.roadNetwork
+
+		// print(tl.mapElementLayer)
+		/* 
+		 * var voiture = new Car(0, this.network.roadSegments.get(0) as Road, tl)
+		 * var voiture3 = new Car(1000, this.network.roadSegments.get(0) as Road, tl)
+		 * var voiture2 = new Car(1, this.network.roadSegments.get(2) as Road, tl)
+		 */
+		// print(tl.mapElementLayer)
+		spawnCarAndAgent
+		//spawnCarAndAgent
+		//emit(new Perception)[elt|elt.UUID==id]
+	}
+
+	on Influence {
+		var agentId = occurrence.agentId
+		var car = this.getCarByAgentId(agentId)
+		
+		
+		if(car.coordinates.equals(occurrence.arrivalPoint)){
+			emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
+			return;
+		}
+		
+		if(car.coordinates.equals(car.road.end)){
+			emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
+			return;
+		}
+		
+		emit(new MoveForward)[elt|elt.UUID == agentId]
+	}
+
+
+	def spawnCarAndAgent(time:int=0) : UUID {
+		while(this.time<0){}
+		
+		var nbRoads = this.network.roadSegments.size
+		var indexRoadRandom = (Math.random() * nbRoads) as int
+		var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
+		//A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
+		var car = new Car(0, selectedRoad, this.trafficLayers)
+		var id = DriverNormal.spawn(car,this.network)
+		agentId_Cars.put(id,car)
+		return id
+	}
+	
+	def getCarByAgentId(agentId : UUID) : Car{
+		return this.agentId_Cars.get(agentId)
+	}
+}

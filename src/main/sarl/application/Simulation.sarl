@@ -196,8 +196,6 @@ class Simulation extends Application {
 		roadNetworkLayer = new RoadNetworkLayer(network)
 		multiMapLayer.addMapLayer(roadNetworkLayer)
 		multiMapLayer.addMapLayer(mapElementLayer)
-		
-		
 
 		return multiMapLayer
 	}

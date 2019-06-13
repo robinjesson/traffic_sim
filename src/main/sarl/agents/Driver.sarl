@@ -1,53 +1,49 @@
-/** 
- * 
- */
 package agents
 
+import capacities.Drive
+import capacities.DrivingNormal
+import events.ArrivedAtDestination
+import events.ArrivedAtEndRoad
+import events.Influence
+import events.MoveForward
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
 import org.arakhne.afc.gis.road.primitive.RoadNetwork
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Car
 import road_elements.GPS
-import road_elements.Road
-import events.Perception
-import events.Influence
-import io.sarl.core.Logging
-import io.sarl.core.DefaultContextInteractions
-import events.ArrivedAtEndRoad
-import io.sarl.core.Initialize
-import java.util.ArrayList
-import events.ArrivedAtDestination
-import io.sarl.core.Lifecycle
-import events.MoveForward
-import org.arakhne.afc.gis.road.primitive.RoadConnection
-import capacities.Drive
-import capacities.DrivingNormal
-import io.sarl.core.Destroy
 
-/** 
- * @author robin
- * 
- */
 agent Driver {
 	uses Logging
 	uses DefaultContextInteractions
 	uses Lifecycle
 	uses Drive
-	
-	protected var currentPoint : Point2d
-	protected var arrivalPoint : Point2d
+
 	protected var car : Car
 	protected var gps : GPS
-	
+	protected var currentPoint : Point2d
+	protected var arrivalPoint : Point2d
 	protected var begSegment : Point2d
 	protected var endSegment : Point2d
 
+	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
+		this.car.road = this.gps.nextRoad
+		this.begSegment=this.gps.nextPoint
+		this.endSegment = this.gps.nextPoint
+		this.car.setCoordinates(this.begSegment, this.endSegment)
+		this.currentPoint = this.car.coordinates
+	}
+
 	on Initialize {
-		synchronized(this){
+		synchronized (this) {
 			setSkill(new DrivingNormal)
 			var network = occurrence.parameters.get(1) as RoadNetwork
-			
+
 			this.car = occurrence.parameters.get(0) as Car
-			
+
 			//this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.currentPoint = this.car.coordinates
 			this.arrivalPoint = new Point2d(50, 50)
@@ -55,56 +51,40 @@ agent Driver {
 			this.car.road = this.gps.nextRoad
 			this.begSegment = this.gps.nextPoint
 			this.endSegment = this.gps.nextPoint
-			
-			
+	
+			if(this.endSegment === null) this.killThis
+
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
-			
 		}
-
-	}
-
-	on Destroy {
-		info("The agent was stopped.")
-	}
-
-	synchronized def initProperties(car : Car, arrivalPoint : Point2d, network : RoadNetwork) : void {
-		
-		this.car.road = this.gps.nextRoad
-		this.begSegment=this.gps.nextPoint
-		this.endSegment = this.gps.nextPoint
-		this.car.setCoordinates(this.begSegment, this.endSegment)
-		this.currentPoint = this.car.coordinates
-		
 	}
 
 	on ArrivedAtEndRoad {
 		info("ARRIVED END OF ROAD")
 		synchronized (this) {
 			var nextRoadToTake = this.gps.nextRoad
+			
 			this.begSegment = this.endSegment
 			this.endSegment = this.gps.nextPoint
 			if (this.endSegment === null)
 				this.killThis
+				
 			this.car.setCoordinates(this.begSegment, this.endSegment)
+			
 			/*
 			this.car.road.removeObject(this.car)
 			this.car.road = nextRoadToTake
 			this.car.road.addObject(this.car)
 			*/
+			
 			this.car.pos1D = 0
+			
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
-		 
 	}
 	
 	on ArrivedAtDestination {
 		info("ARRIVED AT DESTINATION")
 		this.killThis
-	}
-	
-	def killThis : void {
-		this.car.removeFromLayer
-		killMe
 	}
 
 	on MoveForward {
@@ -115,25 +95,32 @@ agent Driver {
 			else {
 				this.car.pos1D = this.car.pos1D - 1
 			}*/
+			
 			this.car.pos1D = this.car.pos1D + 1
 			this.car.setCoordinates(this.begSegment,this.endSegment)
-			this.currentPoint=this.car.coordinates
-			println(this.currentPoint.x+" "+this.currentPoint.y)
+			this.currentPoint = this.car.coordinates
+			
+			// println(this.currentPoint.x + " " + this.currentPoint.y)
 			Thread.sleep(250)
+			
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
+	}
 
+	on Destroy {
+		info("The agent was stopped.")
+	}
+
+	synchronized def killThis : void {
+		this.car.removeFromLayer
+		killMe
 	}
 	
-	def getCurrentPoint:Point2d{
+	synchronized def getCurrentPoint:Point2d{
 		return this.currentPoint
 	}
 
-	def getArrivalPoint : Point2d { 
+	synchronized def getArrivalPoint : Point2d { 
 		return this.arrivalPoint
 	}
-
-	on Initialize {
-		// emit(new AgentDeparture)
-	}	
 }
