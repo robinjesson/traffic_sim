@@ -67,8 +67,8 @@ public class Simulation extends Application {
     this.trafficLayers = this.getRoads();
     MultiMapLayer<TrafficLayers> rootLayer = new MultiMapLayer<TrafficLayers>();
     rootLayer.addMapLayer(this.trafficLayers);
-    GisCanvas<MultiMapLayer<TrafficLayers>> _gisCanvas = new GisCanvas<MultiMapLayer<TrafficLayers>>(rootLayer);
-    ZoomablePane<MultiMapLayer<TrafficLayers>> scrollPane = new ZoomablePane<MultiMapLayer<TrafficLayers>>(_gisCanvas);
+    GisCanvas<MultiMapLayer<TrafficLayers>> canvas = new GisCanvas<MultiMapLayer<TrafficLayers>>(rootLayer);
+    ZoomablePane<MultiMapLayer<TrafficLayers>> scrollPane = new ZoomablePane<MultiMapLayer<TrafficLayers>>(canvas);
     root.setCenter(scrollPane);
     Scene scene = new Scene(root, 1024, 768);
     scene.getStylesheets().add("application.css");
@@ -79,7 +79,7 @@ public class Simulation extends Application {
     primaryStage.setScene(scene);
     primaryStage.show();
     SREBootstrap bootstrap = SRE.getBootstrap();
-    bootstrap.startAgent(EnvAgent.class, this.trafficLayers);
+    bootstrap.startAgent(EnvAgent.class, this.trafficLayers, canvas);
   }
   
   public MapElementLayer<?> loadShapeFile2(final File file) {
@@ -89,7 +89,8 @@ public class Simulation extends Application {
       GISShapeFileReader reader = new GISShapeFileReader(file);
       Rectangle2d worldRect = new Rectangle2d();
       ESRIBounds esriBounds = reader.getBoundsFromHeader();
-      worldRect.setFromCorners(esriBounds.getMinX(), 
+      worldRect.setFromCorners(
+        esriBounds.getMinX(), 
         esriBounds.getMinY(), 
         esriBounds.getMaxX(), 
         esriBounds.getMaxY());

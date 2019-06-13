@@ -18,6 +18,13 @@ import java.util.TreeMap
 import events.ArrivedAtEndRoad
 import events.MoveForward
 import java.util.concurrent.atomic.AtomicInteger
+import org.arakhne.afc.gis.road.StandardRoadNetwork
+import java.util.concurrent.atomic.AtomicBoolean
+import org.arakhne.afc.gis.maplayer.MapLayerContentEvent
+import java.util.Collection
+import java.util.ArrayList
+import org.arakhne.afc.gis.ui.GisCanvas
+import org.arakhne.afc.gis.maplayer.MultiMapLayer
 import org.arakhne.afc.math.geometry.d1.d.Point1d
 
 /** 
@@ -29,15 +36,18 @@ agent EnvAgent {
 	uses DefaultContextInteractions
 	uses Lifecycle
 
+	val agentId_Cars = new TreeMap<UUID, Car>
+	val freeze = new AtomicBoolean
+
+	var canvas : GisCanvas<MultiMapLayer<TrafficLayers>>
 	var network : RoadNetwork
 	var trafficLayers : TrafficLayers
-	val agentId_Cars = new TreeMap<UUID, Car>
-	var nbInfluenceToCompute = new AtomicInteger
-	var time = new AtomicInteger
+	var influences = new AtomicInteger
+	var time = 0
 
 	on Initialize {
-		this.nbInfluenceToCompute.set(0)
-		this.time.set(0)
+		this.influences.set(0)
+		this.canvas = occurrence.parameters.get(1) as GisCanvas<MultiMapLayer<TrafficLayers>>
 		this.trafficLayers = occurrence.parameters.get(0) as TrafficLayers
 		this.network = this.trafficLayers.roadNetworkLayer.roadNetwork
 
@@ -49,75 +59,96 @@ agent EnvAgent {
 		 * var voiture2 = new Car(1, this.network.roadSegments.get(2) as Road, tl)
 		 */
 		// print(tl.mapElementLayer)
-		spawnCarAndAgent
-		//spawnCarAndAgent
-		/* spawnCarAndAgent
-	 * spawnCarAndAgent
-	 * spawnCarAndAgent
-	 */
+		spawnCarAndAgent(4)
+
 		// spawnCarAndAgent
-		// emit(new Perception)[elt|elt.UUID==id]
+			// emit(new Perception)[elt|elt.UUID==id]
 	}
 
 	on Influence {
-		var agentId = occurrence.agentId
-		var car = this.getCarByAgentId(agentId)
-		car.influence = occurrence
-		this.nbInfluenceToCompute.incrementAndGet
-		if (this.nbInfluenceToCompute >= this.agentId_Cars.size) {
-			computeInfluences
-		}
-	}
-
-	def computeInfluences {
-		// info(this.nbInfluenceToCompute)
-		Thread::sleep(250)
-		for (b : agentId_Cars.entrySet) {
-			var body = b.value
-			var agentId = body.influence.agentId
+		synchronized (this) {
+			var agentId = occurrence.agentId
 			var car = this.getCarByAgentId(agentId)
 
-			if (car.coordinates.equals(body.influence.arrivalPoint)) {
-				emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
-				return;
+			if (car !== null) {
+				car.influence = occurrence
+				var v = this.influences.incrementAndGet
+				if (v >= this.agentId_Cars.size) {
+					computeInfluences
+				}
 			}
 
-			if (car.coordinates.equals(body.influence.nextPoint)) {
-				emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
-				return;
-			}
-
-			emit(new MoveForward)[elt|elt.UUID == agentId]
 		}
-
-		this.nbInfluenceToCompute.set(0)
-
-		// info(this.nbInfluenceToCompute)
-		this.time.incrementAndGet
 
 	}
 
-	def removeAgentAndCar(idAgent : UUID) {
+	synchronized def computeInfluences {
+		this.freeze.set(true)
+		var now = System::currentTimeMillis
+		var restart = now + 250
+
+		try {
+			this.influences.set(0)
+
+			for (b : agentId_Cars.entrySet) {
+				var body = b.value
+				var agentId = body.influence.agentId
+				var car = this.getCarByAgentId(agentId)
+
+				/*if (car.coordinates.equals(body.influence.arrivalPoint)) {
+				 * emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
+				 * return;
+				 * }
+				 */
+
+				/* if (car.coordinates.equals(body.influence.nextPoint)) {
+				 * emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
+				 * return;
+				 * }
+				 */
+				emit(new MoveForward)[elt|elt.UUID == agentId]
+				while (System.currentTimeMillis < restart) {
+				} 	// replaces thread::sleep because it caused problems
+					// this.trafficLayers.roadNetworkLayer.container.fireLayerContentChangedEvent(new MapLayerContentEvent(this.trafficLayers.roadNetworkLayer))
+			}
+
+			javafx.application.Platform::runLater[this.canvas.drawContent]
+			this.time++
+
+		} finally {
+			this.freeze.set(false)
+		}
+
+		// info("nbInfl : " + this.influences + "; taille map : " + this.agentId_Cars.size)
+	}
+
+	synchronized def removeAgentAndCar(idAgent : UUID) {
 		this.agentId_Cars.remove(idAgent)
+			// info("taille map apres remove : " + this.agentId_Cars.size)
 	}
 
-	synchronized def spawnCarAndAgent(time : int = 0) : UUID {
-		while (this.time < 0) {
+	synchronized def spawnCarAndAgent(nb : int = 1) : Collection<UUID> {
+		var colID : Collection<UUID> = new ArrayList<UUID>()
+		for (var i = 0; i < nb; i++) {
+			var nbRoads = this.network.roadSegments.size
+			var indexRoadRandom = (Math.random() * nbRoads) as int
+			var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
+			// info(selectedRoad)
+			// A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
+			var car = new Car(new Point1d(selectedRoad, 0, 1), selectedRoad, this.trafficLayers)
+			var id = Driver.spawn(car, this)
+			agentId_Cars.put(id, car)
+			colID.add(id)
 		}
-
-		var nbRoads = this.network.roadSegments.size
-		var indexRoadRandom = (Math.random() * nbRoads) as int
-		var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
-		info(selectedRoad)
-		// A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
-		var car = new Car(new Point1d(selectedRoad, 0, 1), selectedRoad, this.trafficLayers)
-		var id = Driver.spawn(car, this.network, this)
-		agentId_Cars.put(id, car)
-		return id
+		return colID
 	}
 
-	def getCarByAgentId(agentId : UUID) : Car {
+	synchronized def getCarByAgentId(agentId : UUID) : Car {
 		return this.agentId_Cars.get(agentId)
+	}
+
+	synchronized def getNetwork : RoadNetwork {
+		return this.network
 	}
 }
 

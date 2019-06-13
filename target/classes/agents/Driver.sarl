@@ -22,7 +22,7 @@ import org.arakhne.afc.gis.road.primitive.RoadConnection
 import capacities.Drive
 import capacities.DrivingNormal
 import io.sarl.core.Destroy
-import org.arakhne.afc.math.geometry.d2.Point2D
+import java.util.Random
 
 /** 
  * @author robin
@@ -38,32 +38,33 @@ agent Driver {
 	protected var arrivalPoint : Point2d
 	protected var car : Car
 	protected var gps : GPS
+	var random = new Random
 
-	protected var begSegment : Point2D
-	protected var endSegment : Point2D
+	protected var begSegment : Point2d
+	protected var endSegment : Point2d
 	var env : EnvAgent
 
 	on Initialize {
 		synchronized (this) {
 			setSkill(new DrivingNormal)
-			this.env = occurrence.parameters.get(2) as EnvAgent
-			var network = occurrence.parameters.get(1) as RoadNetwork
+			this.env = occurrence.parameters.get(1) as EnvAgent
 
 			this.car = occurrence.parameters.get(0) as Car
 
 			// this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.currentPoint = this.car.coordinates
 			this.arrivalPoint = new Point2d(50, 50)
-			this.gps = new GPS(this.currentPoint, this.arrivalPoint, network)
-			this.car.road = this.gps.nextRoad
-			this.begSegment = this.gps.nextPoint
-			this.endSegment = this.gps.nextPoint
+			// this.gps = new GPS(this.currentPoint, this.arrivalPoint, this.env.network)
+			// this.car.road = this.gps.nextRoad
+			this.begSegment = this.car.road.beginPoint.point
+			this.endSegment = this.car.road.endPoint.point
+			this.car.setCoordinates(this.begSegment, this.endSegment)
 
-			if (!this.gps.hasNextRoad) {
-				this.killThis
-				return
-			}
-
+			/* if (!this.gps.hasNextRoad) {
+			 * this.killThis
+			 * return
+			 * }
+			 */
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 
 		}
@@ -84,62 +85,99 @@ agent Driver {
 	 * 
 	 * }
 	 */
-	on ArrivedAtEndRoad {
-		info("ARRIVED END OF ROAD")
+	def ArrivedAtEndRoad {
 		synchronized (this) {
-			var nextRoadToTake = this.gps.nextRoad
-			this.begSegment = this.endSegment
-			this.endSegment = this.gps.nextPoint
-			// info("NEXTROADTOTOKE " + nextRoadToTake.beginX + " " + nextRoadToTake.beginY + " - " + nextRoadToTake.endX + " " +nextRoadToTake.endY)
-			// info("BEGSEG " + this.begSegment)
-			// info("ENDSEG " + this.endSegment)
-			if (this.endSegment === null)
-				this.killThis
-				
-			this.car.setCoordinates(this.car.position.segment.firstPoint, this.car.position.segment.lastPoint)
+
+				/* var nextRoadToTake = this.gps.nextRoad
+				 * 
+				 * this.begSegment = this.endSegment
+				 * this.endSegment = this.gps.nextPoint
+				 * 
+				 * if (this.endSegment === null)
+				 * this.killThis
+				 * this.car.setCoordinates(this.begSegment, this.endSegment)
+
+				 * this.car.road.removeObject(this.car)
+				 * this.car.road = nextRoadToTake
+				 * this.car.road.addObject(this.car)
+
+				 * this.car.pos1D = 0
+				 * emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+				 */
+			var b = this.car.road.beginPoint
+			var e = this.car.road.endPoint
+
+			var selectedRoad : Road
+			if (b.isNearPoint(this.car.coordinates)) {
+				do {
+					var index = (this.random.nextDouble * b.connectedSegmentCount) as int
+					selectedRoad = b.connectedSegments.get(index) as Road
+				} while (selectedRoad === this.car.road)
+			} else {
+				do {
+					var index = (this.random.nextDouble * e.connectedSegmentCount) as int
+					selectedRoad = e.connectedSegments.get(index) as Road
+				} while (selectedRoad === this.car.road)
+			}
+
 			this.car.road.removeObject(this.car)
-			this.car.road = nextRoadToTake
+			this.car.road = selectedRoad
 			this.car.road.addObject(this.car)
+
+			if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
+				this.begSegment = this.car.road.beginPoint.point
+				this.endSegment = this.car.road.endPoint.point
+			} else {
+				this.begSegment = this.car.road.endPoint.point
+				this.endSegment = this.car.road.beginPoint.point
+			}
+
+			this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.car.position.x = 0
-			
-			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+			// emit(new Influence(this.ID, this.arrivalPoint, this.begSegment))
 		}
 
 	}
 
-	on ArrivedAtDestination {
-		info("ARRIVED AT DESTINATION")
-		this.killThis
+	def ArrivedAtDestination {
+		synchronized (this) {
+			this.killThis
+		}
 	}
 
-	def killThis : void {
+	synchronized def killThis : void {
+
 		this.env.removeAgentAndCar(this.ID)
 		this.car.road.removeObject(this.car)
 		this.car.removeFromLayer
 		killMe
+
 	}
 
 	on MoveForward {
 		synchronized (this) {
+			if (car.coordinates.equals(this.car.influence.arrivalPoint)) {
+				this.ArrivedAtDestination 	// old event ArrivedAtDestination
+			}
+
+			if (car.coordinates.equals(this.car.influence.nextPoint)) {
+				this.ArrivedAtEndRoad 	// old events ArrivedAtEndRoad
+			}
+
 			this.car.position.x = this.car.position.x + speed
 			this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.currentPoint = this.car.coordinates
-			println(this.currentPoint.x+" "+this.currentPoint.y)
-			// Thread.sleep(250)
+
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
 
 	}
 
-	def getCurrentPoint : Point2d {
+	synchronized def getCurrentPoint : Point2d {
 		return this.currentPoint
 	}
 
-	def getArrivalPoint : Point2d {
+	synchronized def getArrivalPoint : Point2d {
 		return this.arrivalPoint
 	}
-
-	on Initialize {
-		// emit(new AgentDeparture)
-	}	
 }

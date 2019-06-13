@@ -7,7 +7,6 @@ package application
  * @author tiantian
  * 
  */
-
 import agents.EnvAgent
 import io.sarl.bootstrap.SRE
 import java.io.File
@@ -39,14 +38,14 @@ import road_elements.TrafficLight
 class Simulation extends Application {
 
 	var trafficLayers = new TrafficLayers(new ArrayList<Road>(), new ArrayList<RoadObject>())
-	
-	def getTrafficLayers : TrafficLayers{
+
+	def getTrafficLayers : TrafficLayers {
 		return this.trafficLayers;
 	}
-	
+
 	def getRoads : TrafficLayers {
 		var roads = TrafficLayers::roadListFactory
-		var cars = new ArrayList<RoadObject>()// TrafficLayers::carListFactory(roads)
+		var cars = new ArrayList<RoadObject>() // TrafficLayers::carListFactory(roads)
 		return new TrafficLayers(roads, cars)
 	}
 
@@ -54,21 +53,21 @@ class Simulation extends Application {
 	def start(primaryStage : Stage) throws Exception {
 		var root = new BorderPane()
 		var reader : road_elements.ShapeReader = new road_elements.ShapeReader()
-		
+
 		var file : File = new File("src/main/resources/application/quartier_polyline.shp")
 		// var file : File = new File("src/main/resources/application/roads-line.shp")
 		
-        // var loadedResourceOK = shapeToLayers()	
+        // var loadedResourceOK = shapeToLayers()
 		// var loadedRoads : RoadNetworkLayer = loadShapeFile2(file) as RoadNetworkLayer
 		
 		this.trafficLayers = getRoads()
-		//var tl = new TrafficLight(0,this.trafficLayers.roadNetworkLayer.roadNetwork.roadSegments.get(0) as Road)
-		//this.trafficLayers.addTrafficLight(tl)
+		// var tl = new TrafficLight(0,this.trafficLayers.roadNetworkLayer.roadNetwork.roadSegments.get(0) as Road)
+		// this.trafficLayers.addTrafficLight(tl)
 		var rootLayer = new MultiMapLayer
 		rootLayer.addMapLayer(this.trafficLayers)
+		var canvas = new GisCanvas(rootLayer)
+		var scrollPane = new ZoomablePane(canvas);
 
-		var scrollPane = new ZoomablePane(new GisCanvas(rootLayer));
-		
 		root.setCenter(scrollPane)
 
 		var scene = new Scene(root, 1024, 768)
@@ -79,27 +78,27 @@ class Simulation extends Application {
 		primaryStage.setTitle("Traffic Simulation")
 		primaryStage.setScene(scene)
 		primaryStage.show()
-		
-		
+
 		var bootstrap = SRE.getBootstrap()
-		bootstrap.startAgent(EnvAgent, this.trafficLayers)
+		bootstrap.startAgent(EnvAgent, this.trafficLayers, canvas)
 	}
 
 	def loadShapeFile2(file : File) : MapElementLayer<?> {
-		
+
 		var network : StandardRoadNetwork = null
 		var layer : MapElementLayer<MapElement> = null
 
 		var reader : GISShapeFileReader = new GISShapeFileReader(file)
-		
+
 		var worldRect : Rectangle2d = new Rectangle2d()
-		
-		var	esriBounds = reader.getBoundsFromHeader()
-		
-		worldRect.setFromCorners(esriBounds.getMinX(), 
-								esriBounds.getMinY(), 
-								esriBounds.getMaxX(),
-								esriBounds.getMaxY()
+
+		var esriBounds = reader.getBoundsFromHeader()
+
+		worldRect.setFromCorners(
+			esriBounds.getMinX(),
+			esriBounds.getMinY(),
+			esriBounds.getMaxX(),
+			esriBounds.getMaxY()
 		)
 
 		if (reader.getShapeElementType() == ShapeElementType.POLYLINE) {
@@ -122,15 +121,15 @@ class Simulation extends Application {
 			} else {
 				if (layer === null) {
 					layer = new TreeMapElementLayer
-				try {
-					layer.addMapElement(element)
-				} catch (e : RoadNetworkException) {
-					throw new RuntimeException(e)
+					try {
+						layer.addMapElement(element)
+					} catch (e : RoadNetworkException) {
+						throw new RuntimeException(e)
+					}
 				}
-				}
-			}	
+			}
 		}
-		
+
 		if (network !== null) {
 			var networkLayer = new RoadNetworkLayer(network)
 			return networkLayer
@@ -156,26 +155,26 @@ class Simulation extends Application {
 		var multiMapLayer = new MultiMapLayer
 		var roadNetworkLayer : RoadNetworkLayer = null
 		var mapElementLayer = new TreeMapElementLayer<MapElement>(worldRect)
-		
-		var network = new StandardRoadNetwork(worldRect)		
+
+		var network = new StandardRoadNetwork(worldRect)
 
 		if (reader.getShapeElementType() == ShapeElementType.POLYLINE) {
 			reader.setMapElementType(typeof(RoadPolyline))
 		}
 
 		var element : MapElement
-		var count= 0
+		var count = 0
 		while ((element = reader.read()) !== null) {
-			
+
 			if (element instanceof RoadPolyline) {
 				var sgmt = element
-				
+
 				if (network === null) {
 					network = new StandardRoadNetwork(worldRect);
 				}
-		
-				for(group:sgmt.groups){
-					for(var i=0;i<group.points.size-1;i++){
+
+				for (group : sgmt.groups) {
+					for (var i = 0; i < group.points.size - 1; i++) {
 						var xBegin = group.points.get(i).x as int
 						var yBegin = group.points.get(i).y as int
 						var xEnd = group.points.get(i + 1).x as int
@@ -183,19 +182,20 @@ class Simulation extends Application {
 
 						var road = new Road(xBegin, yBegin, xEnd, yEnd)
 						network.addRoadSegment(road)
-						/*
-						var car : Car = new Car(0, road, 0, 0)
-						//print(car)
-						mapElementLayer.addMapElement(car)
-						//print(mapElementLayer)
-						*/
+
+					/* 
+					 * var car : Car = new Car(0, road, 0, 0)
+					 * //print(car)
+					 * mapElementLayer.addMapElement(car)
+					 * //print(mapElementLayer)
+					 */
 					}
 				}
-				
-			} 
+
+			}
 			count++
 		}
-		
+
 		roadNetworkLayer = new RoadNetworkLayer(network)
 		multiMapLayer.addMapLayer(roadNetworkLayer)
 		multiMapLayer.addMapLayer(mapElementLayer)
