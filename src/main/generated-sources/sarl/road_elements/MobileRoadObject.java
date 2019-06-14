@@ -3,7 +3,7 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import org.arakhne.afc.gis.road.primitive.RoadConnection;
+import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 import road_elements.RoadObject;
@@ -16,16 +16,14 @@ import road_elements.TrafficLayers;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class MobileRoadObject extends RoadObject {
-  private RoadConnection entryRoadConnection;
-  
   private TrafficLayers trafficLayers;
   
-  public MobileRoadObject(final double pos1D, final Road currentRoad, final TrafficLayers trafficLayers) {
-    super(pos1D, currentRoad);
+  public MobileRoadObject(final Point1d position, final Road currentRoad, final TrafficLayers trafficLayers) {
+    super(position, currentRoad);
     this.trafficLayers = trafficLayers;
   }
   
-  public void removeFromLayer() {
+  public synchronized void removeFromLayer() {
     this.trafficLayers.getMapElementLayer().removeMapElement(this);
   }
   
@@ -56,5 +54,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 2240737139L;
+  private static final long serialVersionUID = 724033456L;
 }

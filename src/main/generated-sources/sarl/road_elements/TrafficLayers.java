@@ -16,6 +16,7 @@ import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.Road;
 import road_elements.RoadObject;
+import road_elements.TrafficLight;
 
 /**
  * @author robin
@@ -108,25 +109,29 @@ public class TrafficLayers extends MultiMapLayer {
    * return carList
    * }
    */
-  public boolean addCar(final Car car) {
+  public synchronized boolean addCar(final Car car) {
     return this.mapElementLayer.addMapElement(car);
   }
   
-  public void removeCar(final Car car) {
+  public synchronized boolean addTrafficLight(final TrafficLight tl) {
+    return this.mapElementLayer.addMapElement(tl);
+  }
+  
+  public synchronized void removeCar(final Car car) {
     this.mapElementLayer.removeMapElement(car);
   }
   
-  public void refresh() {
+  public synchronized void refresh() {
     this.mapElementLayer.repaint();
   }
   
   @Pure
-  public MapElementLayer<MapElement> getMapElementLayer() {
+  public synchronized MapElementLayer<MapElement> getMapElementLayer() {
     return this.mapElementLayer;
   }
   
   @Pure
-  public RoadNetworkLayer getRoadNetworkLayer() {
+  public synchronized RoadNetworkLayer getRoadNetworkLayer() {
     return this.roadNetworkLayer;
   }
   
@@ -157,5 +162,5 @@ public class TrafficLayers extends MultiMapLayer {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 2726919203L;
+  private static final long serialVersionUID = 3224744016L;
 }

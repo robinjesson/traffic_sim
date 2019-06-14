@@ -3,7 +3,6 @@ package drawers;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import javafx.scene.paint.Color;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.arakhne.afc.nodefx.Drawer;
 import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
@@ -20,10 +19,10 @@ public class CarDrawer implements Drawer<Car> {
   @Override
   public void draw(final ZoomableGraphicsContext gc, final Car element) {
     Road currentRoad = element.getRoad();
-    double pos1D = element.getPos1D();
+    double position = element.getPosition().getX();
     Point2d coord = element.getCoordinates();
-    gc.setFill(Color.RED);
-    gc.setStroke(Color.RED);
+    gc.setFill(element.color);
+    gc.setStroke(element.color);
     double _x = coord.getX();
     double _y = coord.getY();
     gc.fillRect((_x - (CarDrawer.width / 2)), (_y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
