@@ -126,6 +126,41 @@ class Road extends RoadPolyline {
 		throw new IllegalArgumentException("This UUID doesn't exist")
 	}
 	
+	def getSameDirectionCars(beg:Point2d, end:Point2d) : ArrayList<Car>{
+		var res=new ArrayList<Car>
+		for(car:this.listOfCars){
+			if(car.road.beginPoint.point.equals(beg) && car.road.endPoint.equals(end)){
+				res.add(car)
+			}
+		}
+		return res
+	}
+
+	def getSameDirectionCars(car : Car) : ArrayList<Car> {
+		return this.getSameDirectionCars(car.road.beginPoint.point, car.road.endPoint.point)
+	}
+	
+	def getFrontCarOf(car:Car) : Car{
+		var lCars = this.getSameDirectionCars(car)
+		if (lCars.size != 0) {
+			var frontCar : Car = lCars.get(0)
+			for (c : lCars) {
+				if(c!=car){
+					if(c.position.x-car.position.x<=frontCar.position.x-car.position.x){
+						frontCar=c
+					}
+				}
+			}
+			return frontCar
+		}
+		return null
+		
+	}
+
+	def getFrontCarDistanceOf(car : Car) : double {
+		return if(this.getFrontCarOf(car)!==null) car.position.x - this.getFrontCarOf(car).position.x else 100000
+	}
+	
 
 	
 }

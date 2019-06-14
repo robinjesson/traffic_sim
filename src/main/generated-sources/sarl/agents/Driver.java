@@ -2,6 +2,7 @@ package agents;
 
 import agents.EnvAgent;
 import capacities.Drive;
+import capacities.DrivingDangerous;
 import capacities.DrivingNormal;
 import events.Influence;
 import events.MoveForward;
@@ -61,8 +62,17 @@ public class Driver extends Agent {
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     synchronized (this) {
-      DrivingNormal _drivingNormal = new DrivingNormal();
-      this.<DrivingNormal>setSkill(_drivingNormal);
+      int _nextInt = this.random.nextInt(2);
+      switch (_nextInt) {
+        case 0:
+          DrivingNormal _drivingNormal = new DrivingNormal();
+          this.<DrivingNormal>setSkill(_drivingNormal);
+          break;
+        default:
+          DrivingDangerous _drivingDangerous = new DrivingDangerous();
+          this.<DrivingDangerous>setSkill(_drivingDangerous);
+          break;
+      }
       Object _get = occurrence.parameters[1];
       this.env = ((EnvAgent) _get);
       Object _get_1 = occurrence.parameters[0];
@@ -164,6 +174,7 @@ public class Driver extends Agent {
       if (_equals_1) {
         this.ArrivedAtEndRoad();
       }
+      double distFrontCar = this.car.getRoad().getFrontCarDistanceOf(this.car);
       Point1d _position = this.car.getPosition();
       double _x = this.car.getPosition().getX();
       Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);

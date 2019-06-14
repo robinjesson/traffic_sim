@@ -1,5 +1,6 @@
 package road_elements;
 
+import com.google.common.base.Objects;
 import io.sarl.lang.annotation.DefaultValue;
 import io.sarl.lang.annotation.DefaultValueSource;
 import io.sarl.lang.annotation.DefaultValueUse;
@@ -172,6 +173,60 @@ public class Road extends RoadPolyline {
     throw new IllegalArgumentException("This UUID doesn\'t exist");
   }
   
+  @Pure
+  public ArrayList<Car> getSameDirectionCars(final Point2d beg, final Point2d end) {
+    ArrayList<Car> res = new ArrayList<Car>();
+    ArrayList<Car> _listOfCars = this.listOfCars();
+    for (final Car car : _listOfCars) {
+      if ((car.getRoad().getBeginPoint().getPoint().equals(beg) && car.getRoad().getEndPoint().equals(end))) {
+        res.add(car);
+      }
+    }
+    return res;
+  }
+  
+  @Pure
+  public ArrayList<Car> getSameDirectionCars(final Car car) {
+    return this.getSameDirectionCars(car.getRoad().getBeginPoint().getPoint(), car.getRoad().getEndPoint().getPoint());
+  }
+  
+  @Pure
+  public Car getFrontCarOf(final Car car) {
+    ArrayList<Car> lCars = this.getSameDirectionCars(car);
+    int _size = lCars.size();
+    if ((_size != 0)) {
+      Car frontCar = lCars.get(0);
+      for (final Car c : lCars) {
+        boolean _notEquals = (!Objects.equal(c, car));
+        if (_notEquals) {
+          double _x = c.getPosition().getX();
+          double _x_1 = car.getPosition().getX();
+          double _x_2 = frontCar.getPosition().getX();
+          double _x_3 = car.getPosition().getX();
+          if (((_x - _x_1) <= (_x_2 - _x_3))) {
+            frontCar = c;
+          }
+        }
+      }
+      return frontCar;
+    }
+    return null;
+  }
+  
+  @Pure
+  public double getFrontCarDistanceOf(final Car car) {
+    double _xifexpression = (double) 0;
+    Car _frontCarOf = this.getFrontCarOf(car);
+    if ((_frontCarOf != null)) {
+      double _x = car.getPosition().getX();
+      double _x_1 = this.getFrontCarOf(car).getPosition().getX();
+      _xifexpression = (_x - _x_1);
+    } else {
+      _xifexpression = 100000;
+    }
+    return _xifexpression;
+  }
+  
   @DefaultValueUse("int,int,int,int,int")
   @SyntheticMember
   public Road(final int beginX, final int beginY, final int endX, final int endY) {
@@ -237,5 +292,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -6560534836L;
+  private static final long serialVersionUID = -3644103507L;
 }

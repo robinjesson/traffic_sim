@@ -77,7 +77,7 @@ public class EnvAgent extends Agent {
     Object _get_1 = occurrence.parameters[0];
     this.trafficLayers = ((TrafficLayers) _get_1);
     this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
-    this.spawnCarAndAgent(5);
+    this.spawnCarAndAgent(8);
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
