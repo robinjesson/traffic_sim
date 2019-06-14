@@ -126,29 +126,42 @@ class Road extends RoadPolyline {
 		throw new IllegalArgumentException("This UUID doesn't exist")
 	}
 	
-	def getSameDirectionCars(beg:Point2d, end:Point2d) : ArrayList<Car>{
-		var res=new ArrayList<Car>
-		for(car:this.listOfCars){
-			if(car.road.beginPoint.point.equals(beg) && car.road.endPoint.equals(end)){
-				res.add(car)
+	def getSameDirectionCars(car : Car) : ArrayList<Car> {
+		// return this.getSameDirectionCars(car.road.beginPoint.point, car.road.endPoint.point)
+		var res = new ArrayList<Car>
+		for (c : this.listOfCars) {
+			if(c!==car){
+				if (car.road.beginPoint.point.equals(c.road.beginPoint.point) &&
+					car.road.endPoint.equals(c.road.endPoint.point)) {
+					res.add(c)
+				}
 			}
 		}
 		return res
 	}
-
-	def getSameDirectionCars(car : Car) : ArrayList<Car> {
-		return this.getSameDirectionCars(car.road.beginPoint.point, car.road.endPoint.point)
+	
+	def getFrontCars(car : Car) : ArrayList<Car>{
+		var cars = this.getSameDirectionCars(car)
+		var res = new ArrayList<Car>
+		for(c:cars){
+			if(c.position.x - car.position.x>0){
+				res.add(c)
+			}
+		}
+		return res
 	}
 	
 	def getFrontCarOf(car:Car) : Car{
-		var lCars = this.getSameDirectionCars(car)
-		if (lCars.size != 0) {
+		var lCars = this.getFrontCars(car)
+		println("SIZE "+ lCars.size)
+		if (lCars.size !== 0) {
 			var frontCar : Car = lCars.get(0)
+			var frontCarDistance = frontCar.position.x - car.position.x
 			for (c : lCars) {
-				if(c!=car){
-					if(c.position.x-car.position.x<=frontCar.position.x-car.position.x){
-						frontCar=c
-					}
+				
+				if(car.position.x < c.position.x && c.position.x - car.position.x < frontCarDistance){
+					frontCar = c
+					frontCarDistance = c.position.x - car.position.x
 				}
 			}
 			return frontCar
@@ -158,7 +171,7 @@ class Road extends RoadPolyline {
 	}
 
 	def getFrontCarDistanceOf(car : Car) : double {
-		return if(this.getFrontCarOf(car)!==null) car.position.x - this.getFrontCarOf(car).position.x else 100000
+		return if(this.getFrontCars(car).size>=1) this.getFrontCarOf(car).position.x - car.position.x else 100000
 	}
 	
 

@@ -19,7 +19,10 @@ class MobileRoadObject extends RoadObject {
 		this.trafficLayers=trafficLayers
 	}
 	
-	synchronized def removeFromLayer:void{
-		this.trafficLayers.mapElementLayer.removeMapElement(this)
+	def removeFromLayer:void{
+		synchronized (this.trafficLayers.mapElementLayer){
+			this.trafficLayers.mapElementLayer.removeMapElement(this)
+			
+		}
 	}
 }

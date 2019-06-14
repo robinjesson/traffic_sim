@@ -22,7 +22,4 @@ public class Perception extends Event {
   public Perception(final Address source) {
     super(source);
   }
-  
-  @SyntheticMember
-  private static final long serialVersionUID = 588368462L;
 }

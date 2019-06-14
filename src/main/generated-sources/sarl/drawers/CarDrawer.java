@@ -21,14 +21,20 @@ public class CarDrawer implements Drawer<Car> {
     Road currentRoad = element.getRoad();
     double position = element.getPosition().getX();
     Point2d coord = element.getCoordinates();
+    double carX = coord.getX();
+    double carY = coord.getY();
+    double _x = currentRoad.getBeginPoint().getPoint().getX();
+    if ((carX == _x)) {
+      carY--;
+    }
     gc.setFill(element.color);
     gc.setStroke(element.color);
-    double _x = coord.getX();
-    double _y = coord.getY();
-    gc.fillRect((_x - (CarDrawer.width / 2)), (_y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
     double _x_1 = coord.getX();
+    double _y = coord.getY();
+    gc.fillRect((_x_1 - (CarDrawer.width / 2)), (_y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
+    double _x_2 = coord.getX();
     double _y_1 = coord.getY();
-    gc.strokeRect((_x_1 - (CarDrawer.width / 2)), (_y_1 - (CarDrawer.width / 2)), CarDrawer.width, 
+    gc.strokeRect((_x_2 - (CarDrawer.width / 2)), (_y_1 - (CarDrawer.width / 2)), CarDrawer.width, 
       CarDrawer.width);
     gc.restore();
   }

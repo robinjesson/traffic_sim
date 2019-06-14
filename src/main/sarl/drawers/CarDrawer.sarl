@@ -15,6 +15,12 @@ class CarDrawer implements Drawer<Car> {
 		
 			
 		var coord=element.coordinates
+		var carX=coord.x
+		var carY = coord.y
+		
+		if(carX==currentRoad.beginPoint.point.x){
+			carY--
+		}
 
 		
 		gc.fill = element.color

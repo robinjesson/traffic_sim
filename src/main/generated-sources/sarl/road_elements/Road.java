@@ -1,6 +1,5 @@
 package road_elements;
 
-import com.google.common.base.Objects;
 import io.sarl.lang.annotation.DefaultValue;
 import io.sarl.lang.annotation.DefaultValueSource;
 import io.sarl.lang.annotation.DefaultValueUse;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
@@ -174,38 +174,51 @@ public class Road extends RoadPolyline {
   }
   
   @Pure
-  public ArrayList<Car> getSameDirectionCars(final Point2d beg, final Point2d end) {
+  public ArrayList<Car> getSameDirectionCars(final Car car) {
     ArrayList<Car> res = new ArrayList<Car>();
     ArrayList<Car> _listOfCars = this.listOfCars();
-    for (final Car car : _listOfCars) {
-      if ((car.getRoad().getBeginPoint().getPoint().equals(beg) && car.getRoad().getEndPoint().equals(end))) {
-        res.add(car);
+    for (final Car c : _listOfCars) {
+      if ((c != car)) {
+        if ((car.getRoad().getBeginPoint().getPoint().equals(c.getRoad().getBeginPoint().getPoint()) && 
+          car.getRoad().getEndPoint().equals(c.getRoad().getEndPoint().getPoint()))) {
+          res.add(c);
+        }
       }
     }
     return res;
   }
   
   @Pure
-  public ArrayList<Car> getSameDirectionCars(final Car car) {
-    return this.getSameDirectionCars(car.getRoad().getBeginPoint().getPoint(), car.getRoad().getEndPoint().getPoint());
+  public ArrayList<Car> getFrontCars(final Car car) {
+    ArrayList<Car> cars = this.getSameDirectionCars(car);
+    ArrayList<Car> res = new ArrayList<Car>();
+    for (final Car c : cars) {
+      double _x = c.getPosition().getX();
+      double _x_1 = car.getPosition().getX();
+      if (((_x - _x_1) > 0)) {
+        res.add(c);
+      }
+    }
+    return res;
   }
   
   @Pure
   public Car getFrontCarOf(final Car car) {
-    ArrayList<Car> lCars = this.getSameDirectionCars(car);
+    ArrayList<Car> lCars = this.getFrontCars(car);
     int _size = lCars.size();
-    if ((_size != 0)) {
+    InputOutput.<String>println(("SIZE " + Integer.valueOf(_size)));
+    int _size_1 = lCars.size();
+    if ((_size_1 != 0)) {
       Car frontCar = lCars.get(0);
+      double _x = frontCar.getPosition().getX();
+      double _x_1 = car.getPosition().getX();
+      double frontCarDistance = (_x - _x_1);
       for (final Car c : lCars) {
-        boolean _notEquals = (!Objects.equal(c, car));
-        if (_notEquals) {
-          double _x = c.getPosition().getX();
-          double _x_1 = car.getPosition().getX();
-          double _x_2 = frontCar.getPosition().getX();
+        if (((car.getPosition().getX() < c.getPosition().getX()) && ((c.getPosition().getX() - car.getPosition().getX()) < frontCarDistance))) {
+          frontCar = c;
+          double _x_2 = c.getPosition().getX();
           double _x_3 = car.getPosition().getX();
-          if (((_x - _x_1) <= (_x_2 - _x_3))) {
-            frontCar = c;
-          }
+          frontCarDistance = (_x_2 - _x_3);
         }
       }
       return frontCar;
@@ -216,10 +229,10 @@ public class Road extends RoadPolyline {
   @Pure
   public double getFrontCarDistanceOf(final Car car) {
     double _xifexpression = (double) 0;
-    Car _frontCarOf = this.getFrontCarOf(car);
-    if ((_frontCarOf != null)) {
-      double _x = car.getPosition().getX();
-      double _x_1 = this.getFrontCarOf(car).getPosition().getX();
+    int _size = this.getFrontCars(car).size();
+    if ((_size >= 1)) {
+      double _x = this.getFrontCarOf(car).getPosition().getX();
+      double _x_1 = car.getPosition().getX();
       _xifexpression = (_x - _x_1);
     } else {
       _xifexpression = 100000;
@@ -292,5 +305,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -3644103507L;
+  private static final long serialVersionUID = -3832513437L;
 }

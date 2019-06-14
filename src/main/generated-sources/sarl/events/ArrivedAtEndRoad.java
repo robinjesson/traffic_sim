@@ -22,7 +22,4 @@ public class ArrivedAtEndRoad extends Event {
   public ArrivedAtEndRoad(final Address source) {
     super(source);
   }
-  
-  @SyntheticMember
-  private static final long serialVersionUID = 588368462L;
 }

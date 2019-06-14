@@ -31,7 +31,7 @@ class Car extends MobileRoadObject {
 		trafficLayers.addCar(this)
 
 		this.setCoordinates(currentRoad.begin,currentRoad.end)
-		this.color = randomColorPicker
+		//this.color = randomColorPicker
 	}
 	
 	
@@ -62,30 +62,10 @@ class Car extends MobileRoadObject {
 		
 		return new Color(r,g,b,1)
 		
-		/*
-		// Find another way, make enum ?
-		var n = (Math.random * 9) as int
-		switch (n) {
-			case 0:
-				this.colour = Color::WHITE
-			case 1:
-				this.colour = Color::BLACK
-			case 2:
-				this.colour = Color::RED
-			case 3:
-				this.colour = Color::ORANGE
-			case 4:
-				this.colour = Color::YELLOW
-			case 5:
-				this.colour = Color::GREEN
-			case 6:
-				this.colour = Color::BLUE
-			case 7:
-				this.colour = Color::INDIGO
-			case 8:
-				this.colour = Color::PURPLE
-		}
-		*/
+	}
+	
+	def setColor(color:Color) : void{
+		this.color=color
 	}
 	
 	def setInfluence(influence : Influence) : Influence {

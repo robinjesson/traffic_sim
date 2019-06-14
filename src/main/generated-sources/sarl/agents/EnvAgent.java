@@ -72,12 +72,14 @@ public class EnvAgent extends Agent {
   
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     this.influences.set(0);
-    Object _get = occurrence.parameters[1];
-    this.canvas = ((GisCanvas<MultiMapLayer<TrafficLayers>>) _get);
-    Object _get_1 = occurrence.parameters[0];
-    this.trafficLayers = ((TrafficLayers) _get_1);
-    this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
-    this.spawnCarAndAgent(8);
+    synchronized (this) {
+      Object _get = occurrence.parameters[1];
+      this.canvas = ((GisCanvas<MultiMapLayer<TrafficLayers>>) _get);
+      Object _get_1 = occurrence.parameters[0];
+      this.trafficLayers = ((TrafficLayers) _get_1);
+      this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
+    }
+    this.spawnCarAndAgent(3);
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {

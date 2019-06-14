@@ -39,10 +39,8 @@ public class Car extends MobileRoadObject {
     }
     trafficLayers.addCar(this);
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
-    this.color = this.randomColorPicker();
   }
   
-  @Pure
   public Point2d getCoordinates() {
     return new Point2d(this.x, this.y);
   }
@@ -72,6 +70,10 @@ public class Car extends MobileRoadObject {
     float g = rand.nextFloat();
     float b = rand.nextFloat();
     return new Color(r, g, b, 1);
+  }
+  
+  public void setColor(final Color color) {
+    this.color = color;
   }
   
   public Influence setInfluence(final Influence influence) {
@@ -127,5 +129,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -257972405L;
+  private static final long serialVersionUID = -1212076053L;
 }

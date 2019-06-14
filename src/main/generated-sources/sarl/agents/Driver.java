@@ -24,6 +24,7 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.Random;
 import java.util.UUID;
+import javafx.scene.paint.Color;
 import javax.inject.Inject;
 import org.arakhne.afc.gis.road.primitive.RoadConnection;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
@@ -67,10 +68,14 @@ public class Driver extends Agent {
         case 0:
           DrivingNormal _drivingNormal = new DrivingNormal();
           this.<DrivingNormal>setSkill(_drivingNormal);
+          this.car.color = Color.BLACK;
           break;
         default:
-          DrivingDangerous _drivingDangerous = new DrivingDangerous();
-          this.<DrivingDangerous>setSkill(_drivingDangerous);
+          {
+            DrivingDangerous _drivingDangerous = new DrivingDangerous();
+            this.<DrivingDangerous>setSkill(_drivingDangerous);
+            this.car.color = Color.RED;
+          }
           break;
       }
       Object _get = occurrence.parameters[1];
@@ -175,13 +180,17 @@ public class Driver extends Agent {
         this.ArrivedAtEndRoad();
       }
       double distFrontCar = this.car.getRoad().getFrontCarDistanceOf(this.car);
-      Point1d _position = this.car.getPosition();
-      double _x = this.car.getPosition().getX();
-      Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
-      int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
-      _position.setX((_x + _speed));
-      this.car.setCoordinates(this.begSegment, this.endSegment);
-      this.currentPoint = this.car.getCoordinates();
+      Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+      _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info(Double.valueOf(distFrontCar));
+      if ((distFrontCar > 10)) {
+        Point1d _position = this.car.getPosition();
+        double _x = this.car.getPosition().getX();
+        Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
+        int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
+        _position.setX((_x + _speed));
+        this.car.setCoordinates(this.begSegment, this.endSegment);
+        this.currentPoint = this.car.getCoordinates();
+      }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
       Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);

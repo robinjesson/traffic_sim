@@ -24,6 +24,7 @@ import capacities.DrivingNormal
 import io.sarl.core.Destroy
 import java.util.Random
 import capacities.DrivingDangerous
+import javafx.scene.paint.Color
 
 /** 
  * @author robin
@@ -48,10 +49,14 @@ agent Driver {
 	on Initialize {
 		synchronized (this) {
 			switch(this.random.nextInt(2)){
-				case 0:
+				case 0:{
 					setSkill(new DrivingNormal)
-				default:
+					this.car.color=Color::BLACK
+				}
+				default: {
 					setSkill(new DrivingDangerous)
+					this.car.color = Color::RED
+				}
 			}
 			
 			this.env = occurrence.parameters.get(1) as EnvAgent
@@ -94,23 +99,6 @@ agent Driver {
 	 */
 	def ArrivedAtEndRoad {
 		synchronized (this) {
-
-				/* var nextRoadToTake = this.gps.nextRoad
-				 * 
-				 * this.begSegment = this.endSegment
-				 * this.endSegment = this.gps.nextPoint
-				 * 
-				 * if (this.endSegment === null)
-				 * this.killThis
-				 * this.car.setCoordinates(this.begSegment, this.endSegment)
-
-				 * this.car.road.removeObject(this.car)
-				 * this.car.road = nextRoadToTake
-				 * this.car.road.addObject(this.car)
-
-				 * this.car.pos1D = 0
-				 * emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
-				 */
 			var b = this.car.road.beginPoint
 			var e = this.car.road.endPoint
 
@@ -141,7 +129,6 @@ agent Driver {
 
 			this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.car.position.x = 0
-			// emit(new Influence(this.ID, this.arrivalPoint, this.begSegment))
 		}
 
 	}
@@ -171,14 +158,16 @@ agent Driver {
 				this.ArrivedAtEndRoad 	// old events ArrivedAtEndRoad
 			}
 			var distFrontCar=this.car.road.getFrontCarDistanceOf(this.car)
-			//if (distFrontCar === 0 || distFrontCar<10) {
+			info(distFrontCar)
+			if (distFrontCar>10) {
 			
 				this.car.position.x = this.car.position.x + speed
 				this.car.setCoordinates(this.begSegment, this.endSegment)
 				this.currentPoint = this.car.coordinates
 			
-				emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
-			//}
+				
+			}
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 			
 			
 		}
