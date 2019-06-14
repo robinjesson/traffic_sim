@@ -5,37 +5,34 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.Objects;
 import java.util.UUID;
-import org.arakhne.afc.gis.mapelement.MapCircle;
+import org.arakhne.afc.gis.mapelement.MapPoint;
+import org.arakhne.afc.math.geometry.d1.Segment1D;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
-import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
-public class RoadObject extends MapCircle {
+public class RoadObject extends MapPoint {
   private Point1d position;
   
   private UUID uuid;
   
-  private Road road;
-  
-  public RoadObject(final Point1d position, final Road road) {
-    super(0, 0, 10);
-    Point1d _point1d = new Point1d();
-    this.position = _point1d;
+  public RoadObject(final Point1d position) {
+    super(0, 0);
+    this.position = position;
     this.uuid = UUID.randomUUID();
-    this.road = road;
   }
   
   @Pure
   public synchronized Road getRoad() {
-    return this.road;
+    Segment1D<?, ?> _segment = this.position.getSegment();
+    return ((Road) _segment);
   }
   
   public synchronized void setRoad(final Road road) {
-    this.road = road;
+    this.position.setSegment(road);
   }
   
   @Pure
@@ -45,20 +42,6 @@ public class RoadObject extends MapCircle {
   
   public synchronized void setPosition(final Point1d position) {
     this.position = position;
-  }
-  
-  @Pure
-  public synchronized Point2d getCoordinates() {
-    double _x = this.position.getX();
-    double _distanceFromStart = this.road.getDistanceFromStart(0);
-    double t = (_x / _distanceFromStart);
-    int _beginX = this.road.getBeginX();
-    int _endX = this.road.getEndX();
-    double x = (((1 - t) * _beginX) + (t * _endX));
-    int _beginY = this.road.getBeginY();
-    int _endY = this.road.getEndY();
-    double y = (((1 - t) * _beginY) + (t * _endY));
-    return new Point2d(x, y);
   }
   
   @Override
@@ -100,5 +83,5 @@ public class RoadObject extends MapCircle {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -1406058470L;
+  private static final long serialVersionUID = 1587700775L;
 }

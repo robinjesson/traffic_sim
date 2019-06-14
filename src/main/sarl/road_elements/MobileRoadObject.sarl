@@ -14,8 +14,8 @@ class MobileRoadObject extends RoadObject {
 	
 	var trafficLayers : TrafficLayers
 
-	new(position : Point1d, currentRoad : Road, trafficLayers : TrafficLayers) {
-		super(position, currentRoad)
+	new(position : Point1d/*, currentRoad : Road*/, trafficLayers : TrafficLayers) {
+		super(position/*, currentRoad*/)
 		this.trafficLayers=trafficLayers
 	}
 	

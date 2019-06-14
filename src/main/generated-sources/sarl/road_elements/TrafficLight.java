@@ -5,7 +5,6 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.eclipse.xtext.xbase.lib.Pure;
-import road_elements.Road;
 import road_elements.RoadObject;
 
 /**
@@ -15,8 +14,8 @@ import road_elements.RoadObject;
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class TrafficLight extends RoadObject {
-  public TrafficLight(final Point1d position, final Road currentRoad) {
-    super(position, currentRoad);
+  public TrafficLight(final Point1d position) {
+    super(position);
   }
   
   @Override
@@ -31,5 +30,5 @@ public class TrafficLight extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -1677496240L;
+  private static final long serialVersionUID = 326794950L;
 }

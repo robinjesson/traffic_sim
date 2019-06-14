@@ -27,11 +27,13 @@ import java.util.UUID;
 import javax.inject.Inject;
 import org.arakhne.afc.gis.road.primitive.RoadConnection;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
+import org.arakhne.afc.math.geometry.d1.Segment1D;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.GPS;
@@ -108,8 +110,10 @@ public class Driver extends Agent {
    */
   protected void ArrivedAtEndRoad() {
     synchronized (this) {
-      RoadConnection b = this.car.getRoad().getBeginPoint();
-      RoadConnection e = this.car.getRoad().getEndPoint();
+      Segment1D<?, ?> _segment = this.car.getPosition().getSegment();
+      RoadConnection b = ((Road) _segment).getBeginPoint();
+      Segment1D<?, ?> _segment_1 = this.car.getPosition().getSegment();
+      RoadConnection e = ((Road) _segment_1).getEndPoint();
       Road selectedRoad = null;
       boolean _isNearPoint = b.isNearPoint(this.car.getCoordinates());
       if (_isNearPoint) {
@@ -130,21 +134,19 @@ public class Driver extends Agent {
             int index = ((int) (_nextDouble * _connectedSegmentCount));
             RoadSegment _get = ((RoadSegment[])Conversions.unwrapArray(e.getConnectedSegments(), RoadSegment.class))[index];
             selectedRoad = ((Road) _get);
+            Logging _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER = this.$castSkill(Logging.class, (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = this.$getSkill(Logging.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
+            String _plus = (Integer.valueOf(index) + " ");
+            int _size = IterableExtensions.size(e.getConnectedSegments());
+            _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info((_plus + Integer.valueOf(_size)));
           }
         } while((selectedRoad == this.car.getRoad()));
+      }
+      if ((selectedRoad == null)) {
+        selectedRoad = this.car.getRoad();
       }
       this.car.getRoad().removeObject(this.car);
       this.car.setRoad(selectedRoad);
       this.car.getRoad().addObject(this.car);
-      boolean _isNearPoint_1 = this.car.getRoad().getBeginPoint().isNearPoint(this.car.getCoordinates());
-      if (_isNearPoint_1) {
-        this.begSegment = this.car.getRoad().getBeginPoint().getPoint();
-        this.endSegment = this.car.getRoad().getEndPoint().getPoint();
-      } else {
-        this.begSegment = this.car.getRoad().getEndPoint().getPoint();
-        this.endSegment = this.car.getRoad().getBeginPoint().getPoint();
-      }
-      this.car.setCoordinates(this.begSegment, this.endSegment);
       Point1d _position = this.car.getPosition();
       _position.setX(0);
     }

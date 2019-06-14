@@ -135,7 +135,7 @@ agent EnvAgent {
 			var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
 			// info(selectedRoad)
 			// A FAIRE : vérifier si rien en dessous, sinon attendre que la place se libère ou chercher une autre place
-			var car = new Car(new Point1d(selectedRoad, 0, 1), selectedRoad, this.trafficLayers)
+			var car = new Car(new Point1d(selectedRoad, 0, 0), selectedRoad, this.trafficLayers)
 			var id = Driver.spawn(car, this)
 			agentId_Cars.put(id, car)
 			colID.add(id)

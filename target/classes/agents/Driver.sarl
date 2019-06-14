@@ -94,25 +94,8 @@ agent Driver {
 	 */
 	def ArrivedAtEndRoad {
 		synchronized (this) {
-
-				/* var nextRoadToTake = this.gps.nextRoad
-				 * 
-				 * this.begSegment = this.endSegment
-				 * this.endSegment = this.gps.nextPoint
-				 * 
-				 * if (this.endSegment === null)
-				 * this.killThis
-				 * this.car.setCoordinates(this.begSegment, this.endSegment)
-
-				 * this.car.road.removeObject(this.car)
-				 * this.car.road = nextRoadToTake
-				 * this.car.road.addObject(this.car)
-
-				 * this.car.pos1D = 0
-				 * emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
-				 */
-			var b = this.car.road.beginPoint
-			var e = this.car.road.endPoint
+			var b = (this.car.position.segment as Road).beginPoint
+			var e = (this.car.position.segment as Road).endPoint
 
 			var selectedRoad : Road
 			if (b.isNearPoint(this.car.coordinates)) {
@@ -124,22 +107,27 @@ agent Driver {
 				do {
 					var index = (this.random.nextDouble * e.connectedSegmentCount) as int
 					selectedRoad = e.connectedSegments.get(index) as Road
+					info(index + " " + e.connectedSegments.size)
 				} while (selectedRoad === this.car.road)
+			}
+			
+			if(selectedRoad===null){
+				selectedRoad=this.car.road
 			}
 
 			this.car.road.removeObject(this.car)
 			this.car.road = selectedRoad
 			this.car.road.addObject(this.car)
 
-			if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
+			/*if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
 				this.begSegment = this.car.road.beginPoint.point
 				this.endSegment = this.car.road.endPoint.point
 			} else {
 				this.begSegment = this.car.road.endPoint.point
 				this.endSegment = this.car.road.beginPoint.point
-			}
+			}*/
 
-			this.car.setCoordinates(this.begSegment, this.endSegment)
+			//this.car.setCoordinates(this.begSegment, this.endSegment)
 			this.car.position.x = 0
 			// emit(new Influence(this.ID, this.arrivalPoint, this.begSegment))
 		}

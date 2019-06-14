@@ -6,9 +6,11 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.Random;
 import javafx.scene.paint.Color;
+import org.arakhne.afc.math.geometry.d1.Segment1D;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.arakhne.afc.math.geometry.d2.d.Vector2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.MobileRoadObject;
 import road_elements.Road;
@@ -32,10 +34,12 @@ public class Car extends MobileRoadObject {
   private Influence influence;
   
   public Car(final Point1d position, final Road currentRoad, final TrafficLayers trafficLayers) {
-    super(position, currentRoad, trafficLayers);
+    super(position, trafficLayers);
     Road _road = super.getRoad();
     if ((_road != null)) {
-      super.getRoad().addObject(this);
+      Segment1D<?, ?> _segment = super.getPosition().getSegment();
+      Road road = ((Road) _segment);
+      road.addObject(this);
     }
     trafficLayers.addCar(this);
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
@@ -44,7 +48,10 @@ public class Car extends MobileRoadObject {
   
   @Pure
   public Point2d getCoordinates() {
-    return new Point2d(this.x, this.y);
+    Point2d position2d = new Point2d();
+    Vector2d tangent2d = new Vector2d();
+    this.getPosition().getSegment().projectsOnPlane(this.getPosition().getX(), this.getPosition().getY(), position2d, tangent2d);
+    return position2d;
   }
   
   public void setCoordinates(final Point2D beg, final Point2D end) {

@@ -11,7 +11,7 @@ import org.arakhne.afc.math.geometry.d1.d.Point1d
  */
 class TrafficLight extends RoadObject {
 	
-	new(position : Point1d, currentRoad : Road) {
-		super(position, currentRoad)
+	new(position : Point1d) {
+		super(position)
 	}
 }

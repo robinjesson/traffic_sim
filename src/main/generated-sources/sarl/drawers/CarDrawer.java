@@ -3,12 +3,18 @@ package drawers;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import javafx.scene.paint.Color;
+import org.arakhne.afc.math.geometry.PathElementType;
+import org.arakhne.afc.math.geometry.d1.d.Point1d;
+import org.arakhne.afc.math.geometry.d2.afp.PathIterator2afp;
+import org.arakhne.afc.math.geometry.d2.d.OrientedRectangle2d;
+import org.arakhne.afc.math.geometry.d2.d.PathElement2d;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.arakhne.afc.math.geometry.d2.d.Vector2d;
 import org.arakhne.afc.nodefx.Drawer;
 import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
-import road_elements.Road;
 
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -18,18 +24,45 @@ public class CarDrawer implements Drawer<Car> {
   
   @Override
   public void draw(final ZoomableGraphicsContext gc, final Car element) {
-    Road currentRoad = element.getRoad();
-    double position = element.getPosition().getX();
-    Point2d coord = element.getCoordinates();
-    gc.setFill(element.color);
-    gc.setStroke(element.color);
-    double _x = coord.getX();
-    double _y = coord.getY();
-    gc.fillRect((_x - (CarDrawer.width / 2)), (_y - (CarDrawer.width / 2)), CarDrawer.width, CarDrawer.width);
-    double _x_1 = coord.getX();
-    double _y_1 = coord.getY();
-    gc.strokeRect((_x_1 - (CarDrawer.width / 2)), (_y_1 - (CarDrawer.width / 2)), CarDrawer.width, 
-      CarDrawer.width);
+    final Point2d position2d = new Point2d();
+    final Vector2d tangent2d = new Vector2d();
+    Color c = gc.rgb(100);
+    gc.setFill(c);
+    gc.setStroke(c);
+    gc.save();
+    Point1d position = element.getPosition();
+    element.getPosition().getSegment().projectsOnPlane(position.getX(), position.getY(), position2d, tangent2d);
+    int width = 2;
+    double _x = position2d.getX();
+    double _y = position2d.getY();
+    OrientedRectangle2d r = new OrientedRectangle2d(_x, _y, 1, 0, (width / 2.0), (width / 2.0));
+    r.rotate(tangent2d.getOrientationAngle());
+    PathIterator2afp<PathElement2d> iterator = r.getPathIterator();
+    gc.beginPath();
+    while (iterator.hasNext()) {
+      {
+        PathElement2d cmp = iterator.next();
+        PathElementType _type = cmp.getType();
+        if (_type != null) {
+          switch (_type) {
+            case MOVE_TO:
+              gc.moveTo(cmp.getToX(), cmp.getToY());
+              break;
+            case LINE_TO:
+              gc.lineTo(cmp.getToX(), cmp.getToY());
+              break;
+            case CLOSE:
+              gc.closePath();
+              break;
+            default:
+              throw new IllegalStateException();
+          }
+        } else {
+          throw new IllegalStateException();
+        }
+      }
+    }
+    gc.fill();
     gc.restore();
   }
   

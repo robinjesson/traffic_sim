@@ -5,7 +5,6 @@ import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.eclipse.xtext.xbase.lib.Pure;
-import road_elements.Road;
 import road_elements.RoadObject;
 import road_elements.TrafficLayers;
 
@@ -18,8 +17,8 @@ import road_elements.TrafficLayers;
 public class MobileRoadObject extends RoadObject {
   private TrafficLayers trafficLayers;
   
-  public MobileRoadObject(final Point1d position, final Road currentRoad, final TrafficLayers trafficLayers) {
-    super(position, currentRoad);
+  public MobileRoadObject(final Point1d position, final TrafficLayers trafficLayers) {
+    super(position);
     this.trafficLayers = trafficLayers;
   }
   
@@ -54,5 +53,5 @@ public class MobileRoadObject extends RoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = 724033456L;
+  private static final long serialVersionUID = -1567449094L;
 }

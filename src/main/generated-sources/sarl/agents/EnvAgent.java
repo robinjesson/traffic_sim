@@ -172,7 +172,7 @@ public class EnvAgent extends Agent {
         int indexRoadRandom = ((int) (_random * nbRoads));
         RoadSegment _get = ((RoadSegment[])Conversions.unwrapArray(this.network.getRoadSegments(), RoadSegment.class))[indexRoadRandom];
         Road selectedRoad = ((Road) _get);
-        Point1d _point1d = new Point1d(selectedRoad, 0, 1);
+        Point1d _point1d = new Point1d(selectedRoad, 0, 0);
         Car car = new Car(_point1d, selectedRoad, this.trafficLayers);
         Lifecycle _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER = this.$castSkill(Lifecycle.class, (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE == null || this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE = this.$getSkill(Lifecycle.class)) : this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
         UUID id = _$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE$CALLER.spawn(Driver.class, car, this);

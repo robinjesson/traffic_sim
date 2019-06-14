@@ -1,29 +1,29 @@
 package road_elements
 
 import java.util.UUID
-import org.arakhne.afc.gis.mapelement.MapCircle
+import org.arakhne.afc.gis.mapelement.MapPoint
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import org.arakhne.afc.math.geometry.d1.d.Point1d
 
-class RoadObject extends MapCircle {
+class RoadObject extends MapPoint {
 	
 	var position : Point1d
 	var uuid : UUID
-	var road : Road
+	//var road : Road
 	
-	new(position : Point1d, road : Road){
-		super(0,0,10)
-		this.position = new Point1d();
+	new(position : Point1d/*, road : Road*/){
+		super(0,0)
+		this.position = position;
 		this.uuid = UUID::randomUUID
-		this.road = road
+		//this.road = road
 	}
 
 	synchronized def getRoad : Road {
-		return this.road
+		return this.position.segment as Road
 	}
 
 	synchronized def setRoad(road : Road) {
-		this.road = road
+		this.position.segment = road
 	}
 
 	synchronized def getPosition : Point1d {
@@ -34,12 +34,12 @@ class RoadObject extends MapCircle {
 		this.position = position
 	}
 
-	synchronized def getCoordinates : Point2d {
+	/*synchronized def getCoordinates : Point2d {
 		var t = this.position.x / this.road.getDistanceFromStart(0);
 		var x : double = (1 - t) * this.road.getBeginX() + t * this.road.getEndX();
 		var y : double = (1 - t) * this.road.getBeginY() + t * this.road.getEndY();
 		return new Point2d(x,y)
-	}
+	}*/
 	
 	
 	/*def isOnRight :boolean{
