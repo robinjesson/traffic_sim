@@ -1,14 +1,11 @@
 # Xtext generated files
 src/main/generated-sources
 
-# NetBean / Eclipse
-bin/
-**/*.java._trace
-**/*.jave_trace
-**/.project
-**/.classpath
-**/.settings
-**/.metadata
+# Eclipse
+.settings
+.metadata
+.idea
 
-# Maven
+
+#Maven
 target/
