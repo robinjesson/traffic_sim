@@ -1,12 +1,3 @@
-/** 
- * 
- */
 package events
 
-import java.util.UUID
-
-/** 
- * @author robin
- * 
- */
 event Perception

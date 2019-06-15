@@ -10,12 +10,13 @@ import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.TrafficLight;
 
+/**
+ * The TrafficLight drawer is implemented but not used in IA51 project
+ */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class TrafficLightDrawer implements Drawer<TrafficLight> {
-  private static final int width = 2;
-  
   @Override
   public void draw(final ZoomableGraphicsContext gc, final TrafficLight element) {
     Point2d coord = element.getCoordinates();

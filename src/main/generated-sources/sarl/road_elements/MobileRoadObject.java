@@ -9,9 +9,6 @@ import road_elements.Road;
 import road_elements.RoadObject;
 import road_elements.TrafficLayers;
 
-/**
- * @author tiantian
- */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")

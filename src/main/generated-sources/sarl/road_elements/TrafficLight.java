@@ -9,7 +9,8 @@ import road_elements.Road;
 import road_elements.RoadObject;
 
 /**
- * @author tiantian
+ * TrafficLight class not used in IA51 project
+ * Class pending for further improvements
  */
 @SarlSpecification("0.9")
 @SarlElementType(10)

@@ -19,7 +19,7 @@ import road_elements.RoadObject;
 import road_elements.TrafficLight;
 
 /**
- * @author robin
+ * TrafficLayers class used for the Road creation
  */
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -55,60 +55,39 @@ public class TrafficLayers extends MultiMapLayer {
   @Pure
   public static ArrayList<Road> roadListFactory() {
     ArrayList<Road> roadList = new ArrayList<Road>();
-    Road r0 = new Road(0, 0, 0, 20, 100);
-    roadList.add(r0);
-    Road _road = new Road(0, 20, 0, 100, 100);
+    Road _road = new Road(0, 0, 0, 20, 100);
     roadList.add(_road);
-    Road _road_1 = new Road(0, 100, 100, 100, 100);
+    Road _road_1 = new Road(0, 20, 0, 100, 100);
     roadList.add(_road_1);
     Road _road_2 = new Road(100, 100, 100, 50, 100);
     roadList.add(_road_2);
     Road _road_3 = new Road(100, 50, 100, 0, 100);
     roadList.add(_road_3);
-    Road _road_4 = new Road(100, 0, 0, 0, 100);
+    Road _road_4 = new Road(0, 100, 100, 100, 100);
     roadList.add(_road_4);
-    Road _road_5 = new Road(0, 20, 20, 20, 70);
+    Road _road_5 = new Road(100, 0, 0, 0, 100);
     roadList.add(_road_5);
-    Road _road_6 = new Road(50, 50, 100, 50, 70);
+    Road _road_6 = new Road(0, 20, 20, 20, 70);
     roadList.add(_road_6);
-    Road _road_7 = new Road(20, 20, 50, 20, 50);
+    Road _road_7 = new Road(50, 50, 100, 50, 70);
     roadList.add(_road_7);
-    Road _road_8 = new Road(20, 50, 50, 50, 50);
+    Road _road_8 = new Road(20, 20, 50, 20, 50);
     roadList.add(_road_8);
-    Road _road_9 = new Road(20, 30, 50, 30, 50);
+    Road _road_9 = new Road(20, 50, 50, 50, 50);
     roadList.add(_road_9);
-    Road _road_10 = new Road(20, 20, 20, 30, 50);
+    Road _road_10 = new Road(20, 30, 50, 30, 50);
     roadList.add(_road_10);
-    Road _road_11 = new Road(20, 30, 20, 50, 50);
+    Road _road_11 = new Road(20, 20, 20, 30, 50);
     roadList.add(_road_11);
-    Road _road_12 = new Road(50, 20, 50, 30, 50);
+    Road _road_12 = new Road(20, 30, 20, 50, 50);
     roadList.add(_road_12);
-    Road _road_13 = new Road(50, 30, 50, 50, 50);
+    Road _road_13 = new Road(50, 20, 50, 30, 50);
     roadList.add(_road_13);
+    Road _road_14 = new Road(50, 30, 50, 50, 50);
+    roadList.add(_road_14);
     return roadList;
   }
   
-  /**
-   * def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
-   * var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
-   * 
-   * for(road:roads){
-   * var nbCarRandom = (Math.random() * 3) as int
-   * for (var i = 0; i < nbCarRandom; i++) {
-   * var posRandom = (Math.random() * road.distanceKilometers) as int
-   * carList.add(new Car(posRandom, road, 0, 0))
-   * }
-   * }
-   * 
-   * for (road : roads) {
-   * for (var i = 0; i < 1; i++) {
-   * var posRandom = 0 as int
-   * carList.add(new Car(posRandom, road,  0, 0))
-   * }
-   * }
-   * return carList
-   * }
-   */
   public synchronized boolean addCar(final Car car) {
     return this.mapElementLayer.addMapElement(car);
   }

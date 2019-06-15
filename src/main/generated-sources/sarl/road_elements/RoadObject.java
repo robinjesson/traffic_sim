@@ -3,21 +3,21 @@ package road_elements;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import java.util.Objects;
-import java.util.UUID;
 import org.arakhne.afc.gis.mapelement.MapCircle;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 
+/**
+ * RoadObject class is used for every objects which can be on the road
+ * like Cars, TrafficLights
+ */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class RoadObject extends MapCircle {
   private Point1d position;
-  
-  private UUID uuid;
   
   private Road road;
   
@@ -25,7 +25,6 @@ public class RoadObject extends MapCircle {
     super(0, 0, 10);
     Point1d _point1d = new Point1d();
     this.position = _point1d;
-    this.uuid = UUID.randomUUID();
     this.road = road;
   }
   
@@ -65,16 +64,6 @@ public class RoadObject extends MapCircle {
   @Pure
   @SyntheticMember
   public boolean equals(final Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    RoadObject other = (RoadObject) obj;
-    if (!Objects.equals(this.uuid, other.uuid)) {
-      return false;
-    }
     return super.equals(obj);
   }
   
@@ -83,8 +72,6 @@ public class RoadObject extends MapCircle {
   @SyntheticMember
   public int hashCode() {
     int result = super.hashCode();
-    final int prime = 31;
-    result = prime * result + Objects.hashCode(this.uuid);
     return result;
   }
   
@@ -100,5 +87,5 @@ public class RoadObject extends MapCircle {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -1406058470L;
+  private static final long serialVersionUID = -1475728636L;
 }

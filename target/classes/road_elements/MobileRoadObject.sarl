@@ -1,15 +1,7 @@
-/** 
- * 
- */
 package road_elements
 
-import org.arakhne.afc.gis.road.primitive.RoadConnection
 import org.arakhne.afc.math.geometry.d1.d.Point1d
 
-/** 
- * @author tiantian
- * 
- */
 class MobileRoadObject extends RoadObject {
 	
 	var trafficLayers : TrafficLayers
@@ -22,7 +14,6 @@ class MobileRoadObject extends RoadObject {
 	def removeFromLayer:void{
 		synchronized (this.trafficLayers.mapElementLayer){
 			this.trafficLayers.mapElementLayer.removeMapElement(this)
-			
 		}
 	}
 }

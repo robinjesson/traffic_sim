@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
 
 /**
- * @author robin
+ * Road class
  */
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -173,14 +172,17 @@ public class Road extends RoadPolyline {
     throw new IllegalArgumentException("This UUID doesn\'t exist");
   }
   
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
   @Pure
   public ArrayList<Car> getSameDirectionCars(final Car car) {
     ArrayList<Car> res = new ArrayList<Car>();
     ArrayList<Car> _listOfCars = this.listOfCars();
     for (final Car c : _listOfCars) {
       if ((c != car)) {
-        if ((car.getRoad().getBeginPoint().getPoint().equals(c.getRoad().getBeginPoint().getPoint()) && 
-          car.getRoad().getEndPoint().equals(c.getRoad().getEndPoint().getPoint()))) {
+        if ((car.getRoad().getBeginPoint().getPoint().equals(c.getRoad().getBeginPoint().getPoint()) && car.getRoad().getEndPoint().equals(c.getRoad().getEndPoint().getPoint()))) {
           res.add(c);
         }
       }
@@ -188,6 +190,10 @@ public class Road extends RoadPolyline {
     return res;
   }
   
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
   @Pure
   public ArrayList<Car> getFrontCars(final Car car) {
     ArrayList<Car> cars = this.getSameDirectionCars(car);
@@ -202,13 +208,15 @@ public class Road extends RoadPolyline {
     return res;
   }
   
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
   @Pure
   public Car getFrontCarOf(final Car car) {
     ArrayList<Car> lCars = this.getFrontCars(car);
     int _size = lCars.size();
-    InputOutput.<String>println(("SIZE " + Integer.valueOf(_size)));
-    int _size_1 = lCars.size();
-    if ((_size_1 != 0)) {
+    if ((_size != 0)) {
       Car frontCar = lCars.get(0);
       double _x = frontCar.getPosition().getX();
       double _x_1 = car.getPosition().getX();
@@ -226,6 +234,10 @@ public class Road extends RoadPolyline {
     return null;
   }
   
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
   @Pure
   public double getFrontCarDistanceOf(final Car car) {
     double _xifexpression = (double) 0;

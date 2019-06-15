@@ -1,14 +1,14 @@
 package drawers;
 
-import org.arakhne.afc.nodefx.Drawer;
-import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
-import road_elements.Car
-import road_elements.Road
 import javafx.scene.paint.Color
+import org.arakhne.afc.nodefx.Drawer
+import org.arakhne.afc.nodefx.ZoomableGraphicsContext
 import road_elements.TrafficLight
 
+/*
+ * The TrafficLight drawer is implemented but not used in IA51 project
+ */
 class TrafficLightDrawer implements Drawer<TrafficLight> {
-	static val width : int = 2
 
 	@Override
 	def draw(gc : ZoomableGraphicsContext, element : TrafficLight) : void {
@@ -32,5 +32,4 @@ class TrafficLightDrawer implements Drawer<TrafficLight> {
 	def getPrimitiveType() : Class<? extends TrafficLight> {
 		return TrafficLight as Class<? extends TrafficLight>
 	}
-
 }

@@ -1,12 +1,5 @@
-/** 
- * 
- */
 package application
 
-/** 
- * @author tiantian
- * 
- */
 import agents.EnvAgent
 import io.sarl.bootstrap.SRE
 import java.io.File
@@ -33,7 +26,6 @@ import org.arakhne.afc.vmutil.Resources
 import road_elements.Road
 import road_elements.RoadObject
 import road_elements.TrafficLayers
-import road_elements.TrafficLight
 
 class Simulation extends Application {
 
@@ -52,19 +44,13 @@ class Simulation extends Application {
 	@Override
 	def start(primaryStage : Stage) throws Exception {
 		var root = new BorderPane()
-		var reader : road_elements.ShapeReader = new road_elements.ShapeReader()
-
 		var file : File = new File("src/main/resources/application/quartier_polyline.shp")
-		// var file : File = new File("src/main/resources/application/roads-line.shp")
-		
-        // var loadedResourceOK = shapeToLayers()
-		// var loadedRoads : RoadNetworkLayer = loadShapeFile2(file) as RoadNetworkLayer
 		
 		this.trafficLayers = getRoads()
-		// var tl = new TrafficLight(0,this.trafficLayers.roadNetworkLayer.roadNetwork.roadSegments.get(0) as Road)
-		// this.trafficLayers.addTrafficLight(tl)
+		
 		var rootLayer = new MultiMapLayer
 		rootLayer.addMapLayer(this.trafficLayers)
+		
 		var canvas = new GisCanvas(rootLayer)
 		var scrollPane = new ZoomablePane(canvas);
 
@@ -83,6 +69,9 @@ class Simulation extends Application {
 		bootstrap.startAgent(EnvAgent, this.trafficLayers, canvas)
 	}
 
+	/*
+	 * Function never used but could be useful for further improvements
+	 */
 	def loadShapeFile2(file : File) : MapElementLayer<?> {
 
 		var network : StandardRoadNetwork = null
@@ -109,9 +98,7 @@ class Simulation extends Application {
 
 		while ((element = reader.read()) !== null) {
 			if (element instanceof RoadPolyline) {
-				if (network === null) {
-					network = new StandardRoadNetwork(worldRect)
-				}
+				if (network === null) network = new StandardRoadNetwork(worldRect)
 				var sgmt : RoadPolyline = element
 				try {
 					network.addRoadSegment(sgmt)
@@ -138,6 +125,11 @@ class Simulation extends Application {
 		return layer
 	}
 
+	/*
+	 * Function never used but could be useful for further improvements
+	 * This function can be used to display Belfort traffic map which its ShapeFile is stored under
+	 * the name "quartier_polyline.shp"
+	 */
 	def static shapeToLayers() : MultiMapLayer {
 		var list = new ArrayList<Road>()
 
@@ -169,9 +161,7 @@ class Simulation extends Application {
 			if (element instanceof RoadPolyline) {
 				var sgmt = element
 
-				if (network === null) {
-					network = new StandardRoadNetwork(worldRect);
-				}
+				if (network === null) network = new StandardRoadNetwork(worldRect);
 
 				for (group : sgmt.groups) {
 					for (var i = 0; i < group.points.size - 1; i++) {
@@ -182,16 +172,8 @@ class Simulation extends Application {
 
 						var road = new Road(xBegin, yBegin, xEnd, yEnd)
 						network.addRoadSegment(road)
-
-					/* 
-					 * var car : Car = new Car(0, road, 0, 0)
-					 * //print(car)
-					 * mapElementLayer.addMapElement(car)
-					 * //print(mapElementLayer)
-					 */
 					}
 				}
-
 			}
 			count++
 		}

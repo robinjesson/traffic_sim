@@ -38,7 +38,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Road;
 import road_elements.RoadObject;
-import road_elements.ShapeReader;
 import road_elements.TrafficLayers;
 
 @SarlSpecification("0.9")
@@ -62,7 +61,6 @@ public class Simulation extends Application {
   @Override
   public void start(final Stage primaryStage) throws Exception {
     BorderPane root = new BorderPane();
-    ShapeReader reader = new ShapeReader();
     File file = new File("src/main/resources/application/quartier_polyline.shp");
     this.trafficLayers = this.getRoads();
     MultiMapLayer<TrafficLayers> rootLayer = new MultiMapLayer<TrafficLayers>();
@@ -82,6 +80,9 @@ public class Simulation extends Application {
     bootstrap.startAgent(EnvAgent.class, this.trafficLayers, canvas);
   }
   
+  /**
+   * Function never used but could be useful for further improvements
+   */
   public MapElementLayer<?> loadShapeFile2(final File file) {
     try {
       StandardRoadNetwork network = null;
@@ -144,6 +145,11 @@ public class Simulation extends Application {
     }
   }
   
+  /**
+   * Function never used but could be useful for further improvements
+   * This function can be used to display Belfort traffic map which its ShapeFile is stored under
+   * the name "quartier_polyline.shp"
+   */
   public static MultiMapLayer shapeToLayers() {
     try {
       ArrayList<Road> list = new ArrayList<Road>();

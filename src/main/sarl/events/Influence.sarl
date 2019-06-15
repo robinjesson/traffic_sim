@@ -1,7 +1,6 @@
 package events
 
 import java.util.UUID
-import org.arakhne.afc.math.geometry.d2.d.Point2d
 import org.arakhne.afc.math.geometry.d2.Point2D
 
 event Influence{

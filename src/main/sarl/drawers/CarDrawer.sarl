@@ -10,24 +10,21 @@ class CarDrawer implements Drawer<Car> {
 	
 	@Override
 	def draw(gc:ZoomableGraphicsContext, element:Car):void {
-		var currentRoad : Road = element.road
-		var position = element.position.x; 
+		var currentRoad : Road = element.road; 
 		
-			
 		var coord=element.coordinates
 		var carX=coord.x
 		var carY = coord.y
 		
-		if(carX==currentRoad.beginPoint.point.x){
+		if(carX == currentRoad.beginPoint.point.x){
 			carY--
 		}
 
-		
-		gc.fill = element.color
-		gc.stroke = element.color
+		var color = gc.rgb(100)
+		gc.fill = color
+		gc.stroke = color
 		gc.fillRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
-		gc.strokeRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width,
-			CarDrawer::width);
+		gc.strokeRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
 		gc.restore
 	}
 
@@ -35,5 +32,4 @@ class CarDrawer implements Drawer<Car> {
 	def getPrimitiveType() : Class<? extends Car> {
 		return Car as Class<? extends Car>
 	}
-
 }

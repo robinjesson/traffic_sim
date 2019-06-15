@@ -7,7 +7,6 @@ import events.MoveForward;
 import io.sarl.core.DefaultContextInteractions;
 import io.sarl.core.Initialize;
 import io.sarl.core.Lifecycle;
-import io.sarl.core.Logging;
 import io.sarl.lang.annotation.DefaultValue;
 import io.sarl.lang.annotation.DefaultValueSource;
 import io.sarl.lang.annotation.DefaultValueUse;
@@ -49,9 +48,6 @@ import road_elements.Car;
 import road_elements.Road;
 import road_elements.TrafficLayers;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(19)
 @SuppressWarnings("all")
@@ -113,7 +109,6 @@ public class EnvAgent extends Agent {
             {
               Car body = b.getValue();
               UUID agentId = body.getInfluence().agentId;
-              Car car = this.getCarByAgentId(agentId);
               DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
               MoveForward _moveForward = new MoveForward();
               class $SerializableClosureProxy implements Scope<Address> {
@@ -200,21 +195,6 @@ public class EnvAgent extends Agent {
   @Pure
   protected synchronized RoadNetwork getNetwork() {
     return this.network;
-  }
-  
-  @Extension
-  @ImportedCapacityFeature(Logging.class)
-  @SyntheticMember
-  private transient ClearableReference<Skill> $CAPACITY_USE$IO_SARL_CORE_LOGGING;
-  
-  @SyntheticMember
-  @Pure
-  @Inline(value = "$castSkill(Logging.class, ($0$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || $0$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) ? ($0$CAPACITY_USE$IO_SARL_CORE_LOGGING = $0$getSkill(Logging.class)) : $0$CAPACITY_USE$IO_SARL_CORE_LOGGING)", imported = Logging.class)
-  private Logging $CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER() {
-    if (this.$CAPACITY_USE$IO_SARL_CORE_LOGGING == null || this.$CAPACITY_USE$IO_SARL_CORE_LOGGING.get() == null) {
-      this.$CAPACITY_USE$IO_SARL_CORE_LOGGING = $getSkill(Logging.class);
-    }
-    return $castSkill(Logging.class, this.$CAPACITY_USE$IO_SARL_CORE_LOGGING);
   }
   
   @Extension

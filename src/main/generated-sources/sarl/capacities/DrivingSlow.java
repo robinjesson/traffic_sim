@@ -13,9 +13,6 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(22)
 @SuppressWarnings("all")

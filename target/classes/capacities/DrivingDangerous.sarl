@@ -1,15 +1,8 @@
-/** 
- * 
- */
 package capacities
 
 import capacities.Drive
 import io.sarl.core.Logging
 
-/** 
- * @author robin
- * 
- */
 skill DrivingDangerous implements Drive {
 	uses Logging
 

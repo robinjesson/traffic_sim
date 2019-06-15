@@ -4,8 +4,6 @@ import events.Influence;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
-import java.util.Random;
-import javafx.scene.paint.Color;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
@@ -14,17 +12,10 @@ import road_elements.MobileRoadObject;
 import road_elements.Road;
 import road_elements.TrafficLayers;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
 public class Car extends MobileRoadObject {
-  public boolean normalDirection = true;
-  
-  public Color color;
-  
   private double x;
   
   private double y;
@@ -41,6 +32,7 @@ public class Car extends MobileRoadObject {
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
   }
   
+  @Pure
   public Point2d getCoordinates() {
     return new Point2d(this.x, this.y);
   }
@@ -63,19 +55,6 @@ public class Car extends MobileRoadObject {
     this.y = (((1 - t) * _y_2) + (t * _y_3));
   }
   
-  @Pure
-  public Color randomColorPicker() {
-    Random rand = new Random();
-    float r = rand.nextFloat();
-    float g = rand.nextFloat();
-    float b = rand.nextFloat();
-    return new Color(r, g, b, 1);
-  }
-  
-  public void setColor(final Color color) {
-    this.color = color;
-  }
-  
   public Influence setInfluence(final Influence influence) {
     return this.influence = influence;
   }
@@ -96,8 +75,6 @@ public class Car extends MobileRoadObject {
     if (getClass() != obj.getClass())
       return false;
     Car other = (Car) obj;
-    if (other.normalDirection != this.normalDirection)
-      return false;
     if (Double.doubleToLongBits(other.x) != Double.doubleToLongBits(this.x))
       return false;
     if (Double.doubleToLongBits(other.y) != Double.doubleToLongBits(this.y))
@@ -111,7 +88,6 @@ public class Car extends MobileRoadObject {
   public int hashCode() {
     int result = super.hashCode();
     final int prime = 31;
-    result = prime * result + (this.normalDirection ? 1231 : 1237);
     result = prime * result + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
     result = prime * result + (int) (Double.doubleToLongBits(this.y) ^ (Double.doubleToLongBits(this.y) >>> 32));
     return result;
@@ -129,5 +105,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -1212076053L;
+  private static final long serialVersionUID = -188907031L;
 }

@@ -5,9 +5,6 @@ import io.sarl.lang.annotation.SyntheticMember;
 import javafx.application.Application;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author tiantian
- */
 @SarlSpecification("0.9")
 @SarlElementType(10)
 @SuppressWarnings("all")
