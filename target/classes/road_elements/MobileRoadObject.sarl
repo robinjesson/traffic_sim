@@ -1,20 +1,19 @@
-/** 
- * 
- */
 package road_elements
 
-import org.arakhne.afc.gis.road.primitive.RoadConnection
+import org.arakhne.afc.math.geometry.d1.d.Point1d
 
-/** 
- * @author tiantian
- * 
- */
 class MobileRoadObject extends RoadObject {
 	
-	var entryRoadConnection : RoadConnection
+	var trafficLayers : TrafficLayers
 
-	new(pos1D : int, currentRoad : Road, entryRoadConnection : RoadConnection) {
-		super(pos1D, currentRoad)
-		this.entryRoadConnection = entryRoadConnection
+	new(position : Point1d, currentRoad : Road, trafficLayers : TrafficLayers) {
+		super(position, currentRoad)
+		this.trafficLayers=trafficLayers
+	}
+	
+	def removeFromLayer:void{
+		synchronized (this.trafficLayers.mapElementLayer){
+			this.trafficLayers.mapElementLayer.removeMapElement(this)
+		}
 	}
 }

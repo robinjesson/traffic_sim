@@ -13,9 +13,6 @@ import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
 
-/**
- * @author robin
- */
 @SarlSpecification("0.9")
 @SarlElementType(22)
 @SuppressWarnings("all")
@@ -38,6 +35,10 @@ public class DrivingSlow extends Skill implements Drive {
   @Override
   public int brake(final int currentSpeed) {
     return 0;
+  }
+  
+  public int getSpeed() {
+    return 1;
   }
   
   @Extension

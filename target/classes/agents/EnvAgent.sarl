@@ -1,45 +1,126 @@
-/** 
- * 
- */
 package agents
 
-import io.sarl.core.AgentKilled
-import io.sarl.core.AgentSpawned
-import io.sarl.core.ContextJoined
-import io.sarl.core.ContextLeft
-import io.sarl.core.Destroy
-import io.sarl.core.Initialize
-import io.sarl.core.Logging
-import io.sarl.core.MemberJoined
-import io.sarl.core.MemberLeft
 import events.Influence
-import events.Perception
+import events.MoveForward
 import io.sarl.core.DefaultContextInteractions
-import events.ArrivedAtDestination
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import java.util.ArrayList
+import java.util.Collection
+import java.util.TreeMap
+import java.util.UUID
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+import javafx.application.Platform
+import org.arakhne.afc.gis.maplayer.MultiMapLayer
+import org.arakhne.afc.gis.road.primitive.RoadNetwork
+import org.arakhne.afc.gis.ui.GisCanvas
+import org.arakhne.afc.math.geometry.d1.d.Point1d
+import road_elements.Car
+import road_elements.Road
+import road_elements.TrafficLayers
 
-/** 
- * @author robin
- * 
- */
 agent EnvAgent {
-	uses Logging
+
 	uses DefaultContextInteractions
-	
-	var time:int=0
-	
+	uses Lifecycle
+
+	val agentId_Cars = new TreeMap<UUID, Car>
+	val freeze = new AtomicBoolean
+
+	var canvas : GisCanvas<MultiMapLayer<TrafficLayers>>
+	var network : RoadNetwork
+	var trafficLayers : TrafficLayers
+	var influences = new AtomicInteger
+	var time = 0
+
 	on Initialize {
-		DriverNormal.spawn(1)
-		emit(new Perception)
-		info("The agent was started.")
+		this.influences.set(0)
+		synchronized(this){
+			this.canvas = occurrence.parameters.get(1) as GisCanvas<MultiMapLayer<TrafficLayers>>
+			this.trafficLayers = occurrence.parameters.get(0) as TrafficLayers
+			this.network = this.trafficLayers.roadNetworkLayer.roadNetwork
+		}
+		spawnCarAndAgent(3)
 	}
 
-	on Influence{
-		var car=occurrence.influencedCar
-		var ^agent=occurrence.^agent as Driver
-		//info("influence"+ car.toString)
-		var xAgent = ^agent.arrivalPoint.x
-		var yAgent = ^agent.arrivalPoint.y
-		if(car.x==xAgent && car.y==yAgent)
-			emit(new ArrivedAtDestination())
+	on Influence {
+		synchronized (this) {
+			var agentId = occurrence.agentId
+			var car = this.getCarByAgentId(agentId)
+			if (car !== null) {
+				car.influence = occurrence
+				var v = this.influences.incrementAndGet
+				if (v >= this.agentId_Cars.size) computeInfluences
+			}
+		}
+	}
+
+	synchronized def computeInfluences {
+		this.freeze.set(true)
+		var now = System::currentTimeMillis
+		var restart = now + 250
+
+		try {
+			this.influences.set(0)
+
+			for (b : agentId_Cars.entrySet) {
+				var body = b.value
+				var agentId = body.influence.agentId
+
+				/*
+				 * The next expressions can be useful for further development
+				 * Change the agent event depending on its location
+				 */
+				// var car = this.getCarByAgentId(agentId)
+				/*if (car.coordinates.equals(body.influence.arrivalPoint)) {
+				 * emit(new ArrivedAtDestination)[elt|elt.UUID == agentId]
+				 * return;
+				 * }
+				 */
+				/* if (car.coordinates.equals(body.influence.nextPoint)) {
+				 * emit(new ArrivedAtEndRoad)[elt|elt.UUID == agentId]
+				 * return;
+				 * }
+				 */
+				emit(new MoveForward)[elt|elt.UUID == agentId]
+				while (System.currentTimeMillis < restart) {
+					// Do nothing
+				} 	
+			}
+
+			Platform::runLater[this.canvas.drawContent]
+			this.time++
+
+		} finally {
+			this.freeze.set(false)
+		}
+	}
+
+	synchronized def removeAgentAndCar(idAgent : UUID) {
+		this.agentId_Cars.remove(idAgent)
+	}
+
+	synchronized def spawnCarAndAgent(nb : int = 1) : Collection<UUID> {
+		var colID : Collection<UUID> = new ArrayList<UUID>()
+		for (var i = 0; i < nb; i++) {
+			var nbRoads = this.network.roadSegments.size
+			var indexRoadRandom = (Math.random() * nbRoads) as int
+			var selectedRoad = this.network.roadSegments.get(indexRoadRandom) as Road
+			var car = new Car(new Point1d(selectedRoad, 0, 1), selectedRoad, this.trafficLayers)
+			var id = Driver.spawn(car, this)
+			agentId_Cars.put(id, car)
+			colID.add(id)
+		}
+		return colID
+	}
+
+	synchronized def getCarByAgentId(agentId : UUID) : Car {
+		return this.agentId_Cars.get(agentId)
+	}
+
+	synchronized def getNetwork : RoadNetwork {
+		return this.network
 	}
 }
+

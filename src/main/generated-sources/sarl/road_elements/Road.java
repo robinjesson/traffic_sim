@@ -1,17 +1,22 @@
 package road_elements;
 
+import io.sarl.lang.annotation.DefaultValue;
+import io.sarl.lang.annotation.DefaultValueSource;
+import io.sarl.lang.annotation.DefaultValueUse;
 import io.sarl.lang.annotation.SarlElementType;
+import io.sarl.lang.annotation.SarlSourceCode;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
 import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
+import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
 
 /**
- * @author robin
+ * Road class
  */
 @SarlSpecification("0.9")
 @SarlElementType(10)
@@ -31,7 +36,8 @@ public class Road extends RoadPolyline {
   
   private int speedLimit;
   
-  public Road(final int beginX, final int beginY, final int endX, final int endY, final int speedLimit) {
+  @DefaultValueSource
+  public Road(final int beginX, final int beginY, final int endX, final int endY, @DefaultValue("road_elements.Road#NEW_0") final int speedLimit) {
     super();
     this.beginX = beginX;
     this.beginY = beginY;
@@ -46,6 +52,25 @@ public class Road extends RoadPolyline {
     double _pow_1 = Math.pow((endY - beginY), 2);
     this.distanceKilometers = Math.sqrt((_pow + _pow_1));
   }
+  
+  /**
+   * Default value for the parameter speedLimit
+   */
+  @SyntheticMember
+  @SarlSourceCode("50")
+  private static final int $DEFAULT_VALUE$NEW_0 = 50;
+  
+  @DefaultValueSource
+  public Road(final Point2d beg, final Point2d end, @DefaultValue("road_elements.Road#NEW_1") final int speed) {
+    this(((int) beg.getX()), ((int) beg.getY()), ((int) end.getX()), ((int) end.getY()), speed);
+  }
+  
+  /**
+   * Default value for the parameter speed
+   */
+  @SyntheticMember
+  @SarlSourceCode("50")
+  private static final int $DEFAULT_VALUE$NEW_1 = 50;
   
   @Pure
   public ArrayList<RoadObject> getObjects() {
@@ -72,8 +97,22 @@ public class Road extends RoadPolyline {
     return this.endY;
   }
   
+  @Pure
+  public Point2d getBegin() {
+    return new Point2d(this.beginX, this.beginY);
+  }
+  
+  @Pure
+  public Point2d getEnd() {
+    return new Point2d(this.endX, this.endY);
+  }
+  
   public boolean addObject(final RoadObject obj) {
     return this.objects.add(obj);
+  }
+  
+  public boolean removeObject(final RoadObject obj) {
+    return this.objects.remove(obj);
   }
   
   public RoadObject removeObject(final UUID id) {
@@ -120,6 +159,109 @@ public class Road extends RoadPolyline {
   @Pure
   public double getSpeedLimitMS() {
     return (this.speedLimit * 3.6);
+  }
+  
+  @Pure
+  public RoadObject getObjectsByUUID(final UUID id) {
+    for (final RoadObject current : this.objects) {
+      UUID _uUID = current.getUUID();
+      if ((_uUID == id)) {
+        return current;
+      }
+    }
+    throw new IllegalArgumentException("This UUID doesn\'t exist");
+  }
+  
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
+  @Pure
+  public ArrayList<Car> getSameDirectionCars(final Car car) {
+    ArrayList<Car> res = new ArrayList<Car>();
+    ArrayList<Car> _listOfCars = this.listOfCars();
+    for (final Car c : _listOfCars) {
+      if ((c != car)) {
+        if ((car.getRoad().getBeginPoint().getPoint().equals(c.getRoad().getBeginPoint().getPoint()) && car.getRoad().getEndPoint().equals(c.getRoad().getEndPoint().getPoint()))) {
+          res.add(c);
+        }
+      }
+    }
+    return res;
+  }
+  
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
+  @Pure
+  public ArrayList<Car> getFrontCars(final Car car) {
+    ArrayList<Car> cars = this.getSameDirectionCars(car);
+    ArrayList<Car> res = new ArrayList<Car>();
+    for (final Car c : cars) {
+      double _x = c.getPosition().getX();
+      double _x_1 = car.getPosition().getX();
+      if (((_x - _x_1) > 0)) {
+        res.add(c);
+      }
+    }
+    return res;
+  }
+  
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
+  @Pure
+  public Car getFrontCarOf(final Car car) {
+    ArrayList<Car> lCars = this.getFrontCars(car);
+    int _size = lCars.size();
+    if ((_size != 0)) {
+      Car frontCar = lCars.get(0);
+      double _x = frontCar.getPosition().getX();
+      double _x_1 = car.getPosition().getX();
+      double frontCarDistance = (_x - _x_1);
+      for (final Car c : lCars) {
+        if (((car.getPosition().getX() < c.getPosition().getX()) && ((c.getPosition().getX() - car.getPosition().getX()) < frontCarDistance))) {
+          frontCar = c;
+          double _x_2 = c.getPosition().getX();
+          double _x_3 = car.getPosition().getX();
+          frontCarDistance = (_x_2 - _x_3);
+        }
+      }
+      return frontCar;
+    }
+    return null;
+  }
+  
+  /**
+   * Function implemented but not used
+   * You can use it to get the distance of the first Car in front of another Car
+   */
+  @Pure
+  public double getFrontCarDistanceOf(final Car car) {
+    double _xifexpression = (double) 0;
+    int _size = this.getFrontCars(car).size();
+    if ((_size >= 1)) {
+      double _x = this.getFrontCarOf(car).getPosition().getX();
+      double _x_1 = car.getPosition().getX();
+      _xifexpression = (_x - _x_1);
+    } else {
+      _xifexpression = 100000;
+    }
+    return _xifexpression;
+  }
+  
+  @DefaultValueUse("int,int,int,int,int")
+  @SyntheticMember
+  public Road(final int beginX, final int beginY, final int endX, final int endY) {
+    this(beginX, beginY, endX, endY, $DEFAULT_VALUE$NEW_0);
+  }
+  
+  @DefaultValueUse("org.arakhne.afc.math.geometry.d2.d.Point2d,org.arakhne.afc.math.geometry.d2.d.Point2d,int")
+  @SyntheticMember
+  public Road(final Point2d beg, final Point2d end) {
+    this(beg, end, $DEFAULT_VALUE$NEW_1);
   }
   
   @Override
@@ -175,5 +317,5 @@ public class Road extends RoadPolyline {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -10705506299L;
+  private static final long serialVersionUID = -3832513437L;
 }

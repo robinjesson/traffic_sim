@@ -1,61 +1,140 @@
-/** 
- * 
- */
 package agents
 
-import org.arakhne.afc.gis.road.primitive.RoadNetwork
+import capacities.Drive
+import capacities.DrivingDangerous
+import capacities.DrivingNormal
+import events.Influence
+import events.MoveForward
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Destroy
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import java.util.Random
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Car
-import road_elements.GPS
 import road_elements.Road
-import events.Perception
-import events.Influence
-import io.sarl.core.Logging
-import io.sarl.core.DefaultContextInteractions
-import events.ArrivedAtEndRoad
 
-/** 
- * @author robin
- * 
- */
 agent Driver {
 	uses Logging
 	uses DefaultContextInteractions
-	
+	uses Lifecycle
+	uses Drive
+
 	protected var currentPoint : Point2d
 	protected var arrivalPoint : Point2d
 	protected var car : Car
-	protected var speed:int
+	protected var begSegment : Point2d
+	protected var endSegment : Point2d
+	var env : EnvAgent
 
-	synchronized def initProperties(pos1D : int, firstRoad : Road, startPoint : Point2d, arrivalPoint : Point2d) : void {
-		this.currentPoint = startPoint
-		this.arrivalPoint = arrivalPoint
-		this.car = new Car(pos1D, firstRoad,0,0)
-		this.speed = 0
-	}
-
-	on ArrivedAtEndRoad {
-		var nextRoadToTake : Road 
+	on Initialize {
 		synchronized (this) {
-			nextRoadToTake = GPS.nextRoad(this.currentPoint, this.arrivalPoint, this.car.getRoad().getRoadNetwork())
-			this.car.road = nextRoadToTake
-			this.car.pos1D=0
+			// Chose randomly the type of Driving of the agent
+			var random = new Random
+			switch random.nextInt(2){
+				case 0:	{
+					setSkill(new DrivingNormal)	
+				}			
+				default: {
+					setSkill(new DrivingDangerous)
+				}
+			}
+			
+			this.env = occurrence.parameters.get(1) as EnvAgent
+			this.car = occurrence.parameters.get(0) as Car
+			this.currentPoint = this.car.coordinates
+			this.arrivalPoint = new Point2d(50, 50)
+			this.begSegment = this.car.road.beginPoint.point
+			this.endSegment = this.car.road.endPoint.point
+			this.car.setCoordinates(this.begSegment, this.endSegment)
+
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
 	}
 
-	on Perception {
-		info("perception")
-		emit(new Influence(this.car,this))
+	on Destroy {
+		info("The agent was stopped.")
+	}
+
+	def ArrivedAtEndRoad {
+		synchronized (this) {
+			var b = this.car.road.beginPoint
+			var e = this.car.road.endPoint
+
+			var selectedRoad : Road
+
+			var random = new Random
+			
+			if (b.isNearPoint(this.car.coordinates)) {
+				do {
+					var index = (random.nextDouble * b.connectedSegmentCount) as int
+					selectedRoad = b.connectedSegments.get(index) as Road
+				} while (selectedRoad === this.car.road)
+			} else {
+				do {
+					var index = (random.nextDouble * e.connectedSegmentCount) as int
+					selectedRoad = e.connectedSegments.get(index) as Road
+				} while (selectedRoad === this.car.road)
+			}
+
+			this.car.road.removeObject(this.car)
+			this.car.road = selectedRoad
+			this.car.road.addObject(this.car)
+
+			if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
+				this.begSegment = this.car.road.beginPoint.point
+				this.endSegment = this.car.road.endPoint.point
+			} else {
+				this.begSegment = this.car.road.endPoint.point
+				this.endSegment = this.car.road.beginPoint.point
+			}
+
+			this.car.setCoordinates(this.begSegment, this.endSegment)
+			this.car.position.x = 0
+		}
 
 	}
-	
-	def getCurrentPoint:Point2d{
+
+	def ArrivedAtDestination {
+		synchronized (this) {
+			this.killThis
+		}
+	}
+
+	synchronized def killThis : void {
+		this.env.removeAgentAndCar(this.ID)
+		this.car.road.removeObject(this.car)
+		this.car.removeFromLayer
+		killMe
+	}
+
+	on MoveForward {
+		synchronized (this) {
+			if (car.coordinates.equals(this.car.influence.arrivalPoint)) this.ArrivedAtDestination
+
+			if (car.coordinates.equals(this.car.influence.nextPoint)) this.ArrivedAtEndRoad
+			
+			/*
+			 * Get the Cars in front of another Car
+			 * --> implemented but not used because of errors
+			 * --> status : pending, waiting for further improvements
+			 */
+			// var distFrontCar=this.car.road.getFrontCarDistanceOf(this.car)
+			// if (distFrontCar>10) {
+				this.car.position.x = this.car.position.x + speed
+				this.car.setCoordinates(this.begSegment, this.endSegment)
+				this.currentPoint = this.car.coordinates
+			// }
+			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
+		}
+	}
+
+	synchronized def getCurrentPoint : Point2d {
 		return this.currentPoint
 	}
 
-	def getArrivalPoint : Point2d {
+	synchronized def getArrivalPoint : Point2d {
 		return this.arrivalPoint
 	}
-	
-
 }

@@ -1,15 +1,15 @@
-/** 
- * 
- */
 package road_elements
 
-/** 
- * @author tiantian
- * 
+import org.arakhne.afc.math.geometry.d1.d.Point1d
+
+/*
+ * TrafficLight class not used in IA51 project
+ * Class pending for further improvements
  */
+
 class TrafficLight extends RoadObject {
 	
-	new(pos1D : int, currentRoad : Road) {
-		super(pos1D, currentRoad)
+	new(position : Point1d, currentRoad : Road) {
+		super(position, currentRoad)
 	}
 }

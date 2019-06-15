@@ -1,18 +1,39 @@
-/** 
- * 
- */
 package road_elements
 
-import org.arakhne.afc.gis.road.primitive.RoadConnection
+import events.Influence
+import org.arakhne.afc.math.geometry.d1.d.Point1d
+import org.arakhne.afc.math.geometry.d2.Point2D
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
-/** 
- * @author robin
- * 
- */
 class Car extends MobileRoadObject {	
-	new(pos1D : int, currentRoad:Road, x:double, y:double){
-		super(pos1D, currentRoad,x,y)
-		if(super.road!==null)
-			super.road.addObject(this)
+	
+	var x:double
+	var y:double
+	var influence : Influence
+	
+	new(position : Point1d, currentRoad:Road, trafficLayers:TrafficLayers){
+		super(position, currentRoad, trafficLayers)
+		if(super.road !== null) super.road.addObject(this)
+		trafficLayers.addCar(this)
+		this.setCoordinates(currentRoad.begin,currentRoad.end)
 	}
+	
+	def getCoordinates : Point2d {
+		return new Point2d(this.x, this.y)
+	}
+	
+	def setCoordinates(beg : Point2D, end : Point2D) : void {
+		var dist = Math.sqrt(Math.pow((end.x - beg.x), 2) + Math.pow((end.y - beg.y), 2))
+		var t = this.position.x / dist
+		this.x = (1 - t) * beg.x + t * end.x;
+		this.y = (1 - t) * beg.y + t * end.y;
+	}
+	
+	def setInfluence(influence : Influence) : Influence {
+		this.influence=influence
+	}
+	
+	def getInfluence {
+		return this.influence
+	}	
 }

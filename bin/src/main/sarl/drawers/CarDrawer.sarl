@@ -1,0 +1,34 @@
+package drawers;
+
+import org.arakhne.afc.nodefx.Drawer;
+import org.arakhne.afc.nodefx.ZoomableGraphicsContext;
+import road_elements.Car
+import road_elements.Road
+import javafx.scene.paint.Color
+
+class CarDrawer implements Drawer<Car> {
+	static val width:int=2
+	
+	@Override
+	def draw(gc:ZoomableGraphicsContext, element:Car):void {
+		var currentRoad:Road=element.road
+		var pos1D=element.getPos1D(); 
+		
+			
+		var coord=element.coordinates
+
+		
+		gc.fill = Color::RED
+		gc.stroke = Color::RED
+		gc.fillRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);
+		gc.strokeRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width,
+			CarDrawer::width);
+		gc.restore
+	}
+
+	@Override
+	def getPrimitiveType() : Class<? extends Car> {
+		return Car as Class<? extends Car>
+	}
+
+}

@@ -1,15 +1,8 @@
-/** 
- * 
- */
 package capacities
 
 import capacities.Drive
 import io.sarl.core.Logging
 
-/** 
- * @author robin
- * 
- */
 skill DrivingSlow implements Drive {
 	uses Logging
 
@@ -34,4 +27,9 @@ skill DrivingSlow implements Drive {
 		// TODO Auto-generated code.
 		0
 	}
+	
+	def getSpeed : int {
+		return 1
+	}
+	
 }

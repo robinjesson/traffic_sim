@@ -1,15 +1,9 @@
-/** 
- * 
- */
 package capacities
 
-import io.sarl.core.Logging
-
-/** 
- * @author robin
- * 
- */
 capacity Drive {
+	
+	def getSpeed():int
+	
 	/**
 	 * Returns the new speed after speeding up
 	 */

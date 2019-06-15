@@ -1,6 +1,3 @@
-/** 
- * 
- */
 package road_elements
 
 import org.arakhne.afc.gis.road.layer.RoadNetworkLayer
@@ -12,15 +9,14 @@ import org.arakhne.afc.gis.mapelement.MapElement
 import org.arakhne.afc.gis.maplayer.TreeMapElementLayer
 import org.arakhne.afc.gis.maplayer.MultiMapLayer
 
-/** 
- * @author robin
- * 
+/*
+ * TrafficLayers class used for the Road creation
  */
+
 class TrafficLayers extends MultiMapLayer {
 	var worldRect : Rectangle2d
 	var roadNetworkLayer : RoadNetworkLayer
 	var mapElementLayer : MapElementLayer<MapElement>
-	//var multiMapLayer : MultiMapLayer<MapElementLayer<? extends MapElement>> 
 	
 	new(roadList : ArrayList<Road>, objectList : ArrayList<RoadObject>) {
 		super()
@@ -38,7 +34,6 @@ class TrafficLayers extends MultiMapLayer {
 		if (!objectList.isNullOrEmpty)
 			this.mapElementLayer.addMapElements(objectList)
 		
-		//this.multiMapLayer = new MultiMapLayer<MapElementLayer<? extends MapElement>>
 		this.addMapLayer(this.roadNetworkLayer)
 		this.addMapLayer(this.mapElementLayer)
 	}
@@ -47,17 +42,22 @@ class TrafficLayers extends MultiMapLayer {
 		var roadList : ArrayList<Road> = new ArrayList<Road>()
 
 		// autoroutes
-		var r0 : Road = new Road(0, 0, 0, 20, 100)
-		roadList.add(r0)
+		roadList.add(new Road(0, 0, 0, 20, 100))
 		roadList.add(new Road(0, 20, 0, 100, 100))
-		roadList.add(new Road(0, 100, 100, 100, 100))
 		roadList.add(new Road(100, 100, 100, 50, 100))
 		roadList.add(new Road(100, 50, 100, 0, 100))
-		roadList.add(new Road(100, 0, 0, 0, 100))
+		 roadList.add(new Road(0, 100, 100, 100, 100))
+		 roadList.add(new Road(100, 0, 0, 0, 100))
+		//roadList.add(new Road(0, 0, 50, 0, 100))
+		//roadList.add(new Road(50, 0, 100, 0, 100))
+		//roadList.add(new Road(0, 100, 50, 100, 100))
+		//roadList.add(new Road(50, 100, 100, 100, 100))
 		
 		// bretelles
 		roadList.add(new Road(0, 20, 20, 20, 70))
 		roadList.add(new Road(50, 50, 100, 50, 70))
+		//roadList.add(new Road(50, 0, 50, 20, 70))
+		//roadList.add(new Road(50, 100, 50, 50, 70))
 		
 		// ville
 		roadList.add(new Road(20, 20, 50, 20, 50))
@@ -67,23 +67,32 @@ class TrafficLayers extends MultiMapLayer {
 		roadList.add(new Road(20, 30, 20, 50, 50))
 		roadList.add(new Road(50, 20, 50, 30, 50))
 		roadList.add(new Road(50, 30, 50, 50, 50))
+
 		return roadList
 	}
-	
-	def static carListFactory(roads : ArrayList<Road>) : ArrayList<RoadObject> {
-		var carList : ArrayList<RoadObject> = new ArrayList<RoadObject>()
-		for(road:roads){
-			
-			var nbCarRandom = (Math.random() * 3) as int
-			//println(road.distanceKilometers+" "+posRandom)
-			for (var i = 0; i < nbCarRandom; i++) {
-				var posRandom = (Math.random() * road.distanceKilometers) as int
-				carList.add(new Car(posRandom, road, 0, 0))
-			}
-			
-		}
-		return carList
+
+  	synchronized def addCar(car : Car) {
+		this.mapElementLayer.addMapElement(car)
 	}
-	
+
+	synchronized def addTrafficLight(tl : TrafficLight) {
+		this.mapElementLayer.addMapElement(tl)
+	}
+
+	synchronized def removeCar(car : Car) : void {
+		this.mapElementLayer.removeMapElement(car)
+	}
+
+	synchronized def refresh : void {
+		this.mapElementLayer.repaint
+	}
+
+	synchronized def getMapElementLayer() : MapElementLayer<MapElement> {
+		return this.mapElementLayer
+	}
+
+	synchronized def getRoadNetworkLayer() : RoadNetworkLayer {
+		return this.roadNetworkLayer
+	}
 	
 }

@@ -1,0 +1,8 @@
+import application.Simulation
+import javafx.application.Application
+
+class Main {
+	static def main(args : String[]) : void {
+		Application::launch(typeof(Simulation))
+	}
+}

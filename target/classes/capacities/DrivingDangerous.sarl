@@ -1,15 +1,8 @@
-/** 
- * 
- */
 package capacities
 
 import capacities.Drive
 import io.sarl.core.Logging
 
-/** 
- * @author robin
- * 
- */
 skill DrivingDangerous implements Drive {
 	uses Logging
 
@@ -38,4 +31,9 @@ skill DrivingDangerous implements Drive {
 	def brake(currentSpeed : int) : int {
 		return currentSpeed - 2
 	}
+	
+	def getSpeed : int {
+		return 2
+	}
+	
 }

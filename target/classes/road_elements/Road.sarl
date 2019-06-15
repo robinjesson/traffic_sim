@@ -3,16 +3,13 @@ package road_elements
 import java.util.ArrayList
 import java.util.UUID
 import org.arakhne.afc.gis.road.RoadPolyline
+import org.arakhne.afc.math.geometry.d2.d.Point2d
 
-/** 
- * 
- */
-
-/** 
- * @author robin
- * 
+/*
+ * Road class 
  */
 class Road extends RoadPolyline {
+	
 	var objects : ArrayList<RoadObject>
 	var beginX : int
 	var beginY : int
@@ -21,7 +18,7 @@ class Road extends RoadPolyline {
 	var distanceKilometers : double
 	var speedLimit : int
 	
-	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int){
+	new(beginX:int, beginY:int, endX:int, endY:int, speedLimit:int=50){
 		super()
 		this.beginX = beginX
 		this.beginY = beginY
@@ -33,6 +30,10 @@ class Road extends RoadPolyline {
 		this.speedLimit=speedLimit
 		this.distanceKilometers = Math.sqrt(Math.pow((endX - beginX), 2) + Math.pow((endY - beginY), 2))
 	}	
+	
+	new(beg : Point2d, end : Point2d, speed : int=50){
+		this(beg.x as int,beg.y as int,end.x as int,end.y as int,speed)
+	}
 
 	def getObjects : ArrayList<RoadObject> {
 		return this.objects
@@ -54,16 +55,26 @@ class Road extends RoadPolyline {
 		return this.endY
 	}
 	
+	def getBegin : Point2d{
+		return new Point2d(this.beginX,this.beginY)
+	}
+
+	def getEnd : Point2d {
+		return new Point2d(this.endX, this.endY)
+	}
+	
 	def addObject(obj : RoadObject){
 		this.objects.add(obj);
+	}
+
+	def removeObject(obj : RoadObject) {
+		this.objects.remove(obj);
 	}
 	
 	def removeObject(id : UUID) : RoadObject {
 		var objToRemove : RoadObject = null;
 		for(obj as RoadObject : this.objects){
-			if (obj.getUUID() === id) {
-				objToRemove = obj
-			}
+			if (obj.getUUID() === id) objToRemove = obj
 		}	
 		
 		if(objToRemove === null) throw new IllegalArgumentException("The UUID " + id + " doesn't exist")
@@ -75,9 +86,7 @@ class Road extends RoadPolyline {
 	def listOfCars() : ArrayList<Car> {
 		var cars = new ArrayList<Car>()
 		for (obj as RoadObject : this.objects) {
-			if (obj instanceof Car) {
-				cars.add(obj)
-			}
+			if (obj instanceof Car) cars.add(obj)
 		}
 		return cars
 	}
@@ -97,27 +106,69 @@ class Road extends RoadPolyline {
 	def getSpeedLimitMS() : double {
 		return this.speedLimit*3.6
 	}
-	
-<<<<<<< HEAD
-	def getFrontCarDistance(car : Car) : double{
-		for(roadCar as Car : this.listOfCars){
-			if(car.pos1D < roadCar.pos1D) return roadCar.pos1D - car.pos1D
-=======
-	def getFrontCarDistance(car:Car):double{
-		var dist:double=10000;
-		for(c:this.listOfCars){
-			if(c.pos1D-car.pos1D<dist)
-				dist = c.pos1D - car.pos1D
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
-		}
-	}
 
 	def getObjectsByUUID(id : UUID) : RoadObject {
 		for (current as RoadObject : this.objects) {
-			if (current.getUUID() === id) {
-				return current
-			}
+			if (current.getUUID() === id) return current
 		}
 		throw new IllegalArgumentException("This UUID doesn't exist")
 	}
+
+	/* 
+	 * Function implemented but not used
+	 * You can use it to get the distance of the first Car in front of another Car
+	 */
+	def getSameDirectionCars(car : Car) : ArrayList<Car> {
+		var res = new ArrayList<Car>
+		for (c : this.listOfCars) {
+			if(c !== car){
+				if (car.road.beginPoint.point.equals(c.road.beginPoint.point) && car.road.endPoint.equals(c.road.endPoint.point)) res.add(c)
+			}
+		}
+		return res
+	}
+
+	/* 
+	 * Function implemented but not used
+	 * You can use it to get the distance of the first Car in front of another Car
+	 */
+	def getFrontCars(car : Car) : ArrayList<Car>{
+		var cars = this.getSameDirectionCars(car)
+		var res = new ArrayList<Car>
+		for(c:cars) {
+			if(c.position.x - car.position.x>0) res.add(c)
+		}
+		return res
+	}
+
+	/* 
+	 * Function implemented but not used
+	 * You can use it to get the distance of the first Car in front of another Car
+	 */	
+	def getFrontCarOf(car:Car) : Car{
+		var lCars = this.getFrontCars(car)
+		if (lCars.size !== 0) {
+			var frontCar : Car = lCars.get(0)
+			var frontCarDistance = frontCar.position.x - car.position.x
+			for (c : lCars) {
+				if(car.position.x < c.position.x && c.position.x - car.position.x < frontCarDistance){
+					frontCar = c
+					frontCarDistance = c.position.x - car.position.x
+				}
+			}
+			return frontCar
+		}
+		return null
+	}
+
+	/* 
+	 * Function implemented but not used
+	 * You can use it to get the distance of the first Car in front of another Car
+	 */
+	def getFrontCarDistanceOf(car : Car) : double {
+		return if(this.getFrontCars(car).size>=1) this.getFrontCarOf(car).position.x - car.position.x else 100000
+	}
+	
+
+	
 }

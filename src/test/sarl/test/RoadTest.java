@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.arakhne.afc.gis.road.primitive.RoadConnection;
+import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.junit.Rule;
 import org.junit.jupiter.api.*;
 import org.junit.rules.ExpectedException;
@@ -27,9 +28,9 @@ class RoadTest {
 	@BeforeAll
 	static void setUp() {
 		road = new Road(10,20,30,40,50);
-		tLight = new TrafficLight(4, null);
-		car = new Car(3,null,null);
-		car2 = new Car(4, null, null);
+		tLight = new TrafficLight(new Point1d(),null);
+		car = new Car(new Point1d(),null,null);
+		car2 = new Car(new Point1d(),null,null);
 		road.addObject(car);
 		road.addObject(car2);
 	}
@@ -50,26 +51,11 @@ class RoadTest {
 
 	@Test
 	void testAddObject() {
-<<<<<<< HEAD
-=======
-		Car car = new Car(3, null,0,0);
-		System.out.println("Hello");
-		System.out.println(car.getUUID());
-		System.out.println("OK");
-		road.getObjects().add(car);
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertEquals("Should be the same object", car, road.getObjectsByUUID(car.getUUID()));		
 	}
 
 	@Test
-<<<<<<< HEAD
 	void remove_object_should_return_object() {
-=======
-	void testRemoveObject() {
-		Car car = new Car(3,null,0,0);
-		System.out.println(car);
-		road.addObject(car);
->>>>>>> 119d5ddeb38cd6d9fa22b10ba8d8436e7ad3ec53
 		assertTrue(car == road.removeObject(car.getUUID()));
 	}
 
@@ -82,8 +68,8 @@ class RoadTest {
 
 	@Test
 	void get_front_car_distance() {
-		double expectedDistance = car2.getPos1D() - car.getPos1D();
-		assertTrue(expectedDistance == road.getFrontCarDistance(car));
+		double expectedDistance = car2.getPosition().getX() - car.getPosition().getX();
+		//assertTrue(expectedDistance == road.getFrontCarDistance(car));
 	}
 
 	@Test
