@@ -20,7 +20,7 @@ class CarDrawer implements Drawer<Car> {
 			carY--
 		}
 
-		var color = gc.rgb(100)
+		var color = element.colour
 		gc.fill = color
 		gc.stroke = color
 		gc.fillRect(coord.x - CarDrawer::width / 2, coord.y - CarDrawer::width / 2, CarDrawer::width, CarDrawer::width);

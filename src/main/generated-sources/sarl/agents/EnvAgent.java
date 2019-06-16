@@ -75,7 +75,7 @@ public class EnvAgent extends Agent {
       this.trafficLayers = ((TrafficLayers) _get_1);
       this.network = this.trafficLayers.getRoadNetworkLayer().getRoadNetwork();
     }
-    this.spawnCarAndAgent(3);
+    this.spawnCarAndAgent(8);
   }
   
   private void $behaviorUnit$Influence$1(final Influence occurrence) {
@@ -93,6 +93,11 @@ public class EnvAgent extends Agent {
     }
   }
   
+  /**
+   * emit MoveForward on each drivers, which the driver on the reception will compute itself what it must do.
+   * then it increments the time
+   * then repaint the cars
+   */
   protected synchronized int computeInfluences() {
     int _xblockexpression = (int) 0;
     {
@@ -227,6 +232,9 @@ public class EnvAgent extends Agent {
     return $castSkill(Lifecycle.class, this.$CAPACITY_USE$IO_SARL_CORE_LIFECYCLE);
   }
   
+  /**
+   * The environment creates the cars on a network and puts agent inside the created cars
+   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
@@ -235,6 +243,11 @@ public class EnvAgent extends Agent {
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Initialize$0(occurrence));
   }
   
+  /**
+   * Receives influences from cars
+   * Stores influence inside the car
+   * if it has received all cars, then computes all influence
+   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$Influence(final Influence occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {

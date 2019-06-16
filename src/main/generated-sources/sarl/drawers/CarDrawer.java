@@ -27,7 +27,7 @@ public class CarDrawer implements Drawer<Car> {
     if ((carX == _x)) {
       carY--;
     }
-    Color color = gc.rgb(100);
+    Color color = element.getColour();
     gc.setFill(color);
     gc.setStroke(color);
     double _x_1 = coord.getX();
