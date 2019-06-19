@@ -67,44 +67,45 @@ agent Driver {
 	/**
 	 * Previously an event
 	 * Select a next road and do the necessary changes
-	 */
-	def ArrivedAtEndRoad {
-		synchronized (this) {
+ */
+	synchronized def ArrivedAtEndRoad : void {
 			var b = this.car.road.beginPoint
 			var e = this.car.road.endPoint
 
 			var selectedRoad : Road
 
 			var random = new Random
-			
-			if (b.isNearPoint(this.car.coordinates)) {
-				do {
-					var index = (random.nextDouble * b.connectedSegmentCount) as int
-					selectedRoad = b.connectedSegments.get(index) as Road
-				} while (selectedRoad === this.car.road)
-			} else {
-				do {
-					var index = (random.nextDouble * e.connectedSegmentCount) as int
-					selectedRoad = e.connectedSegments.get(index) as Road
-				} while (selectedRoad === this.car.road)
+			try{
+				if (b.isNearPoint(this.car.coordinates)) {
+					do {
+						var index = (random.nextDouble * b.connectedSegmentCount) as int
+						selectedRoad = b.connectedSegments.get(index) as Road
+					} while (selectedRoad === this.car.road)
+				} else {
+					do {
+						var index = (random.nextDouble * e.connectedSegmentCount) as int
+						selectedRoad = e.connectedSegments.get(index) as Road
+					} while (selectedRoad === this.car.road)
+				}
+	
+				this.car.road.removeObject(this.car)
+				this.car.road = selectedRoad
+				this.car.road.addObject(this.car)
+	
+				if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
+					this.begSegment = this.car.road.beginPoint.point
+					this.endSegment = this.car.road.endPoint.point
+				} else {
+					this.begSegment = this.car.road.endPoint.point
+					this.endSegment = this.car.road.beginPoint.point
+				}
+	
+				this.car.setCoordinates(this.begSegment, this.endSegment)
+				this.car.position.x = 0
 			}
-
-			this.car.road.removeObject(this.car)
-			this.car.road = selectedRoad
-			this.car.road.addObject(this.car)
-
-			if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
-				this.begSegment = this.car.road.beginPoint.point
-				this.endSegment = this.car.road.endPoint.point
-			} else {
-				this.begSegment = this.car.road.endPoint.point
-				this.endSegment = this.car.road.beginPoint.point
+			catch(ex:NullPointerException){
+				
 			}
-
-			this.car.setCoordinates(this.begSegment, this.endSegment)
-			this.car.position.x = 0
-		}
-
 	}
 
 	/**

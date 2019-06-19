@@ -35,6 +35,7 @@ public class Car extends MobileRoadObject {
     this.setCoordinates(currentRoad.getBegin(), currentRoad.getEnd());
   }
   
+  @Pure
   public Point2d getCoordinates() {
     return new Point2d(this.x, this.y);
   }

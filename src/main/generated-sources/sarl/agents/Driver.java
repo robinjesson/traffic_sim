@@ -31,6 +31,7 @@ import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -97,12 +98,12 @@ public class Driver extends Agent {
    * Previously an event
    * Select a next road and do the necessary changes
    */
-  protected void ArrivedAtEndRoad() {
-    synchronized (this) {
-      RoadConnection b = this.car.getRoad().getBeginPoint();
-      RoadConnection e = this.car.getRoad().getEndPoint();
-      Road selectedRoad = null;
-      Random random = new Random();
+  protected synchronized void ArrivedAtEndRoad() {
+    RoadConnection b = this.car.getRoad().getBeginPoint();
+    RoadConnection e = this.car.getRoad().getEndPoint();
+    Road selectedRoad = null;
+    Random random = new Random();
+    try {
       boolean _isNearPoint = b.isNearPoint(this.car.getCoordinates());
       if (_isNearPoint) {
         do {
@@ -139,6 +140,11 @@ public class Driver extends Agent {
       this.car.setCoordinates(this.begSegment, this.endSegment);
       Point1d _position = this.car.getPosition();
       _position.setX(0);
+    } catch (final Throwable _t) {
+      if (_t instanceof NullPointerException) {
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
     }
   }
   
