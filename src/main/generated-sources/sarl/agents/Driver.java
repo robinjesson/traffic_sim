@@ -24,12 +24,14 @@ import io.sarl.lang.util.ClearableReference;
 import java.util.Collection;
 import java.util.Random;
 import java.util.UUID;
+import javafx.scene.paint.Color;
 import javax.inject.Inject;
 import org.arakhne.afc.gis.road.primitive.RoadConnection;
 import org.arakhne.afc.gis.road.primitive.RoadSegment;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Extension;
 import org.eclipse.xtext.xbase.lib.Inline;
 import org.eclipse.xtext.xbase.lib.Pure;
@@ -55,21 +57,25 @@ public class Driver extends Agent {
   private void $behaviorUnit$Initialize$0(final Initialize occurrence) {
     synchronized (this) {
       Random random = new Random();
+      Object _get = occurrence.parameters[0];
+      this.car = ((Car) _get);
       int _nextInt = random.nextInt(2);
       switch (_nextInt) {
         case 0:
           DrivingNormal _drivingNormal = new DrivingNormal();
           this.<DrivingNormal>setSkill(_drivingNormal);
+          this.car.setColour(Color.BLUE);
           break;
         default:
-          DrivingDangerous _drivingDangerous = new DrivingDangerous();
-          this.<DrivingDangerous>setSkill(_drivingDangerous);
+          {
+            DrivingDangerous _drivingDangerous = new DrivingDangerous();
+            this.<DrivingDangerous>setSkill(_drivingDangerous);
+            this.car.setColour(Color.RED);
+          }
           break;
       }
-      Object _get = occurrence.parameters[1];
-      this.env = ((EnvAgent) _get);
-      Object _get_1 = occurrence.parameters[0];
-      this.car = ((Car) _get_1);
+      Object _get_1 = occurrence.parameters[1];
+      this.env = ((EnvAgent) _get_1);
       this.currentPoint = this.car.getCoordinates();
       Point2d _point2d = new Point2d(50, 50);
       this.arrivalPoint = _point2d;
@@ -88,12 +94,16 @@ public class Driver extends Agent {
     _$CAPACITY_USE$IO_SARL_CORE_LOGGING$CALLER.info("The agent was stopped.");
   }
   
-  protected void ArrivedAtEndRoad() {
-    synchronized (this) {
-      RoadConnection b = this.car.getRoad().getBeginPoint();
-      RoadConnection e = this.car.getRoad().getEndPoint();
-      Road selectedRoad = null;
-      Random random = new Random();
+  /**
+   * Previously an event
+   * Select a next road and do the necessary changes
+   */
+  protected synchronized void ArrivedAtEndRoad() {
+    RoadConnection b = this.car.getRoad().getBeginPoint();
+    RoadConnection e = this.car.getRoad().getEndPoint();
+    Road selectedRoad = null;
+    Random random = new Random();
+    try {
       boolean _isNearPoint = b.isNearPoint(this.car.getCoordinates());
       if (_isNearPoint) {
         do {
@@ -130,15 +140,27 @@ public class Driver extends Agent {
       this.car.setCoordinates(this.begSegment, this.endSegment);
       Point1d _position = this.car.getPosition();
       _position.setX(0);
+    } catch (final Throwable _t) {
+      if (_t instanceof NullPointerException) {
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
     }
   }
   
+  /**
+   * Previously an event
+   * Kill the agent and the car when arrived at destination
+   */
   protected void ArrivedAtDestination() {
     synchronized (this) {
       this.killThis();
     }
   }
   
+  /**
+   * Kills the agent, remove the cars from the road and the layer
+   */
   protected synchronized void killThis() {
     this.env.removeAgentAndCar(this.getID());
     this.car.getRoad().removeObject(this.car);
@@ -157,13 +179,16 @@ public class Driver extends Agent {
       if (_equals_1) {
         this.ArrivedAtEndRoad();
       }
-      Point1d _position = this.car.getPosition();
-      double _x = this.car.getPosition().getX();
-      Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
-      int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
-      _position.setX((_x + _speed));
-      this.car.setCoordinates(this.begSegment, this.endSegment);
-      this.currentPoint = this.car.getCoordinates();
+      double distFrontCar = this.car.getRoad().getFrontCarDistanceOf(this.car);
+      if ((distFrontCar > 10)) {
+        Point1d _position = this.car.getPosition();
+        double _x = this.car.getPosition().getX();
+        Drive _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER = this.$castSkill(Drive.class, (this.$CAPACITY_USE$CAPACITIES_DRIVE == null || this.$CAPACITY_USE$CAPACITIES_DRIVE.get() == null) ? (this.$CAPACITY_USE$CAPACITIES_DRIVE = this.$getSkill(Drive.class)) : this.$CAPACITY_USE$CAPACITIES_DRIVE);
+        int _speed = _$CAPACITY_USE$CAPACITIES_DRIVE$CALLER.getSpeed();
+        _position.setX((_x + _speed));
+        this.car.setCoordinates(this.begSegment, this.endSegment);
+        this.currentPoint = this.car.getCoordinates();
+      }
       DefaultContextInteractions _$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS$CALLER = this.$castSkill(DefaultContextInteractions.class, (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS == null || this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS.get() == null) ? (this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS = this.$getSkill(DefaultContextInteractions.class)) : this.$CAPACITY_USE$IO_SARL_CORE_DEFAULTCONTEXTINTERACTIONS);
       UUID _iD = this.getID();
       Influence _influence = new Influence(_iD, this.arrivalPoint, this.endSegment);
@@ -241,6 +266,10 @@ public class Driver extends Agent {
     return $castSkill(Drive.class, this.$CAPACITY_USE$CAPACITIES_DRIVE);
   }
   
+  /**
+   * The agent receives the cars and stores it.
+   * Directly after the creation, the driver emit an influence to the environment
+   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$Initialize(final Initialize occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {
@@ -257,6 +286,11 @@ public class Driver extends Agent {
     ___SARLlocal_runnableCollection.add(() -> $behaviorUnit$Destroy$1(occurrence));
   }
   
+  /**
+   * Checks if the agent is arrived at destination,
+   * Or if it musts change its road because it is at the end of a road,
+   * Or simply update its position 1D.
+   */
   @SyntheticMember
   @PerceptGuardEvaluator
   private void $guardEvaluator$MoveForward(final MoveForward occurrence, final Collection<Runnable> ___SARLlocal_runnableCollection) {

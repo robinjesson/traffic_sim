@@ -14,6 +14,7 @@ import java.util.Random
 import org.arakhne.afc.math.geometry.d2.d.Point2d
 import road_elements.Car
 import road_elements.Road
+import javafx.scene.paint.Color
 
 agent Driver {
 	uses Logging
@@ -27,22 +28,28 @@ agent Driver {
 	protected var begSegment : Point2d
 	protected var endSegment : Point2d
 	var env : EnvAgent
-
+	
+	/**
+	 * The agent receives the cars and stores it.
+	 * Directly after the creation, the driver emit an influence to the environment
+	 */
 	on Initialize {
 		synchronized (this) {
 			// Chose randomly the type of Driving of the agent
 			var random = new Random
+			this.car = occurrence.parameters.get(0) as Car
 			switch random.nextInt(2){
 				case 0:	{
 					setSkill(new DrivingNormal)	
+					this.car.colour = Color::BLUE
 				}			
 				default: {
 					setSkill(new DrivingDangerous)
+					this.car.colour = Color::RED
 				}
 			}
 			
 			this.env = occurrence.parameters.get(1) as EnvAgent
-			this.car = occurrence.parameters.get(0) as Car
 			this.currentPoint = this.car.coordinates
 			this.arrivalPoint = new Point2d(50, 50)
 			this.begSegment = this.car.road.beginPoint.point
@@ -56,52 +63,64 @@ agent Driver {
 	on Destroy {
 		info("The agent was stopped.")
 	}
-
-	def ArrivedAtEndRoad {
-		synchronized (this) {
+	
+	/**
+	 * Previously an event
+	 * Select a next road and do the necessary changes
+ */
+	synchronized def ArrivedAtEndRoad : void {
 			var b = this.car.road.beginPoint
 			var e = this.car.road.endPoint
 
 			var selectedRoad : Road
 
 			var random = new Random
-			
-			if (b.isNearPoint(this.car.coordinates)) {
-				do {
-					var index = (random.nextDouble * b.connectedSegmentCount) as int
-					selectedRoad = b.connectedSegments.get(index) as Road
-				} while (selectedRoad === this.car.road)
-			} else {
-				do {
-					var index = (random.nextDouble * e.connectedSegmentCount) as int
-					selectedRoad = e.connectedSegments.get(index) as Road
-				} while (selectedRoad === this.car.road)
+			try{
+				if (b.isNearPoint(this.car.coordinates)) {
+					do {
+						var index = (random.nextDouble * b.connectedSegmentCount) as int
+						selectedRoad = b.connectedSegments.get(index) as Road
+					} while (selectedRoad === this.car.road)
+				} else {
+					do {
+						var index = (random.nextDouble * e.connectedSegmentCount) as int
+						selectedRoad = e.connectedSegments.get(index) as Road
+					} while (selectedRoad === this.car.road)
+				}
+	
+				this.car.road.removeObject(this.car)
+				this.car.road = selectedRoad
+				this.car.road.addObject(this.car)
+	
+				if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
+					this.begSegment = this.car.road.beginPoint.point
+					this.endSegment = this.car.road.endPoint.point
+				} else {
+					this.begSegment = this.car.road.endPoint.point
+					this.endSegment = this.car.road.beginPoint.point
+				}
+	
+				this.car.setCoordinates(this.begSegment, this.endSegment)
+				this.car.position.x = 0
 			}
-
-			this.car.road.removeObject(this.car)
-			this.car.road = selectedRoad
-			this.car.road.addObject(this.car)
-
-			if (this.car.road.beginPoint.isNearPoint(this.car.coordinates)) {
-				this.begSegment = this.car.road.beginPoint.point
-				this.endSegment = this.car.road.endPoint.point
-			} else {
-				this.begSegment = this.car.road.endPoint.point
-				this.endSegment = this.car.road.beginPoint.point
+			catch(ex:NullPointerException){
+				
 			}
-
-			this.car.setCoordinates(this.begSegment, this.endSegment)
-			this.car.position.x = 0
-		}
-
 	}
 
+	/**
+	 * Previously an event
+	 * Kill the agent and the car when arrived at destination
+	 */
 	def ArrivedAtDestination {
 		synchronized (this) {
 			this.killThis
 		}
 	}
-
+	
+	/**
+	 * Kills the agent, remove the cars from the road and the layer
+	 */
 	synchronized def killThis : void {
 		this.env.removeAgentAndCar(this.ID)
 		this.car.road.removeObject(this.car)
@@ -109,6 +128,11 @@ agent Driver {
 		killMe
 	}
 
+	/**
+	 * Checks if the agent is arrived at destination,
+	 * Or if it musts change its road because it is at the end of a road,
+	 * Or simply update its position 1D.
+	 */
 	on MoveForward {
 		synchronized (this) {
 			if (car.coordinates.equals(this.car.influence.arrivalPoint)) this.ArrivedAtDestination
@@ -120,12 +144,12 @@ agent Driver {
 			 * --> implemented but not used because of errors
 			 * --> status : pending, waiting for further improvements
 			 */
-			// var distFrontCar=this.car.road.getFrontCarDistanceOf(this.car)
-			// if (distFrontCar>10) {
+			var distFrontCar=this.car.road.getFrontCarDistanceOf(this.car)
+			if (distFrontCar>10) {
 				this.car.position.x = this.car.position.x + speed
 				this.car.setCoordinates(this.begSegment, this.endSegment)
 				this.currentPoint = this.car.coordinates
-			// }
+			}
 			emit(new Influence(this.ID, this.arrivalPoint, this.endSegment))
 		}
 	}

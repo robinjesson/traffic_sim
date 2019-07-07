@@ -33,7 +33,10 @@ agent EnvAgent {
 	var trafficLayers : TrafficLayers
 	var influences = new AtomicInteger
 	var time = 0
-
+	
+	/**
+	 * The environment creates the cars on a network and puts agent inside the created cars
+	 */
 	on Initialize {
 		this.influences.set(0)
 		synchronized(this){
@@ -41,9 +44,14 @@ agent EnvAgent {
 			this.trafficLayers = occurrence.parameters.get(0) as TrafficLayers
 			this.network = this.trafficLayers.roadNetworkLayer.roadNetwork
 		}
-		spawnCarAndAgent(3)
+		spawnCarAndAgent(8)
 	}
-
+	
+	/**
+	 * Receives influences from cars
+	 * Stores influence inside the car
+	 * if it has received all cars, then computes all influence
+	 */
 	on Influence {
 		synchronized (this) {
 			var agentId = occurrence.agentId
@@ -56,6 +64,11 @@ agent EnvAgent {
 		}
 	}
 
+	/**
+	 * emit MoveForward on each drivers, which the driver on the reception will compute itself what it must do.
+	 * then it increments the time
+	 * then repaint the cars
+	 */
 	synchronized def computeInfluences {
 		this.freeze.set(true)
 		var now = System::currentTimeMillis

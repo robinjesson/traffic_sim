@@ -4,6 +4,7 @@ import events.Influence;
 import io.sarl.lang.annotation.SarlElementType;
 import io.sarl.lang.annotation.SarlSpecification;
 import io.sarl.lang.annotation.SyntheticMember;
+import javafx.scene.paint.Color;
 import org.arakhne.afc.math.geometry.d1.d.Point1d;
 import org.arakhne.afc.math.geometry.d2.Point2D;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
@@ -22,6 +23,8 @@ public class Car extends MobileRoadObject {
   
   private Influence influence;
   
+  private Color colour = Color.RED;
+  
   public Car(final Point1d position, final Road currentRoad, final TrafficLayers trafficLayers) {
     super(position, currentRoad, trafficLayers);
     Road _road = super.getRoad();
@@ -37,6 +40,9 @@ public class Car extends MobileRoadObject {
     return new Point2d(this.x, this.y);
   }
   
+  /**
+   * Sets the x and y with interpolation between 2 points (generally begin and end of the road)
+   */
   public void setCoordinates(final Point2D beg, final Point2D end) {
     double _x = end.getX();
     double _x_1 = beg.getX();
@@ -62,6 +68,15 @@ public class Car extends MobileRoadObject {
   @Pure
   public Influence getInfluence() {
     return this.influence;
+  }
+  
+  @Pure
+  public Color getColour() {
+    return this.colour;
+  }
+  
+  public void setColour(final Color color) {
+    this.colour = color;
   }
   
   @Override
@@ -105,5 +120,5 @@ public class Car extends MobileRoadObject {
   }
   
   @SyntheticMember
-  private static final long serialVersionUID = -188907031L;
+  private static final long serialVersionUID = -351870061L;
 }

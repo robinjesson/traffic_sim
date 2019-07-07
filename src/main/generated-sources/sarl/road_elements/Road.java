@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import org.arakhne.afc.gis.road.RoadPolyline;
 import org.arakhne.afc.math.geometry.d2.d.Point2d;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Pure;
 import road_elements.Car;
 import road_elements.RoadObject;
@@ -240,16 +241,26 @@ public class Road extends RoadPolyline {
    */
   @Pure
   public double getFrontCarDistanceOf(final Car car) {
-    double _xifexpression = (double) 0;
-    int _size = this.getFrontCars(car).size();
-    if ((_size >= 1)) {
-      double _x = this.getFrontCarOf(car).getPosition().getX();
-      double _x_1 = car.getPosition().getX();
-      _xifexpression = (_x - _x_1);
-    } else {
-      _xifexpression = 100000;
+    try {
+      double _xifexpression = (double) 0;
+      int _size = this.getFrontCars(car).size();
+      if ((_size >= 1)) {
+        double _x = this.getFrontCarOf(car).getPosition().getX();
+        double _x_1 = car.getPosition().getX();
+        _xifexpression = (_x - _x_1);
+      } else {
+        _xifexpression = 100000;
+      }
+      return _xifexpression;
+    } catch (final Throwable _t) {
+      if (_t instanceof NullPointerException) {
+        final NullPointerException ex = (NullPointerException)_t;
+        ex.printStackTrace();
+        return 10000;
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
     }
-    return _xifexpression;
   }
   
   @DefaultValueUse("int,int,int,int,int")

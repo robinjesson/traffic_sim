@@ -1,0 +1,11 @@
+# Xtext generated files
+src/main/generated-sources
+
+# Eclipse
+.settings
+.metadata
+.idea
+
+
+#Maven
+target/

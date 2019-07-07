@@ -4,12 +4,14 @@ import events.Influence
 import org.arakhne.afc.math.geometry.d1.d.Point1d
 import org.arakhne.afc.math.geometry.d2.Point2D
 import org.arakhne.afc.math.geometry.d2.d.Point2d
+import javafx.scene.paint.Color
 
 class Car extends MobileRoadObject {	
 	
 	var x:double
 	var y:double
 	var influence : Influence
+	var colour : javafx.scene.paint.Color = Color::RED
 	
 	new(position : Point1d, currentRoad:Road, trafficLayers:TrafficLayers){
 		super(position, currentRoad, trafficLayers)
@@ -22,6 +24,9 @@ class Car extends MobileRoadObject {
 		return new Point2d(this.x, this.y)
 	}
 	
+	/**
+	 * Sets the x and y with interpolation between 2 points (generally begin and end of the road)
+	 */
 	def setCoordinates(beg : Point2D, end : Point2D) : void {
 		var dist = Math.sqrt(Math.pow((end.x - beg.x), 2) + Math.pow((end.y - beg.y), 2))
 		var t = this.position.x / dist
@@ -36,4 +41,13 @@ class Car extends MobileRoadObject {
 	def getInfluence {
 		return this.influence
 	}	
+	
+	def getColour : Color{
+		return this.colour
+	}
+	
+	def setColour(color:Color){
+		this.colour=color
+	}
+
 }

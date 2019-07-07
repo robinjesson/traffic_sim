@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.Screen?>
+<?import javafx.stage.Screen?>
+<?import org.fxmisc.flowless.*?>
+<?import org.arakhne.afc.simulation.framework.base.fx.controls.*?>
+
+<BorderPane fx:id="main_pane"
+            maxHeight="+Infinity" maxWidth="+Infinity"
+            minHeight="300" minWidth="300"
+            prefWidth="${screen.visualBounds.width}"
+            prefHeight="${screen.visualBounds.height}"
+            xmlns="http://javafx.com/javafx/8.0.111"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="fx.FxController">
+	<fx:define>
+		<Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+	<top>
+		<FlowPane>
+			<children>
+		      <Button fx:id="setupButton"
+		              mnemonicParsing="false"
+		              onAction="#actionSetup"
+		              text="%SetupButtonText">
+		         <tooltip>
+		            <Tooltip text="%SetupButtonTooltip" />
+		         </tooltip>
+		      </Button>
+		      <Button fx:id="startButton"
+		              mnemonicParsing="false"
+		              onAction="#actionStart"
+		              text="%StartButtonText"
+		              disable="true">
+		         <tooltip>
+		            <Tooltip text="%StartButtonTooltip" />
+		         </tooltip>
+		      </Button>
+		      <Button fx:id="stopButton"
+		              mnemonicParsing="false"
+		              onAction="#actionStop"
+		              text="%StopButtonText"
+		              disable="true">
+		         <tooltip>
+		            <Tooltip text="%StopButtonTooltip" />
+		         </tooltip>
+		      </Button>
+			</children>
+		</FlowPane>
+	</top>
+</BorderPane>

@@ -166,7 +166,13 @@ class Road extends RoadPolyline {
 	 * You can use it to get the distance of the first Car in front of another Car
 	 */
 	def getFrontCarDistanceOf(car : Car) : double {
-		return if(this.getFrontCars(car).size>=1) this.getFrontCarOf(car).position.x - car.position.x else 100000
+		try{
+			return if(this.getFrontCars(car).size>=1) this.getFrontCarOf(car).position.x - car.position.x else 100000
+		}
+		catch(ex:NullPointerException){
+			ex.printStackTrace
+			return 10000
+		}
 	}
 	
 
